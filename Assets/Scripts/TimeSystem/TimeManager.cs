@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Generic; //包含定义泛型集合的类与接口的命名空间
 using UnityEngine;
 
 public class TimeManager : SingletonMonobehaviour<TimeManager>, ISaveable
 {
-
+    // 游戏初始时间为第1年春季的第1天6点30分0秒，星期一
     private int gameYear = 1;
     private Season gameSeason = Season.Spring;
     private int gameDay = 1;
@@ -13,15 +13,18 @@ public class TimeManager : SingletonMonobehaviour<TimeManager>, ISaveable
     private int gameSecond = 0;
     private string gameDayOfWeek = "Mon";
 
-    private bool gameClockPaused = false;
+    private bool gameClockPaused = false; // 游戏时钟是否暂停
 
     private float gameTick = 0f;
 
+
+    // 实现ISaveable接口的ISaveableUniqueID属性与GameObjectSave属性
     private string _iSaveableUniqueID;
     public string ISaveableUniqueID { get { return _iSaveableUniqueID; } set { _iSaveableUniqueID = value; } }
 
     private GameObjectSave _gameObjectSave;
     public GameObjectSave GameObjectSave { get { return _gameObjectSave; } set { _gameObjectSave = value; } }
+
 
     protected override void Awake()
     {
@@ -65,8 +68,9 @@ public class TimeManager : SingletonMonobehaviour<TimeManager>, ISaveable
 
     private void Update()
     {
-        if (!gameClockPaused)
+        if (!gameClockPaused) // 如果游戏时钟没有暂停
         {
+            // 
             GameTick();
         }
     }
@@ -75,6 +79,7 @@ public class TimeManager : SingletonMonobehaviour<TimeManager>, ISaveable
     {
         gameTick += Time.deltaTime;
 
+        // 当实际时间等于或超过游戏时间的最小刻度（即secondsPerGameSecond秒）时，重置gameTick，重新累加，并调用UpdateGameSecond方法
         if (gameTick >= Settings.secondsPerGameSecond)
         {
             gameTick -= Settings.secondsPerGameSecond;
@@ -85,24 +90,27 @@ public class TimeManager : SingletonMonobehaviour<TimeManager>, ISaveable
 
     private void UpdateGameSecond()
     {
-        gameSecond++;
+        gameSecond++; // 增加游戏秒数
 
+        // 如果游戏秒数超过59秒，则将游戏秒数重置为0，并增加游戏分钟数
         if (gameSecond > 59)
         {
             gameSecond = 0;
             gameMinute++;
 
-
-            if (gameMinute > 59)
+            // 如果游戏分钟数超过59分钟，则将游戏分钟数重置为0，并增加游戏小时数
+            if (gameMinute > 59) 
             {
                 gameMinute = 0;
                 gameHour++;
-
+                
+                // 如果游戏小时数超过23小时，则将游戏小时数重置为0，并增加游戏天数
                 if (gameHour > 23)
                 {
                     gameHour = 0;
                     gameDay++;
 
+                    // 如果游戏天数超过30天，则将游戏天数重置为1，并到达下一个游戏季节
                     if (gameDay > 30)
                     {
                         gameDay = 1;
@@ -112,13 +120,15 @@ public class TimeManager : SingletonMonobehaviour<TimeManager>, ISaveable
 
                         gameSeason = (Season)gs;
 
+                        // 如果游戏季节超过3个季节，则将游戏季节重置为0，并增加游戏年份
                         if (gs > 3)
                         {
                             gs = 0;
                             gameSeason = (Season)gs;
 
                             gameYear++;
-
+                            
+                            // 如果游戏年份超过9999年，则将游戏年份重置为1
                             if (gameYear > 9999)
                                 gameYear = 1;
 
@@ -208,6 +218,8 @@ public class TimeManager : SingletonMonobehaviour<TimeManager>, ISaveable
         }
     }
 
+
+    // 实现ISaveable接口的ISaveableRegister方法,ISaveableDeregister方法,ISaveableSave方法,ISaveableLoad方法,ISaveableStoreScene方法,ISaveableRestoreScene方法
     public void ISaveableRegister()
     {
         SaveLoadManager.Instance.iSaveableObjectList.Add(this);
@@ -303,11 +315,11 @@ public class TimeManager : SingletonMonobehaviour<TimeManager>, ISaveable
     }
     public void ISaveableStoreScene(string sceneName)
     {
-        // Nothing required here since Time Manager is running on the persistent scene
+        // 无需实现因为时间管理器在持久场景中运行
     }
 
     public void ISaveableRestoreScene(string sceneName)
     {
-        // Nothing required here since Time Manager is running on the persistent scene
+        // 无需实现因为时间管理器在持久场景中运行
     }
 }

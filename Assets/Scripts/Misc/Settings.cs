@@ -88,7 +88,7 @@ public static class Settings
     public const int maxTargetComponentsToDestroyPerReapSwing = 2;
 
 
-    // 事件系统
+    // 游戏每秒的时间时间
     public const float secondsPerGameSecond = 0.012f;
 
 

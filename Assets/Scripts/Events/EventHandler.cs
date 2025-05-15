@@ -85,17 +85,14 @@ public static class EventHandler
                 idleUp, idleDown, idleLeft, idleRight);
     }
 
-    // Time Events
 
-    // Advance game minute
+    // AdvanceGameMinuteEvent静态事件的定义
     public static event Action<int, Season, int, string, int, int, int> AdvanceGameMinuteEvent;
-
+    //调用AdvanceGameMinuteEvent事件
     public static void CallAdvanceGameMinuteEvent(int gameYear, Season gameSeason, int gameDay, string gameDayOfWeek, int gameHour, int gameMinute, int gameSecond)
     {
-        if (AdvanceGameMinuteEvent != null)
-        {
-            AdvanceGameMinuteEvent(gameYear, gameSeason, gameDay, gameDayOfWeek, gameHour, gameMinute, gameSecond);
-        }
+        //如果AdvanceGameMinuteEvent事件不为空，则调用该事件
+        AdvanceGameMinuteEvent?.Invoke(gameYear, gameSeason, gameDay, gameDayOfWeek, gameHour, gameMinute, gameSecond);
     }
 
     // Advance game hour
