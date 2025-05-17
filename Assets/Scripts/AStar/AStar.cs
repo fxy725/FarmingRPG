@@ -17,8 +17,8 @@ public class AStar : MonoBehaviour
     private Node targetNode;
     private int gridWidth;
     private int gridHeight;
-    private int originX;
-    private int originY;
+    private int originX; // 原点的x坐标
+    private int originY; // 原点的y坐标
 
     private List<Node> openNodeList;
     private HashSet<Node> closedNodeList;
