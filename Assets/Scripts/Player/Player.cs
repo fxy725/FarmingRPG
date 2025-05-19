@@ -6,9 +6,9 @@ using UnityEngine.SceneManagement;
 
 public class Player : SingletonMonobehaviour<Player>, ISaveable
 {
-    private WaitForSeconds afterLiftToolAnimationPause;
-    private WaitForSeconds afterUseToolAnimationPause;
-    private WaitForSeconds afterPickAnimationPause;
+    private WaitForSeconds afterLiftToolAnimationPause; // 在LiftTool动画后暂停的时间
+    private WaitForSeconds afterUseToolAnimationPause; // 在UseTool动画后暂停的时间
+    private WaitForSeconds afterPickAnimationPause; // 在Pick动画后暂停的时间
     private AnimationOverrides animationOverrides;
     private GridCursor gridCursor;
     private Cursor cursor;
@@ -50,16 +50,16 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
     private Direction playerDirection;
 
-    private List<CharacterAttribute> characterAttributeCustomisationList;
+    private List<CharacterPartProperties> characterAttributeCustomisationList;
     private float movementSpeed;
 
     [Tooltip("Should be populated in the prefab with the equipped item sprite renderer")]
     [SerializeField] private SpriteRenderer equippedItemSpriteRenderer = null;
 
     // Player attributes that can be swapped
-    private CharacterAttribute armsCharacterAttribute;
+    private CharacterPartProperties armsCharacterAttribute;
 
-    private CharacterAttribute toolCharacterAttribute;
+    private CharacterPartProperties toolCharacterAttribute;
 
     private bool _playerInputIsDisabled = false;
     public bool PlayerInputIsDisabled { get => _playerInputIsDisabled; set => _playerInputIsDisabled = value; }
@@ -81,11 +81,11 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         animationOverrides = GetComponentInChildren<AnimationOverrides>();
 
         // Initialise swappable character attributes
-        armsCharacterAttribute = new CharacterAttribute(CharacterPartAnimator.arms, PartVariantColour.none, PartVariantType.none);
-        toolCharacterAttribute = new CharacterAttribute(CharacterPartAnimator.tool, PartVariantColour.none, PartVariantType.hoe);
+        armsCharacterAttribute = new CharacterPartProperties(CharacterPartAnimator.arms, PartVariantColour.none, PartVariantType.none);
+        toolCharacterAttribute = new CharacterPartProperties(CharacterPartAnimator.tool, PartVariantColour.none, PartVariantType.hoe);
 
         // Initialise character attribute list
-        characterAttributeCustomisationList = new List<CharacterAttribute>();
+        characterAttributeCustomisationList = new List<CharacterPartProperties>();
 
         // Get unique ID for gameobject and create save data object
         ISaveableUniqueID = GetComponent<GenerateGUID>().GUID;
@@ -490,7 +490,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         toolCharacterAttribute.partVariantType = PartVariantType.hoe;
         characterAttributeCustomisationList.Clear();
         characterAttributeCustomisationList.Add(toolCharacterAttribute);
-        animationOverrides.ApplyCharacterCustomisationParameters(characterAttributeCustomisationList);
+        animationOverrides.ApplyCharacterCustomizationParameters(characterAttributeCustomisationList);
 
         if (playerDirection == Vector3Int.right)
         {
@@ -549,7 +549,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         toolCharacterAttribute.partVariantType = PartVariantType.wateringCan;
         characterAttributeCustomisationList.Clear();
         characterAttributeCustomisationList.Add(toolCharacterAttribute);
-        animationOverrides.ApplyCharacterCustomisationParameters(characterAttributeCustomisationList);
+        animationOverrides.ApplyCharacterCustomizationParameters(characterAttributeCustomisationList);
 
         // TODO: If there is water in the watering can
         toolEffect = ToolEffect.watering;
@@ -610,7 +610,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         toolCharacterAttribute.partVariantType = PartVariantType.axe;
         characterAttributeCustomisationList.Clear();
         characterAttributeCustomisationList.Add(toolCharacterAttribute);
-        animationOverrides.ApplyCharacterCustomisationParameters(characterAttributeCustomisationList);
+        animationOverrides.ApplyCharacterCustomizationParameters(characterAttributeCustomisationList);
 
         ProcessCropWithEquippedItemInPlayerDirection(playerDirection, equippedItemDetails, gridPropertyDetails);
 
@@ -667,7 +667,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         toolCharacterAttribute.partVariantType = PartVariantType.pickaxe;
         characterAttributeCustomisationList.Clear();
         characterAttributeCustomisationList.Add(toolCharacterAttribute);
-        animationOverrides.ApplyCharacterCustomisationParameters(characterAttributeCustomisationList);
+        animationOverrides.ApplyCharacterCustomizationParameters(characterAttributeCustomisationList);
 
         ProcessCropWithEquippedItemInPlayerDirection(playerDirection, equippedItemDetails, gridPropertyDetails);
 
@@ -695,7 +695,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         toolCharacterAttribute.partVariantType = PartVariantType.scythe;
         characterAttributeCustomisationList.Clear();
         characterAttributeCustomisationList.Add(toolCharacterAttribute);
-        animationOverrides.ApplyCharacterCustomisationParameters(characterAttributeCustomisationList);
+        animationOverrides.ApplyCharacterCustomizationParameters(characterAttributeCustomisationList);
 
         // Reap in player direction
         UseToolInPlayerDirection(itemDetails, playerDirection);
@@ -911,7 +911,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         armsCharacterAttribute.partVariantType = PartVariantType.none;
         characterAttributeCustomisationList.Clear();
         characterAttributeCustomisationList.Add(armsCharacterAttribute);
-        animationOverrides.ApplyCharacterCustomisationParameters(characterAttributeCustomisationList);
+        animationOverrides.ApplyCharacterCustomizationParameters(characterAttributeCustomisationList);
 
         isCarrying = false;
     }
@@ -928,7 +928,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
             armsCharacterAttribute.partVariantType = PartVariantType.carry;
             characterAttributeCustomisationList.Clear();
             characterAttributeCustomisationList.Add(armsCharacterAttribute);
-            animationOverrides.ApplyCharacterCustomisationParameters(characterAttributeCustomisationList);
+            animationOverrides.ApplyCharacterCustomizationParameters(characterAttributeCustomisationList);
 
             isCarrying = true;
         }
