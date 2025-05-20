@@ -1,7 +1,8 @@
 /.vs
 /.vscode
 /.vsconfig
-/Library
+/Library/*
+!/Library/ScriptAssemblies
 /Logs
 /obj
 /Temp
