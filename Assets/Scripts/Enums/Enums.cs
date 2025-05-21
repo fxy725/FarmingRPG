@@ -158,23 +158,23 @@ public enum SoundName
 }
 
 
-public enum ItemType
+public enum ItemType //物品类型
 {
-    Seed,
-    Commodity,
-    Watering_tool,
-    Hoeing_tool,
-    Chopping_tool,
-    Breaking_tool,
-    Reaping_tool,
-    Collecting_tool,
-    Reapable_scenary,
-    Furniture,
-    none,
+    Seed, //种子
+    Commodity, //商品
+    Watering_tool, //浇水工具
+    Hoeing_tool, //锄头工具
+    Chopping_tool, //砍树工具
+    Breaking_tool, //破坏工具
+    Reaping_tool, //收割工具
+    Collecting_tool, //收集工具
+    Reapable_scenary, //可收割的场景物体
+    Furniture, //家具
+    none, //无
     count
 }
 
-public enum Facing
+public enum Facing //人物朝向
 {
     none,
     front,

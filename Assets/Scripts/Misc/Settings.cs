@@ -1,7 +1,7 @@
 ﻿
 using UnityEngine;
 
-public static class Settings 
+public static class Settings
 {
     // 持久化场景的引用
     public const string PersistentScene = "PersistentScene";
@@ -84,8 +84,8 @@ public static class Settings
     public const string CollectingTool = "Basket";
 
     // 收获
-    public const int maxCollidersToTestPerReapSwing = 15;
-    public const int maxTargetComponentsToDestroyPerReapSwing = 2;
+    public const int maxCollidersToTestPerReapSwing = 15; // 每次收割挥动时要测试的最大碰撞器数量
+    public const int maxTargetComponentsToDestroyPerReapSwing = 2; // 每次收割挥动时要摧毁的最大目标组件数量
 
 
     // 游戏每秒的时间时间
