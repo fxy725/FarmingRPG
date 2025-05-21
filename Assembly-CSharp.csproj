@@ -105,6 +105,7 @@
     <Compile Include="Assets\Scripts\Item\ObscuringItemFader.cs" />
     <Compile Include="Assets\Scripts\Scene\SceneControllerManager.cs" />
     <Compile Include="Assets\Scripts\Events\EventHandler.cs" />
+    <Compile Include="Assets\Scripts\Animation\CharacterPartProperties.cs" />
     <Compile Include="Assets\Scripts\Item\Item.cs" />
     <Compile Include="Assets\Scripts\Map\SO_GridProperties.cs" />
     <Compile Include="Assets\Scripts\Animation\AnimationOverrides.cs" />
@@ -125,7 +126,6 @@
     <Compile Include="Assets\Scripts\Sounds\AudioManager.cs" />
     <Compile Include="Assets\Scripts\Crop\CropInstantiator.cs" />
     <Compile Include="Assets\Scripts\NPC\NPC.cs" />
-    <Compile Include="Assets\Scripts\Animation\CharacterAttribute.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerAnimationTest.cs" />
     <Compile Include="Assets\Scripts\Scene\SceneRoute.cs" />
   </ItemGroup>

@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class InventoryManager :SingletonMonobehaviour<InventoryManager>, ISaveable
+public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISaveable
 {
-    private UIInventoryBar inventoryBar;
+    private UIInventoryBar inventoryBar; //库存栏UI组件的引用
 
     private Dictionary<int, ItemDetails> itemDetailsDictionary;
 
@@ -177,7 +177,7 @@ public class InventoryManager :SingletonMonobehaviour<InventoryManager>, ISaveab
         inventoryItem.itemCode = itemCode;
         inventoryList[position] = inventoryItem;
 
-        
+
         //DebugPrintInventoryList(inventoryList);
     }
 
@@ -392,7 +392,7 @@ public class InventoryManager :SingletonMonobehaviour<InventoryManager>, ISaveab
         // Nothing required her since the inventory manager is on a persistent scene;
     }
 
-        public void ISaveableRestoreScene(string sceneName)
+    public void ISaveableRestoreScene(string sceneName)
     {
         // Nothing required here since the inventory manager is on a persistent scene;
     }
