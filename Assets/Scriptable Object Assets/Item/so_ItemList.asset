@@ -15,10 +15,9 @@ MonoBehaviour:
   itemDetails:
   - itemCode: 10000
     itemType: 0
-    itemDescription: Canyon Oak Acorn
+    itemDescription: "\u5CE1\u8C37\u6A61\u6811\u679C\u5B9E"
     itemSprite: {fileID: 21300000, guid: 730e572c78cf0244ca0db36bb8f3af7f, type: 3}
-    itemLongDescription: From small acorns do large oak trees grow. One day this
-      humble acorn could be a towering giant!
+    itemLongDescription: "\u53C2\u5929\u5927\u6811\uFF0C\u7686\u7531\u5C0F\u6A61\u5B9E\u800C\u6765\u3002\u8BF4\u4E0D\u5B9A\u8FD9\u9897\u5C0F\u5C0F\u7684\u6A61\u5B9E\uFF0C\u6709\u671D\u4E00\u65E5\u4E5F\u80FD\u957F\u6210\u53C2\u5929\u5DE8\u6811\u5462\uFF01"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 0
@@ -28,10 +27,10 @@ MonoBehaviour:
     canBeCarried: 1
   - itemCode: 10001
     itemType: 1
-    itemDescription: Pumpkin
+    itemDescription: "\u5357\u74DC"
     itemSprite: {fileID: 21300000, guid: f0d720006ae6c9e468cc99a9f1713ba1, type: 3}
-    itemLongDescription: A juicy, fat, ripe pumpkin.  It makes great soup as well
-      as a scary Halloween face!
+    itemLongDescription: "\u4E00\u4E2A\u6C34\u7075\u7075\u3001\u80D6\u561F\u561F\u3001\u719F\u900F\u4E86\u7684\u5927\u5357\u74DC\uFF01
+      \u65E2\u80FD\u505A\u7F8E\u5473\u7684\u6C64\uFF0C\u53C8\u80FD\u96D5\u523B\u6210\u5413\u4EBA\u7684\u4E07\u5723\u8282\u9B3C\u8138\uFF01"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 0
@@ -41,10 +40,9 @@ MonoBehaviour:
     canBeCarried: 1
   - itemCode: 10002
     itemType: 1
-    itemDescription: Corn
+    itemDescription: "\u7389\u7C73"
     itemSprite: {fileID: 21300000, guid: 081b5033ea188cb48b5d44b99ab920bc, type: 3}
-    itemLongDescription: Juicy fresh corn - try it roasted on a BBQ smothered with
-      butter and a health conscious sprinkling of salt and pepper!
+    itemLongDescription: "\u591A\u6C41\u65B0\u9C9C\u7684\u7389\u7C73\u2014\u2014\u4E0D\u59A8\u8BD5\u8BD5\u5728\u70E7\u70E4\u67B6\u4E0A\u70E4\u5236\uFF0C\u518D\u6D82\u4E0A\u9EC4\u6CB9\uFF0C\u6700\u540E\u5065\u5EB7\u5730\u6492\u4E0A\u5C11\u8BB8\u76D0\u548C\u80E1\u6912\uFF01"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 0
@@ -54,10 +52,9 @@ MonoBehaviour:
     canBeCarried: 1
   - itemCode: 10003
     itemType: 2
-    itemDescription: A Basic Watering Can
+    itemDescription: "\u4E00\u4E2A\u7B80\u6613\u6D12\u6C34\u58F6"
     itemSprite: {fileID: 21300136, guid: 853ac38383c680342ac7e688bf29b197, type: 3}
-    itemLongDescription: The humble watering can - an essential tool for any budding
-      farmer
+    itemLongDescription: "\u7B80\u6734\u7684\u6C34\u58F6\u2014\u2014\u4EFB\u4F55\u6709\u62B1\u8D1F\u7684\u519C\u4EBA\u5FC5\u5907\u7684\u5DE5\u5177\u3002"
     itemUseGridRadius: 1
     itemUseRadius: 0
     isStartingItem: 1
@@ -67,10 +64,9 @@ MonoBehaviour:
     canBeCarried: 0
   - itemCode: 10004
     itemType: 3
-    itemDescription: A Basic Hoe
+    itemDescription: "\u4E00\u628A\u666E\u901A\u9504\u5934"
     itemSprite: {fileID: 21300052, guid: 853ac38383c680342ac7e688bf29b197, type: 3}
-    itemLongDescription: A strong, sturdy basic hoe - great for breaking up the soil
-      ready for planting
+    itemLongDescription: "\u4E00\u628A\u7ED3\u5B9E\u8010\u7528\u7684\u57FA\u7840\u9504\u5934\u2014\u2014\u975E\u5E38\u9002\u5408\u7FFB\u677E\u571F\u58E4\uFF0C\u4E3A\u64AD\u79CD\u505A\u597D\u51C6\u5907\u3002"
     itemUseGridRadius: 1
     itemUseRadius: 0
     isStartingItem: 1
@@ -80,9 +76,10 @@ MonoBehaviour:
     canBeCarried: 0
   - itemCode: 10005
     itemType: 4
-    itemDescription: A Basic Axe
+    itemDescription: "\u4E00\u628A\u666E\u901A\u65A7\u5934"
     itemSprite: {fileID: 21300010, guid: 853ac38383c680342ac7e688bf29b197, type: 3}
-    itemLongDescription: A sharp, sturdy basic axe - great for chopping down trees
+    itemLongDescription: "\u4E00\u628A\u950B\u5229\u8010\u7528\u7684\u57FA\u7840\u65A7\u5934
+      - \u780D\u6811\u5229\u5668\u3002"
     itemUseGridRadius: 1
     itemUseRadius: 0
     isStartingItem: 1
@@ -92,9 +89,9 @@ MonoBehaviour:
     canBeCarried: 0
   - itemCode: 10006
     itemType: 0
-    itemDescription: Parsnip Seed
+    itemDescription: "\u6B27\u9632\u98CE\u7C7D"
     itemSprite: {fileID: 21300000, guid: 7da78110e28e0f74aaa3ef4a41f4c0ed, type: 3}
-    itemLongDescription: Parsnip seeds take 5 days to grow
+    itemLongDescription: "\u9632\u98CE\u8349\u79CD\u5B50\u9700\u89815\u5929\u624D\u80FD\u53D1\u82BD\u3002"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 0
@@ -104,9 +101,9 @@ MonoBehaviour:
     canBeCarried: 1
   - itemCode: 10007
     itemType: 1
-    itemDescription: Parsnip
+    itemDescription: "\u6B27\u6D32\u9632\u98CE\u8349"
     itemSprite: {fileID: 21300000, guid: 0a1268bf801d5304ebf16458d7309ac1, type: 3}
-    itemLongDescription: Parsnips are full of fibre and vitamins
+    itemLongDescription: "\u6B27\u6D32\u9632\u98CE\u8349\u5BCC\u542B\u7EA4\u7EF4\u548C\u7EF4\u751F\u7D20\u3002"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 0
@@ -116,10 +113,9 @@ MonoBehaviour:
     canBeCarried: 1
   - itemCode: 10008
     itemType: 1
-    itemDescription: Wood
+    itemDescription: "\u6728\u5934"
     itemSprite: {fileID: 21300000, guid: e26dc0d638731ec47abe9c4b3cae62ac, type: 3}
-    itemLongDescription: Wood is useful for many things - from a building material
-      to a fuel
+    itemLongDescription: "\u6728\u6750\u7528\u9014\u5E7F\u6CDB\uFF0C\u65E2\u53EF\u4F5C\u5EFA\u7B51\u6750\u6599\uFF0C\u53C8\u80FD\u5F53\u71C3\u6599\u3002"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 0
@@ -129,9 +125,9 @@ MonoBehaviour:
     canBeCarried: 1
   - itemCode: 10009
     itemType: 0
-    itemDescription: Blue Spruce Pine Cone
+    itemDescription: "\u84DD\u6749\u677E\u679C"
     itemSprite: {fileID: 21300000, guid: 5eb84bf51d351da428f95a1296f6a397, type: 3}
-    itemLongDescription: Pine cones are packed with seeds to grow new fir trees
+    itemLongDescription: "\u677E\u679C\u9971\u542B\u79CD\u5B50\uFF0C\u5B55\u80B2\u7740\u65B0\u7684\u51B7\u6749\u3002"
     itemUseGridRadius: 1
     itemUseRadius: 0
     isStartingItem: 0
@@ -141,7 +137,7 @@ MonoBehaviour:
     canBeCarried: 1
   - itemCode: 10010
     itemType: 0
-    itemDescription: Canyon Oak Tree Stump
+    itemDescription: "\u5CE1\u8C37\u680E\u6811\u6869"
     itemSprite: {fileID: 7154603021615155856, guid: d241c496741a12d4290e12ba81dd6724,
       type: 3}
     itemLongDescription: 
@@ -154,10 +150,10 @@ MonoBehaviour:
     canBeCarried: 0
   - itemCode: 10011
     itemType: 0
-    itemDescription: Blue Spruce Tree Stump
+    itemDescription: "\u84DD\u6749\u6811\u6869"
     itemSprite: {fileID: -341119608263849502, guid: 5d22327a2a3d2a049a8a59a708d527fe,
       type: 3}
-    itemLongDescription: The stump of a spruce tree
+    itemLongDescription: "\u4E00\u68F5\u84DD\u6749\u7684\u6811\u6869"
     itemUseGridRadius: 0
     itemUseRadius: 0
     isStartingItem: 0
@@ -167,9 +163,9 @@ MonoBehaviour:
     canBeCarried: 0
   - itemCode: 10012
     itemType: 7
-    itemDescription: Wicker Basket
+    itemDescription: "\u67F3\u6761\u7B50"
     itemSprite: {fileID: 21300504, guid: 853ac38383c680342ac7e688bf29b197, type: 3}
-    itemLongDescription: A wicker basket for harvesting produce you have grown
+    itemLongDescription: "\u4E00\u4E2A\u7528\u6765\u91C7\u6458\u60A8\u4EB2\u624B\u79CD\u690D\u7684\u519C\u4EA7\u54C1\u7684\u67F3\u6761\u7BEE\u5B50\u3002"
     itemUseGridRadius: 1
     itemUseRadius: 0
     isStartingItem: 1
@@ -179,9 +175,9 @@ MonoBehaviour:
     canBeCarried: 0
   - itemCode: 10013
     itemType: 5
-    itemDescription: A Basic Pickaxe
+    itemDescription: "\u4E00\u628A\u57FA\u7840\u9550\u5B50"
     itemSprite: {fileID: 21300094, guid: 853ac38383c680342ac7e688bf29b197, type: 3}
-    itemLongDescription: A strong, sturdy basic pickaxe - great for breaking rocks
+    itemLongDescription: "\u4E00\u628A\u7ED3\u5B9E\u8010\u7528\u7684\u57FA\u7840\u9550\u2014\u2014\u975E\u5E38\u9002\u5408\u7528\u6765\u7834\u5F00\u5CA9\u77F3\u3002"
     itemUseGridRadius: 1
     itemUseRadius: 0
     isStartingItem: 1
@@ -191,7 +187,7 @@ MonoBehaviour:
     canBeCarried: 0
   - itemCode: 10014
     itemType: 0
-    itemDescription: Stone 1 Seed
+    itemDescription: "\u4E00\u5757\u77F3\u5934\uFF0C\u4E00\u7C92\u79CD\u5B50"
     itemSprite: {fileID: 21300000, guid: 4fb548784c08c2c40b86a99493efa98d, type: 3}
     itemLongDescription: 
     itemUseGridRadius: 0
@@ -203,9 +199,9 @@ MonoBehaviour:
     canBeCarried: 0
   - itemCode: 10015
     itemType: 1
-    itemDescription: Stone
+    itemDescription: "\u77F3\u5934"
     itemSprite: {fileID: 21300000, guid: 7700e9e59e6f58e4598ea8f2e5a84cc1, type: 3}
-    itemLongDescription: Stone has many practical uses for crafting and building
+    itemLongDescription: "\u77F3\u5934\u5728\u5DE5\u827A\u5236\u4F5C\u548C\u5EFA\u7B51\u65B9\u9762\u7528\u9014\u5E7F\u6CDB\u3002"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 0
@@ -215,7 +211,7 @@ MonoBehaviour:
     canBeCarried: 1
   - itemCode: 10016
     itemType: 0
-    itemDescription: Stone 2 Seed
+    itemDescription: "\u4ECE\u77F3\u5934\u5230\u79CD\u5B50"
     itemSprite: {fileID: 21300000, guid: ffd3a07e9702a614284d1e5a4be9f532, type: 3}
     itemLongDescription: 
     itemUseGridRadius: 0
@@ -227,9 +223,10 @@ MonoBehaviour:
     canBeCarried: 0
   - itemCode: 10017
     itemType: 6
-    itemDescription: A Basic Scythe For Reaping
+    itemDescription: "\u4E00\u628A\u6536\u5272\u7528\u7684\u666E\u901A\u9570\u5200"
     itemSprite: {fileID: 21300506, guid: 853ac38383c680342ac7e688bf29b197, type: 3}
-    itemLongDescription: A sharp, basic scythe - great for cutting grass
+    itemLongDescription: "\u4E00\u628A\u950B\u5229\u7684\u666E\u901A\u9570\u5200
+      - \u975E\u5E38\u9002\u5408\u5272\u8349\u3002"
     itemUseGridRadius: 0
     itemUseRadius: 1.5
     isStartingItem: 1
@@ -239,7 +236,7 @@ MonoBehaviour:
     canBeCarried: 0
   - itemCode: 10018
     itemType: 8
-    itemDescription: Grass1
+    itemDescription: "\u83491"
     itemSprite: {fileID: 21300000, guid: 207ad99171e171b418bcaaa396d5a6f6, type: 3}
     itemLongDescription: 
     itemUseGridRadius: 0
@@ -251,7 +248,7 @@ MonoBehaviour:
     canBeCarried: 0
   - itemCode: 10019
     itemType: 8
-    itemDescription: Grass2
+    itemDescription: "\u83492"
     itemSprite: {fileID: 21300000, guid: e452dd2aa629f624390a9ba516a7c47e, type: 3}
     itemLongDescription: 
     itemUseGridRadius: 0
@@ -263,9 +260,9 @@ MonoBehaviour:
     canBeCarried: 0
   - itemCode: 10020
     itemType: 1
-    itemDescription: Weed
+    itemDescription: "\u5927\u9EBB"
     itemSprite: {fileID: 21300000, guid: 25925800440b0e84f9533a314ddca6b5, type: 3}
-    itemLongDescription: Weed
+    itemLongDescription: "\u5927\u9EBB"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 0
@@ -275,9 +272,9 @@ MonoBehaviour:
     canBeCarried: 1
   - itemCode: 10021
     itemType: 8
-    itemDescription: Prickly Cactus
+    itemDescription: "\u5E26\u523A\u7684\u4ED9\u4EBA\u638C"
     itemSprite: {fileID: 21300000, guid: 37e09848a493a0a4b89a743f73f75963, type: 3}
-    itemLongDescription: Prickly Cactus
+    itemLongDescription: "\u5E26\u523A\u7684\u4ED9\u4EBA\u638C"
     itemUseGridRadius: 0
     itemUseRadius: 0
     isStartingItem: 0
@@ -287,9 +284,9 @@ MonoBehaviour:
     canBeCarried: 0
   - itemCode: 10022
     itemType: 9
-    itemDescription: Chair
+    itemDescription: "\u6905\u5B50"
     itemSprite: {fileID: 21300000, guid: 2a61f48c8f2dfed4da6f2f8e2485ee15, type: 3}
-    itemLongDescription: Chair
+    itemLongDescription: "\u6905\u5B50"
     itemUseGridRadius: 0
     itemUseRadius: 0
     isStartingItem: 0
@@ -299,9 +296,9 @@ MonoBehaviour:
     canBeCarried: 0
   - itemCode: 10023
     itemType: 9
-    itemDescription: Table
+    itemDescription: "\u684C\u5B50"
     itemSprite: {fileID: 21300000, guid: 60f7a57556be87841a8cabc94054df28, type: 3}
-    itemLongDescription: Wooden Table
+    itemLongDescription: "\u6728\u684C"
     itemUseGridRadius: 0
     itemUseRadius: 0
     isStartingItem: 0

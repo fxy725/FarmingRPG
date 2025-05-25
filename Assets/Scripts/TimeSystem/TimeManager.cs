@@ -6,7 +6,7 @@ public class TimeManager : SingletonMonobehaviour<TimeManager>, ISaveable
 {
     // 游戏初始时间为第1年春季的第1天6点30分0秒，星期一
     private int gameYear = 1;
-    private Season gameSeason = Season.Spring;
+    private Season gameSeason = Season.春天;
     private int gameDay = 1;
     private int gameHour = 6;
     private int gameMinute = 30;
@@ -99,11 +99,11 @@ public class TimeManager : SingletonMonobehaviour<TimeManager>, ISaveable
             gameMinute++;
 
             // 如果游戏分钟数超过59分钟，则将游戏分钟数重置为0，并增加游戏小时数
-            if (gameMinute > 59) 
+            if (gameMinute > 59)
             {
                 gameMinute = 0;
                 gameHour++;
-                
+
                 // 如果游戏小时数超过23小时，则将游戏小时数重置为0，并增加游戏天数
                 if (gameHour > 23)
                 {
@@ -127,7 +127,7 @@ public class TimeManager : SingletonMonobehaviour<TimeManager>, ISaveable
                             gameSeason = (Season)gs;
 
                             gameYear++;
-                            
+
                             // 如果游戏年份超过9999年，则将游戏年份重置为1
                             if (gameYear > 9999)
                                 gameYear = 1;

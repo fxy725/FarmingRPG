@@ -23,7 +23,7 @@ public class Item : MonoBehaviour
         }
     }
 
-    public void Init (int itemCodeParam)
+    public void Init(int itemCodeParam)
     {
         if (itemCodeParam != 0)
         {
@@ -33,7 +33,7 @@ public class Item : MonoBehaviour
 
             spriteRenderer.sprite = itemDetails.itemSprite;
 
-            // If item type is reapable then add nudgeable component
+            // 如果物品类型是可收割的，则添加 nudgeable 组件
             if (itemDetails.itemType == ItemType.Reapable_scenary)
             {
                 gameObject.AddComponent<ItemNudge>();

@@ -5,9 +5,9 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
 {
     private UIInventoryBar inventoryBar; //库存栏UI组件的引用
 
-    private Dictionary<int, ItemDetails> itemDetailsDictionary;
+    private Dictionary<int, ItemDetails> itemDetailsDictionary; // 物品详情字典，键为物品代码，值为物品详情
 
-    private int[] selectedInventoryItem; // the index of the array is the inventory list, and the value is the item code
+    private int[] selectedInventoryItem; // 数组索引为库存列表，值为物品代码
 
     public List<InventoryItem>[] inventoryLists;
 
@@ -231,10 +231,8 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
         return -1;
     }
 
-    /// <summary>
-    /// Returns the itemDetails (from the SO_ItemList) for the itemCode, or null if the item code doesn't exist
-    /// </summary>
 
+    // 返回 itemCode 对应的 itemDetails（从 SO_ItemList），如果 itemCode 不存在则返回 null
     public ItemDetails GetItemDetails(int itemCode)
     {
         ItemDetails itemDetails;
@@ -277,10 +275,8 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
 
 
 
-    /// <summary>
-    /// Get the item type description for an item type - returns the item type description as a string for a given ItemType
-    /// </summary>
 
+    // 获取物品类型描述 - 返回给定 ItemType 的物品类型描述字符串
     public string GetItemTypeDescription(ItemType itemType)
     {
         string itemTypeDescription;
