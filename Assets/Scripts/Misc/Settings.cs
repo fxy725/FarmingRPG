@@ -76,12 +76,12 @@ public static class Settings
     public static int idleRight;
 
     // 工具
-    public const string HoeingTool = "Hoe";
-    public const string ChoppingTool = "Axe";
-    public const string BreakingTool = "Pickaxe";
-    public const string ReapingTool = "Scythe";
-    public const string WateringTool = "Watering Can";
-    public const string CollectingTool = "Basket";
+    public const string HoeingTool = "Hoe"; // 锄头
+    public const string ChoppingTool = "Axe"; // 斧头
+    public const string BreakingTool = "Pickaxe"; // 镐子
+    public const string ReapingTool = "Scythe"; // 镰刀
+    public const string WateringTool = "Watering Can"; // 水壶
+    public const string CollectingTool = "Basket"; // 篮子
 
     // 收获
     public const int maxCollidersToTestPerReapSwing = 15; // 每次收割挥动时要测试的最大碰撞器数量

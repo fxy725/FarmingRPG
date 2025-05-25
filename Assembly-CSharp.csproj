@@ -69,6 +69,7 @@
     <Compile Include="Assets\Scripts\NPC\NPCPath.cs" />
     <Compile Include="Assets\Scripts\Sounds\SO_SceneSoundsList.cs" />
     <Compile Include="Assets\Scripts\TimeSystem\TimeManager.cs" />
+    <Compile Include="Assets\Scripts\Playground.cs" />
     <Compile Include="Assets\Scripts\Enums\Enums.cs" />
     <Compile Include="Assets\Scripts\Sounds\SO_SoundList.cs" />
     <Compile Include="Assets\Scripts\Inventory\InventoryItem.cs" />

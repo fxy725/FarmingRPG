@@ -20,10 +20,10 @@ public class GameClock : MonoBehaviour
         EventHandler.AdvanceGameMinuteEvent -= UpdateGameTime;
     }
 
-    // AdvanceGameMinuteEvent事件的处理程序
+    // AdvanceGameMinuteEvent事件的处理程序UpdateGameTime
     private void UpdateGameTime(int gameYear, Season gameSeason, int gameDay, string gameDayOfWeek, int gameHour, int gameMinute, int gameSecond)
     {
-        // Update time
+        // 更新时间
 
         gameMinute = gameMinute - (gameMinute % 10);
 
@@ -32,11 +32,11 @@ public class GameClock : MonoBehaviour
 
         if (gameHour >= 12)
         {
-            ampm = " pm";
+            ampm = " 下午";
         }
         else
         {
-            ampm = " am";
+            ampm = " 上午";
         }
 
         if (gameHour >= 13)
@@ -59,7 +59,7 @@ public class GameClock : MonoBehaviour
         timeText.SetText(time);
         dateText.SetText(gameDayOfWeek + ". " + gameDay.ToString());
         seasonText.SetText(gameSeason.ToString());
-        yearText.SetText("Year " + gameYear);
+        yearText.SetText("第" + gameYear + "年");
     }
 
 }

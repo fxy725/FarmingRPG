@@ -87,10 +87,10 @@ public enum SceneName
 
 public enum Season
 {
-    Spring,
-    Summer,
-    Autumn,
-    Winter,
+    春天,
+    夏天,
+    秋天,
+    冬天,
     none,
     count
 }
