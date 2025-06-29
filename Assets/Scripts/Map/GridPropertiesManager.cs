@@ -11,7 +11,7 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
     private Tilemap groundDecoration1;
     private Tilemap groundDecoration2;
     private bool isFirstTimeSceneLoaded = true;
-    private Grid grid;
+    private UnityEngine.Grid grid;
     private Dictionary<string, GridPropertyDetails> gridPropertyDictionary;
     [SerializeField] private SO_CropDetailsList so_CropDetailsList = null;
     [SerializeField] private SO_GridProperties[] so_gridPropertiesArray = null;
@@ -34,7 +34,7 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
 
     private void OnEnable()
     {
-        ISaveableRegister();
+        SaveableRegister();
 
         EventHandler.AfterSceneLoadEvent += AfterSceneLoaded;
         EventHandler.AdvanceGameDayEvent += AdvanceDay;
@@ -42,7 +42,7 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
 
     private void OnDisable()
     {
-        ISaveableDeregister();
+        SaveableDeregister();
 
         EventHandler.AfterSceneLoadEvent -= AfterSceneLoaded;
         EventHandler.AdvanceGameDayEvent -= AdvanceDay;
@@ -410,7 +410,7 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
                 int growthStages = cropDetails.growthDays.Length;
 
                 int currentGrowthStage = 0;
-              
+
                 for (int i = growthStages - 1; i >= 0; i--)
                 {
                     if (gridPropertyDetails.growthDays >= cropDetails.growthDays[i])
@@ -529,7 +529,7 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
 
 
         // Get Grid
-        grid = GameObject.FindFirstObjectByType<Grid>();
+        grid = GameObject.FindFirstObjectByType<UnityEngine.Grid>();
 
         // Get tilemaps
         groundDecoration1 = GameObject.FindGameObjectWithTag(Tags.GroundDecoration1).GetComponent<Tilemap>();
@@ -630,29 +630,29 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
 
 
 
-    public void ISaveableDeregister()
+    public void SaveableDeregister()
     {
-        SaveLoadManager.Instance.iSaveableObjectList.Remove(this);
+        SaveLoadManager.Instance.saveableObjectList.Remove(this);
     }
 
-        public void ISaveableLoad(GameSave gameSave)
+    public void LoadData(GameSave gameSave)
     {
         if (gameSave.gameObjectData.TryGetValue(ISaveableUniqueID, out GameObjectSave gameObjectSave))
         {
             GameObjectSave = gameObjectSave;
 
             // Restore data for current scene
-            ISaveableRestoreScene(SceneManager.GetActiveScene().name);
+            RestoreScene(SceneManager.GetActiveScene().name);
         }
     }
 
 
-    public void ISaveableRegister()
+    public void SaveableRegister()
     {
-        SaveLoadManager.Instance.iSaveableObjectList.Add(this);
+        SaveLoadManager.Instance.saveableObjectList.Add(this);
     }
 
-    public void ISaveableRestoreScene(string sceneName)
+    public void RestoreScene(string sceneName)
     {
         // Get sceneSave for scene - it exists since we created it in initialise
         if (GameObjectSave.sceneData.TryGetValue(sceneName, out SceneSave sceneSave))
@@ -694,16 +694,16 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
         }
     }
 
-    public GameObjectSave ISaveableSave()
+    public GameObjectSave SaveData()
     {
         // Store current scene data
-        ISaveableStoreScene(SceneManager.GetActiveScene().name);
+        StoreScene(SceneManager.GetActiveScene().name);
 
         return GameObjectSave;
     }
 
 
-    public void ISaveableStoreScene(string sceneName)
+    public void StoreScene(string sceneName)
     {
         // Remove sceneSave for scene
         GameObjectSave.sceneData.Remove(sceneName);

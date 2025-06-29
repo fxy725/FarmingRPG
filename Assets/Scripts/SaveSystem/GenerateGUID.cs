@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[ExecuteAlways] //编辑器模式下依旧运行
+[ExecuteAlways] //编辑模式与预制件编辑模式下也运行
 public class GenerateGUID : MonoBehaviour
 {
     [SerializeField]
@@ -10,12 +10,11 @@ public class GenerateGUID : MonoBehaviour
 
     private void Awake()
     {
-        if (!Application.IsPlaying(gameObject))
+        if (!Application.IsPlaying(gameObject)) //判断是否在运行模式下
         {
-            // 确保对象有独一无二的标识符
-            if (_gUID == "")
+            if (string.IsNullOrEmpty(_gUID))
             {
-                _gUID = System.Guid.NewGuid().ToString();   //微软官方提供的GUID生成工具
+                _gUID = System.Guid.NewGuid().ToString();
             }
         }
     }

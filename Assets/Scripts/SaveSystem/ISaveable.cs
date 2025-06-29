@@ -6,15 +6,12 @@ public interface ISaveable
     string ISaveableUniqueID { get; set; } // 唯一ID
     GameObjectSave GameObjectSave { get; set; } // 保存数据的GameObjectSave对象
 
-    void ISaveableRegister(); // 注册保存事件
+    void SaveableRegister(); // 注册保存事件
+    void SaveableDeregister(); // 注销保存事件
 
-    void ISaveableDeregister(); // 注销保存事件
+    GameObjectSave SaveData(); // 保存数据
+    void LoadData(GameSave gameSave); // 加载数据
 
-    GameObjectSave ISaveableSave(); // 保存数据
-
-    void ISaveableLoad(GameSave gameSave); // 加载数据
-
-    void ISaveableStoreScene(string sceneName); // 存储场景数据
-
-    void ISaveableRestoreScene(string sceneName); // 恢复场景数据
+    void StoreScene(string sceneName); // 存储场景数据
+    void RestoreScene(string sceneName); // 恢复场景数据
 }

@@ -3,32 +3,29 @@ using UnityEngine;
 
 public class AStar : MonoBehaviour
 {
-    [Header("Tiles & Tilemap References")]
-    [Header("Options")]
-    [SerializeField] private bool observeMovementPenalties = true;
+    [Header("图块与图块地图参考")] [Header("选项")] [SerializeField]
+    private bool observeMovementPenalties = true; // 是否观察移动惩罚
 
-    [Range(0, 20)]
-    [SerializeField] private int pathMovementPenalty = 0;
-    [Range(0, 20)]
-    [SerializeField] private int defaultMovementPenalty = 0;
+    [Range(0, 20)] [SerializeField] private int pathMovementPenalty = 0;
+    [Range(0, 20)] [SerializeField] private int defaultMovementPenalty = 0;
 
-    private GridNodes gridNodes;
+    private Grid grid;
     private Node startNode;
     private Node targetNode;
     private int gridWidth;
     private int gridHeight;
-    private int originX; // 原点的x坐标
-    private int originY; // 原点的y坐标
+    private int originX;
+    private int originY;
 
-    private List<Node> openNodeList;
-    private HashSet<Node> closedNodeList;
+    private List<Node> openNodeList; // 开放列表，存储待评估的节点
+    private HashSet<Node> closedNodeList; // 关闭列表，存储已评估的节点
 
-    private bool pathFound = false;
+    private bool pathFound;
 
-    /// <summary>
-    /// Builds a path for the given sceneName, from the startGridPosition to the endGridPosition, and adds movement steps to the passed in npcMovementStack.  Also returns true if path found or false if no path found.
-    /// </summary>
-    public bool BuildPath(SceneName sceneName, Vector2Int startGridPosition, Vector2Int endGridPosition, Stack<NPCMovementStep> npcMovementStepStack)
+
+    // 根据给定的场景名称为其从startGridPosition到endGridPosition构建一条路径，并将移动步骤添加到传入的npcMovementStepStack中。如果找到路径则返回true，否则返回false。
+    public bool BuildPath(SceneName sceneName, Vector2Int startGridPosition, Vector2Int endGridPosition,
+        Stack<NPCMovementStep> npcMovementStepStack)
     {
         pathFound = false;
 
@@ -41,9 +38,11 @@ public class AStar : MonoBehaviour
                 return true;
             }
         }
+
         return false;
     }
 
+    //
     private void UpdatePathOnNPCMovementStepStack(SceneName sceneName, Stack<NPCMovementStep> npcMovementStepStack)
     {
         Node nextNode = targetNode;
@@ -53,7 +52,8 @@ public class AStar : MonoBehaviour
             NPCMovementStep npcMovementStep = new NPCMovementStep();
 
             npcMovementStep.sceneName = sceneName;
-            npcMovementStep.gridCoordinate = new Vector2Int(nextNode.gridPosition.x + originX, nextNode.gridPosition.y + originY);
+            npcMovementStep.gridCoordinate =
+                new Vector2Int(nextNode.gridPosition.x + originX, nextNode.gridPosition.y + originY);
 
             npcMovementStepStack.Push(npcMovementStep);
 
@@ -119,7 +119,8 @@ public class AStar : MonoBehaviour
                 if (i == 0 && j == 0)
                     continue;
 
-                validNeighbourNode = GetValidNodeNeighbour(currentNodeGridPosition.x + i, currentNodeGridPosition.y + j);
+                validNeighbourNode =
+                    GetValidNodeNeighbour(currentNodeGridPosition.x + i, currentNodeGridPosition.y + j);
 
                 if (validNeighbourNode != null)
                 {
@@ -128,7 +129,8 @@ public class AStar : MonoBehaviour
 
                     if (observeMovementPenalties)
                     {
-                        newCostToNeighbour = currentNode.gCost + GetDistance(currentNode, validNeighbourNode) + validNeighbourNode.movementPenalty;
+                        newCostToNeighbour = currentNode.gCost + GetDistance(currentNode, validNeighbourNode) +
+                                             validNeighbourNode.movementPenalty;
                     }
                     else
                     {
@@ -167,13 +169,14 @@ public class AStar : MonoBehaviour
     private Node GetValidNodeNeighbour(int neighboutNodeXPosition, int neighbourNodeYPosition)
     {
         // If neighbour node position is beyond grid then return null
-        if (neighboutNodeXPosition >= gridWidth || neighboutNodeXPosition < 0 || neighbourNodeYPosition >= gridHeight || neighbourNodeYPosition < 0)
+        if (neighboutNodeXPosition >= gridWidth || neighboutNodeXPosition < 0 || neighbourNodeYPosition >= gridHeight ||
+            neighbourNodeYPosition < 0)
         {
             return null;
         }
 
         // if neighbour is an obstacle or neighbour is in the closed list then skip
-        Node neighbourNode = gridNodes.GetGridNode(neighboutNodeXPosition, neighbourNodeYPosition);
+        Node neighbourNode = grid.GetGridNode(neighboutNodeXPosition, neighbourNodeYPosition);
 
         if (neighbourNode.isObstacle || closedNodeList.Contains(neighbourNode))
         {
@@ -185,7 +188,8 @@ public class AStar : MonoBehaviour
         }
     }
 
-    private bool PopulateGridNodesFromGridPropertiesDictionary(SceneName sceneName, Vector2Int startGridPosition, Vector2Int endGridPosition)
+    private bool PopulateGridNodesFromGridPropertiesDictionary(SceneName sceneName, Vector2Int startGridPosition,
+        Vector2Int endGridPosition)
     {
         // Get grid properties dictionary for the scene
         SceneSave sceneSave;
@@ -196,10 +200,11 @@ public class AStar : MonoBehaviour
             if (sceneSave.gridPropertyDetailsDictionary != null)
             {
                 // Get grid height and width
-                if (GridPropertiesManager.Instance.GetGridDimensions(sceneName, out Vector2Int gridDimensions, out Vector2Int gridOrigin))
+                if (GridPropertiesManager.Instance.GetGridDimensions(sceneName, out Vector2Int gridDimensions,
+                        out Vector2Int gridOrigin))
                 {
                     // Create nodes grid based on grid properties dictionary
-                    gridNodes = new GridNodes(gridDimensions.x, gridDimensions.y);
+                    grid = new Grid(gridDimensions.x, gridDimensions.y);
                     gridWidth = gridDimensions.x;
                     gridHeight = gridDimensions.y;
                     originX = gridOrigin.x;
@@ -217,34 +222,36 @@ public class AStar : MonoBehaviour
                 }
 
                 // Populate start node
-                startNode = gridNodes.GetGridNode(startGridPosition.x - gridOrigin.x, startGridPosition.y - gridOrigin.y);
+                startNode = grid.GetGridNode(startGridPosition.x - gridOrigin.x, startGridPosition.y - gridOrigin.y);
 
                 // Populate target node
-                targetNode = gridNodes.GetGridNode(endGridPosition.x - gridOrigin.x, endGridPosition.y - gridOrigin.y);
+                targetNode = grid.GetGridNode(endGridPosition.x - gridOrigin.x, endGridPosition.y - gridOrigin.y);
 
                 // populate obstacle and path info for grid
                 for (int x = 0; x < gridDimensions.x; x++)
                 {
                     for (int y = 0; y < gridDimensions.y; y++)
                     {
-                        GridPropertyDetails gridPropertyDetails = GridPropertiesManager.Instance.GetGridPropertyDetails(x + gridOrigin.x, y + gridOrigin.y, sceneSave.gridPropertyDetailsDictionary);
+                        GridPropertyDetails gridPropertyDetails =
+                            GridPropertiesManager.Instance.GetGridPropertyDetails(x + gridOrigin.x, y + gridOrigin.y,
+                                sceneSave.gridPropertyDetailsDictionary);
 
                         if (gridPropertyDetails != null)
                         {
                             // If NPC obstacle
                             if (gridPropertyDetails.isNPCObstacle == true)
                             {
-                                Node node = gridNodes.GetGridNode(x, y);
+                                Node node = grid.GetGridNode(x, y);
                                 node.isObstacle = true;
                             }
                             else if (gridPropertyDetails.isPath == true)
                             {
-                                Node node = gridNodes.GetGridNode(x, y);
+                                Node node = grid.GetGridNode(x, y);
                                 node.movementPenalty = pathMovementPenalty;
                             }
                             else
                             {
-                                Node node = gridNodes.GetGridNode(x, y);
+                                Node node = grid.GetGridNode(x, y);
                                 node.movementPenalty = defaultMovementPenalty;
                             }
                         }

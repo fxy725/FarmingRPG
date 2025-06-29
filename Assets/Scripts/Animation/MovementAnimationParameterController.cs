@@ -1,11 +1,11 @@
 ﻿
 using UnityEngine;
 
-public class MovementAnimationParameterControl : MonoBehaviour
+public class MovementAnimationParameterController : MonoBehaviour
 {
     private Animator animator;
 
-    // Use this for initialisation
+
 
     private void Awake()
     {
@@ -21,6 +21,8 @@ public class MovementAnimationParameterControl : MonoBehaviour
     {
         EventHandler.MovementEvent -= SetAnimationParameters;
     }
+
+
 
     private void SetAnimationParameters(float xInput, float yInput, bool isWalking, bool isRunning, bool isIdle, bool isCarrying, ToolEffect toolEffect,
         bool isUsingToolRight, bool isUsingToolLeft, bool isUsingToolUp, bool isUsingToolDown,

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Playground : MonoBehaviour
+public class CallBack : MonoBehaviour
 {
     private void Awake()
     {

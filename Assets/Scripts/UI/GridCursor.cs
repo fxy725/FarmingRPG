@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class GridCursor : MonoBehaviour
 {
     private Canvas canvas;
-    private Grid grid;
+    private UnityEngine.Grid grid;
     private Camera mainCamera;
     [SerializeField] private Image cursorImage = null;
     [SerializeField] private RectTransform cursorRectTransform = null;
@@ -77,7 +77,7 @@ public class GridCursor : MonoBehaviour
 
     private void SceneLoaded()
     {
-        grid = GameObject.FindFirstObjectByType<Grid>();
+        grid = GameObject.FindFirstObjectByType<UnityEngine.Grid>();
     }
 
     private void SetCursorValidity(Vector3Int cursorGridPosition, Vector3Int playerGridPosition)

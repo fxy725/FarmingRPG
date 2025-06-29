@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider2D))]
 public class SceneTeleport : MonoBehaviour
 {
-    [SerializeField] private SceneName sceneNameGoto = SceneName.Scene1_Farm;
+    [SerializeField] private SceneName sceneNameGoto = SceneName.scene1_Farm;
     [SerializeField] private Vector3 scenePositionGoto = new Vector3();
 
 
@@ -17,16 +17,19 @@ public class SceneTeleport : MonoBehaviour
         {
             //  Calculate players new position
 
-            float xPosition = Mathf.Approximately(scenePositionGoto.x, 0f) ? player.transform.position.x : scenePositionGoto.x;
+            float xPosition = Mathf.Approximately(scenePositionGoto.x, 0f)
+                ? player.transform.position.x
+                : scenePositionGoto.x;
 
-            float yPosition = Mathf.Approximately(scenePositionGoto.y, 0f) ? player.transform.position.y : scenePositionGoto.y;
+            float yPosition = Mathf.Approximately(scenePositionGoto.y, 0f)
+                ? player.transform.position.y
+                : scenePositionGoto.y;
 
             float zPosition = 0f;
 
             // Teleport to new scene
-            SceneControllerManager.Instance.FadeAndLoadScene(sceneNameGoto.ToString(), new Vector3(xPosition, yPosition, zPosition));
-
+            SceneControllerManager.Instance.FadeAndLoadScene(sceneNameGoto.ToString(),
+                new Vector3(xPosition, yPosition, zPosition));
         }
-
     }
 }

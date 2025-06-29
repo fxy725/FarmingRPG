@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(AStar))]
 public class NPCManager : SingletonMonobehaviour<NPCManager>
 {
-    [SerializeField] private SO_SceneRouteList so_SceneRouteList = null;
+    [SerializeField] private SO_SceneRouteList so_SceneRouteList;
     private Dictionary<string, SceneRoute> sceneRouteDictionary;
 
     [HideInInspector]

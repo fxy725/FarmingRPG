@@ -3,15 +3,16 @@ using UnityEngine.UI;
 
 public class UIManager : SingletonMonobehaviour<UIManager>
 {
+    [SerializeField] private UIInventoryBar uiInventoryBar;
+    [SerializeField] private PauseMenuInventoryManagement pauseMenuInventoryManagement;
+    [SerializeField] private GameObject pauseMenu;
+    [SerializeField] private GameObject[] menuTabs;
+    [SerializeField] private Button[] menuButtons;
 
-    private bool _pauseMenuOn = false;
-    [SerializeField] private UIInventoryBar uiInventoryBar = null;
-    [SerializeField] private PauseMenuInventoryManagement pauseMenuInventoryManagement = null;
-    [SerializeField] private GameObject pauseMenu = null;
-    [SerializeField] private GameObject[] menuTabs = null;
-    [SerializeField] private Button[] menuButtons = null;
-
+    private bool _pauseMenuOn;
     public bool PauseMenuOn { get => _pauseMenuOn; set => _pauseMenuOn = value; }
+
+
 
     protected override void Awake()
     {
@@ -20,16 +21,16 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         pauseMenu.SetActive(false);
     }
 
-    // Update is called once per frame
     private void Update()
     {
         PauseMenu();
     }
 
+
+
     private void PauseMenu()
     {
-        // Toggle pause menu if escape is pressed
-
+        // 按下ESC键时，暂停菜单
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (PauseMenuOn)
@@ -45,10 +46,10 @@ public class UIManager : SingletonMonobehaviour<UIManager>
 
     private void EnablePauseMenu()
     {
-        // Destroy any currently dragged items
+        // 销毁当前拖拽的物品
         uiInventoryBar.DestroyCurrentlyDraggedItems();
 
-        // Clear currently selected items
+        // 清空当前选中的物品
         uiInventoryBar.ClearCurrentlySelectedItems();
 
         PauseMenuOn = true;
@@ -56,16 +57,16 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         Time.timeScale = 0;
         pauseMenu.SetActive(true);
 
-        // Trigger garbage collector
+        // 触发垃圾回收
         System.GC.Collect();
 
-        // Highlight selected button
+        // 高亮选中的按钮
         HighlightButtonForSelectedTab();
     }
 
     public void DisablePauseMenu()
     {
-        // Destroy any currently dragged items
+        // 销毁当前拖拽的物品
         pauseMenuInventoryManagement.DestroyCurrentlyDraggedItems();
 
         PauseMenuOn = false;
@@ -97,7 +98,6 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         colors.normalColor = colors.pressedColor;
 
         button.colors = colors;
-
     }
 
     private void SetButtonColorToInactive(Button button)
@@ -121,13 +121,11 @@ public class UIManager : SingletonMonobehaviour<UIManager>
             else
             {
                 menuTabs[i].SetActive(true);
-
             }
         }
-
         HighlightButtonForSelectedTab();
-
     }
+
     public void QuitGame()
     {
         Application.Quit();

@@ -15,7 +15,7 @@ public class colorSwap
 }
 
 
-public class ApplyCharacterCustomisation : MonoBehaviour
+public class ApplyCharacterCustomization : MonoBehaviour
 {
     // Input Textures
     [Header("Base Textures")]

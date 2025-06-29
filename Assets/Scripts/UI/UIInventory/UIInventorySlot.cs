@@ -237,7 +237,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             }
 
             // Enable player input
-            Player.Instance.EnablePlayerInput();
+            Player.Instance.PlayerInputIsDisabled = false;
         }
     }
 

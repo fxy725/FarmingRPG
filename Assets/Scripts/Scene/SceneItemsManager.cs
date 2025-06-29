@@ -66,35 +66,35 @@ public class SceneItemsManager : SingletonMonobehaviour<SceneItemsManager>, ISav
 
     private void OnDisable()
     {
-        ISaveableDeregister();
+        SaveableDeregister();
         EventHandler.AfterSceneLoadEvent -= AfterSceneLoad;
     }
 
     private void OnEnable()
     {
-        ISaveableRegister();
+        SaveableRegister();
         EventHandler.AfterSceneLoadEvent += AfterSceneLoad;
     }
 
-    public void ISaveableDeregister()
+    public void SaveableDeregister()
     {
-        SaveLoadManager.Instance.iSaveableObjectList.Remove(this);
+        SaveLoadManager.Instance.saveableObjectList.Remove(this);
     }
 
-    public void ISaveableLoad(GameSave gameSave)
+    public void LoadData(GameSave gameSave)
     {
         if (gameSave.gameObjectData.TryGetValue(ISaveableUniqueID, out GameObjectSave gameObjectSave))
         {
             GameObjectSave = gameObjectSave;
 
             // Restore data for current scene
-            ISaveableRestoreScene(SceneManager.GetActiveScene().name);
+            RestoreScene(SceneManager.GetActiveScene().name);
         }
     }
 
 
 
-    public void ISaveableRestoreScene(string sceneName)
+    public void RestoreScene(string sceneName)
     {
         if (GameObjectSave.sceneData.TryGetValue(sceneName, out SceneSave sceneSave))
         {
@@ -109,22 +109,22 @@ public class SceneItemsManager : SingletonMonobehaviour<SceneItemsManager>, ISav
         }
     }
 
-    public void ISaveableRegister()
+    public void SaveableRegister()
     {
-        SaveLoadManager.Instance.iSaveableObjectList.Add(this);
+        SaveLoadManager.Instance.saveableObjectList.Add(this);
     }
 
-    public GameObjectSave ISaveableSave()
+    public GameObjectSave SaveData()
     {
         // Store current scene data
-        ISaveableStoreScene(SceneManager.GetActiveScene().name);
+        StoreScene(SceneManager.GetActiveScene().name);
 
         return GameObjectSave;
     }
 
 
 
-    public void ISaveableStoreScene(string sceneName)
+    public void StoreScene(string sceneName)
     {
         // Remove old scene save for gameObject if exists
         GameObjectSave.sceneData.Remove(sceneName);
@@ -138,7 +138,7 @@ public class SceneItemsManager : SingletonMonobehaviour<SceneItemsManager>, ISav
         {
             SceneItem sceneItem = new SceneItem();
             sceneItem.itemCode = item.ItemCode;
-            sceneItem.position = new Vector3Serializable(item.transform.position.x, item.transform.position.y, item.transform.position.z);
+            sceneItem.position = new Vector3(item.transform.position.x, item.transform.position.y, item.transform.position.z);
             sceneItem.itemName = item.name;
 
             // Add scene item to list

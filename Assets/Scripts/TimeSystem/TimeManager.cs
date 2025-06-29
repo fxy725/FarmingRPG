@@ -36,7 +36,7 @@ public class TimeManager : SingletonMonobehaviour<TimeManager>, ISaveable
 
     private void OnEnable()
     {
-        ISaveableRegister();
+        SaveableRegister();
 
         EventHandler.BeforeSceneUnloadEvent += BeforeSceneUnloadFadeOut;
         EventHandler.AfterSceneLoadEvent += AfterSceneLoadFadeIn;
@@ -44,7 +44,7 @@ public class TimeManager : SingletonMonobehaviour<TimeManager>, ISaveable
 
     private void OnDisable()
     {
-        ISaveableDeregister();
+        SaveableDeregister();
 
         EventHandler.BeforeSceneUnloadEvent -= BeforeSceneUnloadFadeOut;
         EventHandler.AfterSceneLoadEvent -= AfterSceneLoadFadeIn;
@@ -220,17 +220,17 @@ public class TimeManager : SingletonMonobehaviour<TimeManager>, ISaveable
 
 
     // 实现ISaveable接口的ISaveableRegister方法,ISaveableDeregister方法,ISaveableSave方法,ISaveableLoad方法,ISaveableStoreScene方法,ISaveableRestoreScene方法
-    public void ISaveableRegister()
+    public void SaveableRegister()
     {
-        SaveLoadManager.Instance.iSaveableObjectList.Add(this);
+        SaveLoadManager.Instance.saveableObjectList.Add(this);
     }
 
-    public void ISaveableDeregister()
+    public void SaveableDeregister()
     {
-        SaveLoadManager.Instance.iSaveableObjectList.Remove(this);
+        SaveLoadManager.Instance.saveableObjectList.Remove(this);
     }
 
-    public GameObjectSave ISaveableSave()
+    public GameObjectSave SaveData()
     {
         // Delete existing scene save if exists
         GameObjectSave.sceneData.Remove(Settings.PersistentScene);
@@ -261,7 +261,7 @@ public class TimeManager : SingletonMonobehaviour<TimeManager>, ISaveable
         return GameObjectSave;
     }
 
-    public void ISaveableLoad(GameSave gameSave)
+    public void LoadData(GameSave gameSave)
     {
         // Get saved gameobject from gameSave data
         if (gameSave.gameObjectData.TryGetValue(ISaveableUniqueID, out GameObjectSave gameObjectSave))
@@ -313,12 +313,12 @@ public class TimeManager : SingletonMonobehaviour<TimeManager>, ISaveable
             }
         }
     }
-    public void ISaveableStoreScene(string sceneName)
+    public void StoreScene(string sceneName)
     {
         // 无需实现因为时间管理器在持久场景中运行
     }
 
-    public void ISaveableRestoreScene(string sceneName)
+    public void RestoreScene(string sceneName)
     {
         // 无需实现因为时间管理器在持久场景中运行
     }
