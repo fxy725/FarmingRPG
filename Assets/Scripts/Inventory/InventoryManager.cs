@@ -48,13 +48,13 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
 
     private void OnDisable()
     {
-        ISaveableDeregister();
+        SaveableDeregister();
     }
 
 
     private void OnEnable()
     {
-        ISaveableRegister();
+        SaveableRegister();
     }
 
     private void Start()
@@ -314,17 +314,17 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
         return itemTypeDescription;
     }
 
-    public void ISaveableRegister()
+    public void SaveableRegister()
     {
-        SaveLoadManager.Instance.iSaveableObjectList.Add(this);
+        SaveLoadManager.Instance.saveableObjectList.Add(this);
     }
 
-    public void ISaveableDeregister()
+    public void SaveableDeregister()
     {
-        SaveLoadManager.Instance.iSaveableObjectList.Remove(this);
+        SaveLoadManager.Instance.saveableObjectList.Remove(this);
     }
 
-    public GameObjectSave ISaveableSave()
+    public GameObjectSave SaveData()
     {
         // Create new scene save
         SceneSave sceneSave = new SceneSave();
@@ -346,7 +346,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
     }
 
 
-    public void ISaveableLoad(GameSave gameSave)
+    public void LoadData(GameSave gameSave)
     {
         if (gameSave.gameObjectData.TryGetValue(ISaveableUniqueID, out GameObjectSave gameObjectSave))
         {
@@ -383,12 +383,12 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
         }
     }
 
-    public void ISaveableStoreScene(string sceneName)
+    public void StoreScene(string sceneName)
     {
         // Nothing required her since the inventory manager is on a persistent scene;
     }
 
-    public void ISaveableRestoreScene(string sceneName)
+    public void RestoreScene(string sceneName)
     {
         // Nothing required here since the inventory manager is on a persistent scene;
     }

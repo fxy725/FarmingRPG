@@ -1,12 +1,11 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
 
 public static class Settings
 {
-    // 持久化场景的引用
+    // 持久化场景的标识
     public const string PersistentScene = "PersistentScene";
 
-    // Obscuring Item Fading - ObscuringItemFader
+    // 遮挡物淡入淡出 - ObscuringItemFader
     public const float fadeInSeconds = 0.25f;
     public const float fadeOutSeconds = 0.35f;
     public const float targetAlpha = 0.45f;
@@ -16,15 +15,19 @@ public static class Settings
     public const float gridCellDiagonalSize = 1.41f; // Unity单元中心的对角距离
     public const int maxGridWidth = 99999;
     public const int maxGridHeight = 99999;
+
+    // 光标大小
     public static Vector2 cursorSize = Vector2.one;
 
-    // 玩家
+    // 玩家中心Y偏移量
     public static float playerCentreYOffset = 0.875f;
 
 
-    // 玩家移动
+    // 玩家移动速度
     public const float runningSpeed = 5.333f;
     public const float walkingSpeed = 2.666f;
+
+    // 动画暂停时间
     public static float useToolAnimationPause = 0.25f;
     public static float liftToolAnimationPause = 0.4f;
     public static float pickAnimationPause = 1f;

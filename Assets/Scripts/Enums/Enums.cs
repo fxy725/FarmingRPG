@@ -44,7 +44,8 @@ public enum CharacterPartAnimator
     hat,
     count
 }
-public enum PartVariantColour
+
+public enum PartVariantColor
 {
     none,
     count
@@ -61,6 +62,7 @@ public enum PartVariantType
     wateringCan,
     count
 }
+
 public enum GridBoolProperty
 {
     diggable,
@@ -80,9 +82,9 @@ public enum InventoryLocation
 
 public enum SceneName
 {
-    Scene1_Farm,
-    Scene2_Field,
-    Scene3_Cabin
+    scene1_Farm,
+    scene2_Field,
+    scene3_Cabin
 }
 
 public enum Season

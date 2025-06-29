@@ -3,13 +3,14 @@ using UnityEngine;
 
 public class VFXManager : SingletonMonobehaviour<VFXManager>
 {
-
     private WaitForSeconds twoSeconds;
-    [SerializeField] private GameObject deciduousLeavesFallingPrefab = null;
-    [SerializeField] private GameObject pineConesFallingPrefab = null;
-    [SerializeField] private GameObject choppingTreeTrunkPrefab = null;
-    [SerializeField] private GameObject breakingStonePrefab = null;
-    [SerializeField] private GameObject reapingPrefab = null;
+
+    [SerializeField] private GameObject deciduousLeavesFallingPrefab;
+    [SerializeField] private GameObject pineConesFallingPrefab;
+    [SerializeField] private GameObject choppingTreeTrunkPrefab;
+    [SerializeField] private GameObject breakingStonePrefab;
+    [SerializeField] private GameObject reapingPrefab;
+
 
 
     protected override void Awake()
@@ -20,15 +21,17 @@ public class VFXManager : SingletonMonobehaviour<VFXManager>
 
     }
 
-    private void OnDisable()
-    {
-        EventHandler.HarvestActionEffectEvent -= displayHarvestActionEffect;
-    }
-
     private void OnEnable()
     {
-        EventHandler.HarvestActionEffectEvent += displayHarvestActionEffect;
+        EventHandler.HarvestActionEffectEvent += DisplayHarvestActionEffect;
     }
+
+    private void OnDisable()
+    {
+        EventHandler.HarvestActionEffectEvent -= DisplayHarvestActionEffect;
+    }
+
+
 
     private IEnumerator DisableHarvestActionEffect(GameObject effectGameObject, WaitForSeconds secondsToWait)
     {
@@ -36,37 +39,37 @@ public class VFXManager : SingletonMonobehaviour<VFXManager>
         effectGameObject.SetActive(false);
     }
 
-    private void displayHarvestActionEffect(Vector3 effectPosition, HarvestActionEffect harvestActionEffect)
+    private void DisplayHarvestActionEffect(Vector3 effectPosition, HarvestActionEffect harvestActionEffect)
     {
         switch (harvestActionEffect)
         {
 
-            case HarvestActionEffect.deciduousLeavesFalling:
+            case HarvestActionEffect.deciduousLeavesFalling: //落叶掉落
                 GameObject deciduousLeaveFalling = PoolManager.Instance.ReuseObject(deciduousLeavesFallingPrefab, effectPosition, Quaternion.identity);
                 deciduousLeaveFalling.SetActive(true);
                 StartCoroutine(DisableHarvestActionEffect(deciduousLeaveFalling, twoSeconds));
                 break;
 
-            case HarvestActionEffect.pineConesFalling:
+            case HarvestActionEffect.pineConesFalling: //松果掉落
                 GameObject pineConesFalling = PoolManager.Instance.ReuseObject(pineConesFallingPrefab, effectPosition, Quaternion.identity);
                 pineConesFalling.SetActive(true);
                 StartCoroutine(DisableHarvestActionEffect(pineConesFalling, twoSeconds));
                 break;
 
-            case HarvestActionEffect.choppingTreeTrunk:
+            case HarvestActionEffect.choppingTreeTrunk: //砍树
                 GameObject choppingTreeTrunk = PoolManager.Instance.ReuseObject(choppingTreeTrunkPrefab, effectPosition, Quaternion.identity);
                 choppingTreeTrunk.SetActive(true);
                 StartCoroutine(DisableHarvestActionEffect(choppingTreeTrunk, twoSeconds));
                 break;
 
-            case HarvestActionEffect.breakingStone:
+            case HarvestActionEffect.breakingStone: //破坏石头
                 GameObject breakingStone = PoolManager.Instance.ReuseObject(breakingStonePrefab, effectPosition, Quaternion.identity);
                 breakingStone.SetActive(true);
                 StartCoroutine(DisableHarvestActionEffect(breakingStone, twoSeconds));
                 break;
 
 
-            case HarvestActionEffect.reaping:
+            case HarvestActionEffect.reaping: //收割
                 GameObject reaping = PoolManager.Instance.ReuseObject(reapingPrefab, effectPosition, Quaternion.identity);
                 reaping.SetActive(true);
                 StartCoroutine(DisableHarvestActionEffect(reaping, twoSeconds));
@@ -80,6 +83,4 @@ public class VFXManager : SingletonMonobehaviour<VFXManager>
                 break;
         }
     }
-
-
 }

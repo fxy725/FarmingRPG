@@ -33,7 +33,7 @@ public class NPCMovement : MonoBehaviour
     [Header("NPC Animation")]
     [SerializeField] private AnimationClip blankAnimation = null;
 
-    private Grid grid;
+    private UnityEngine.Grid grid;
     private Rigidbody2D rigidBody2D;
     private BoxCollider2D boxCollider2D;
     private WaitForFixedUpdate waitForFixedUpdate;
@@ -245,7 +245,7 @@ public class NPCMovement : MonoBehaviour
 
     private void AfterSceneLoad()
     {
-        grid = GameObject.FindFirstObjectByType<Grid>();
+        grid = GameObject.FindFirstObjectByType<UnityEngine.Grid>();
 
         if (!npcInitialised)
         {
@@ -360,7 +360,7 @@ public class NPCMovement : MonoBehaviour
             float timeToMove = (float)(npcMovementStepTime.TotalSeconds - gameTime.TotalSeconds);
 
             // Calculate speed
-            float npcCalculatedSpeed = Mathf.Max(npcMinSpeed,Vector3.Distance(transform.position, npcNextWorldPosition) / timeToMove / Settings.secondsPerGameSecond);
+            float npcCalculatedSpeed = Mathf.Max(npcMinSpeed, Vector3.Distance(transform.position, npcNextWorldPosition) / timeToMove / Settings.secondsPerGameSecond);
 
             //// If speed is at least npc min speed and less than npc max speed  then process, otherwise skip and move NPC immediately to position
             if (npcCalculatedSpeed <= npcMaxSpeed)

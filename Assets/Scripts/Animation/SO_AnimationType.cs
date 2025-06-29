@@ -10,7 +10,7 @@ public class SO_AnimationType : ScriptableObject
     public AnimationClip animationClip; // 存放对anim资源的引用
     public AnimationName animationName; // 枚举类型字段，表示动画名称
     public CharacterPartAnimator characterPart; // 枚举类型字段，表示要参与动画的角色部位
-    public PartVariantColour partVariantColour; // 枚举类型字段，表示角色部件的颜色
+    public PartVariantColor partVariantColour; // 枚举类型字段，表示角色部件的颜色
     public PartVariantType partVariantType; // 枚举类型字段，表示角色部件的类型
 }
 

@@ -6,64 +6,74 @@ using UnityEngine.SceneManagement;
 
 public class Player : SingletonMonobehaviour<Player>, ISaveable
 {
-    private WaitForSeconds afterLiftToolAnimationPause; // 在LiftTool动画后暂停的时间
-    private WaitForSeconds afterUseToolAnimationPause; // 在UseTool动画后暂停的时间
-    private WaitForSeconds afterPickAnimationPause; // 在Pick动画后暂停的时间
+    // 动画暂停时间
+    private WaitForSeconds liftToolAnimationPause; // 举起工具动画的暂停时间
+    private WaitForSeconds afterLiftToolAnimationPause; // 在举起工具动画后暂停的时间
+
+    private WaitForSeconds useToolAnimationPause; // 使用工具动画的暂停时间
+    private WaitForSeconds afterUseToolAnimationPause; // 在使用工具动画后暂停的时间
+
+    private WaitForSeconds pickAnimationPause; // 拾取动画的暂停时间
+    private WaitForSeconds afterPickAnimationPause; // 在拾取动画后暂停的时间
+
+
+    // 组件引用
     private AnimationOverrides animationOverrides;
+    private Camera mainCamera;
+    private Rigidbody2D rigidBody2D;
     private GridCursor gridCursor;
     private Cursor cursor;
 
-    // Movement Parameters
-    private float xInput;
+    [Tooltip("应在预制件中填充装备物品的SpriteRenderer组件")]
+    [SerializeField] private SpriteRenderer equippedItemSpriteRenderer;
 
+
+    // 移动参数
+    private float xInput;
     private float yInput;
-    private bool isCarrying = false;
+    private float movementSpeed;
+    private Direction playerDirection;
+
+
+    // 状态参数
+    private bool isCarrying;
     private bool isIdle;
+    private bool isRunning;
+    private bool isWalking;
+
     private bool isLiftingToolDown;
     private bool isLiftingToolLeft;
     private bool isLiftingToolRight;
     private bool isLiftingToolUp;
-    private bool isRunning;
+
     private bool isUsingToolDown;
     private bool isUsingToolLeft;
     private bool isUsingToolRight;
     private bool isUsingToolUp;
+
     private bool isSwingingToolDown;
     private bool isSwingingToolLeft;
     private bool isSwingingToolRight;
     private bool isSwingingToolUp;
-    private bool isWalking;
+
     private bool isPickingUp;
     private bool isPickingDown;
     private bool isPickingLeft;
     private bool isPickingRight;
-    private WaitForSeconds liftToolAnimationPause;
-    private WaitForSeconds pickAnimationPause;
 
-    private Camera mainCamera;
-    private bool playerToolUseDisabled = false;
-
-    private ToolEffect toolEffect = ToolEffect.none;
-
-    private Rigidbody2D rigidBody2D;
-    private WaitForSeconds useToolAnimationPause;
-
-    private Direction playerDirection;
-
-    private List<CharacterPartProperties> characterAttributeCustomisationList;
-    private float movementSpeed;
-
-    [Tooltip("Should be populated in the prefab with the equipped item sprite renderer")]
-    [SerializeField] private SpriteRenderer equippedItemSpriteRenderer = null;
-
-    // Player attributes that can be swapped
-    private CharacterPartProperties armsCharacterAttribute;
-
-    private CharacterPartProperties toolCharacterAttribute;
-
-    private bool _playerInputIsDisabled = false;
+    private bool playerToolUseDisabled;
+    private bool _playerInputIsDisabled;
     public bool PlayerInputIsDisabled { get => _playerInputIsDisabled; set => _playerInputIsDisabled = value; }
 
+
+    // 角色部件
+    private List<CharacterPart> characterAttributeCustomizationList;
+
+    private CharacterPart armsPart;
+    private CharacterPart toolPart;
+
+
+    // 保存数据
     private string _iSaveableUniqueID;
     public string ISaveableUniqueID { get { return _iSaveableUniqueID; } set { _iSaveableUniqueID = value; } }
 
@@ -71,46 +81,40 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
     public GameObjectSave GameObjectSave { get { return _gameObjectSave; } set { _gameObjectSave = value; } }
 
 
+    // 其他
+    private ToolEffect toolEffect;
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     protected override void Awake()
     {
         base.Awake();
 
+
+        // 初始化字段
         rigidBody2D = GetComponent<Rigidbody2D>();
 
         animationOverrides = GetComponentInChildren<AnimationOverrides>();
 
-        // Initialise swappable character attributes
-        armsCharacterAttribute = new CharacterPartProperties(CharacterPartAnimator.arms, PartVariantColour.none, PartVariantType.none);
-        toolCharacterAttribute = new CharacterPartProperties(CharacterPartAnimator.tool, PartVariantColour.none, PartVariantType.hoe);
-
-        // Initialise character attribute list
-        characterAttributeCustomisationList = new List<CharacterPartProperties>();
-
-        // Get unique ID for gameobject and create save data object
-        ISaveableUniqueID = GetComponent<GenerateGUID>().GUID;
-
-        GameObjectSave = new GameObjectSave();
-
-        // get reference to main camera
         mainCamera = Camera.main;
-    }
 
-    private void OnDisable()
-    {
-        ISaveableDeregister();
+        armsPart = new CharacterPart(CharacterPartAnimator.arms, PartVariantColor.none, PartVariantType.none);
+        toolPart = new CharacterPart(CharacterPartAnimator.tool, PartVariantColor.none, PartVariantType.hoe);
+        characterAttributeCustomizationList = new List<CharacterPart>();
 
-        EventHandler.BeforeSceneUnloadFadeOutEvent -= DisablePlayerInputAndResetMovement;
-        EventHandler.AfterSceneLoadFadeInEvent -= EnablePlayerInput;
+        ISaveableUniqueID = GetComponent<GenerateGUID>().GUID;
+        GameObjectSave = new GameObjectSave();
     }
 
 
     private void OnEnable()
     {
-        ISaveableRegister();
+        SaveableRegister();
 
         EventHandler.BeforeSceneUnloadFadeOutEvent += DisablePlayerInputAndResetMovement;
-        EventHandler.AfterSceneLoadFadeInEvent += EnablePlayerInput;
+        EventHandler.AfterSceneLoadFadeInEvent += () => PlayerInputIsDisabled = false;
     }
 
 
@@ -126,10 +130,15 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         afterPickAnimationPause = new WaitForSeconds(Settings.afterPickAnimationPause);
     }
 
+
+    private void FixedUpdate()
+    {
+        PlayerMovement();
+    }
+
+
     private void Update()
     {
-        #region Player Input
-
         if (!PlayerInputIsDisabled)
         {
             ResetAnimationTriggers();
@@ -150,14 +159,20 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
                 isSwingingToolRight, isSwingingToolLeft, isSwingingToolUp, isSwingingToolDown,
                 false, false, false, false);
         }
-
-        #endregion Player Input
     }
 
-    private void FixedUpdate()
+
+    private void OnDisable()
     {
-        PlayerMovement();
+        SaveableDeregister();
+
+        EventHandler.BeforeSceneUnloadFadeOutEvent -= DisablePlayerInputAndResetMovement;
+        EventHandler.AfterSceneLoadFadeInEvent -= () => PlayerInputIsDisabled = false;
     }
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     private void PlayerMovement()
     {
@@ -166,26 +181,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         rigidBody2D.MovePosition(rigidBody2D.position + move);
     }
 
-    private void ResetAnimationTriggers()
-    {
-        isPickingRight = false;
-        isPickingLeft = false;
-        isPickingUp = false;
-        isPickingDown = false;
-        isUsingToolRight = false;
-        isUsingToolLeft = false;
-        isUsingToolUp = false;
-        isUsingToolDown = false;
-        isLiftingToolRight = false;
-        isLiftingToolLeft = false;
-        isLiftingToolUp = false;
-        isLiftingToolDown = false;
-        isSwingingToolRight = false;
-        isSwingingToolLeft = false;
-        isSwingingToolUp = false;
-        isSwingingToolDown = false;
-        toolEffect = ToolEffect.none;
-    }
+
 
     private void PlayerMovementInput()
     {
@@ -229,6 +225,24 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
             isWalking = false;
             isIdle = true;
         }
+    }
+
+
+    // 测试输入的临时例程
+    private void PlayerTestInput()
+    {
+        // Trigger Advance Time
+        if (Input.GetKey(KeyCode.T))
+        {
+            TimeManager.Instance.TestAdvanceGameMinute();
+        }
+
+        // Trigger Advance Day
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            TimeManager.Instance.TestAdvanceGameDay();
+        }
+
     }
 
     private void PlayerWalkInput()
@@ -373,6 +387,37 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         }
     }
 
+    private void SetPlayerDirection(Direction playerDirection)
+    {
+        switch (playerDirection)
+        {
+            case Direction.up:
+                // set idle up trigger
+                EventHandler.CallMovementEvent(0f, 0f, false, false, false, false, ToolEffect.none, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false);
+
+                break;
+
+            case Direction.down:
+                // set idle down trigger
+                EventHandler.CallMovementEvent(0f, 0f, false, false, false, false, ToolEffect.none, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false);
+                break;
+
+            case Direction.left:
+                EventHandler.CallMovementEvent(0f, 0f, false, false, false, false, ToolEffect.none, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false);
+                break;
+
+            case Direction.right:
+                EventHandler.CallMovementEvent(0f, 0f, false, false, false, false, ToolEffect.none, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true);
+                break;
+
+            default:
+                // set idle down trigger
+                EventHandler.CallMovementEvent(0f, 0f, false, false, false, false, ToolEffect.none, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false);
+
+                break;
+        }
+    }
+
     private void ProcessPlayerClickInputSeed(GridPropertyDetails gridPropertyDetails, ItemDetails itemDetails)
     {
         if (itemDetails.canBeDropped && gridCursor.CursorPositionIsValid && gridPropertyDetails.daysSinceDug > -1 && gridPropertyDetails.seedItemCode == -1)
@@ -383,28 +428,6 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         {
             EventHandler.CallDropSelectedItemEvent();
         }
-    }
-
-    private void PlantSeedAtCursor(GridPropertyDetails gridPropertyDetails, ItemDetails itemDetails)
-    {
-        // Process if we have cropdetails for the seed
-        if (GridPropertiesManager.Instance.GetCropDetails(itemDetails.itemCode) != null)
-        {
-            // Update grid properties with seed details
-            gridPropertyDetails.seedItemCode = itemDetails.itemCode;
-            gridPropertyDetails.growthDays = 0;
-
-            // Display planted crop at grid property details
-            GridPropertiesManager.Instance.DisplayPlantedCrop(gridPropertyDetails);
-
-            // Remove item from inventory
-            EventHandler.CallRemoveSelectedItemFromInventoryEvent();
-
-            // Make planting sound
-            AudioManager.Instance.PlaySound(SoundName.effectPlantingSound);
-
-        }
-
     }
 
 
@@ -472,25 +495,47 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         }
     }
 
+    private void PlantSeedAtCursor(GridPropertyDetails gridPropertyDetails, ItemDetails itemDetails)
+    {
+        // Process if we have cropdetails for the seed
+        if (GridPropertiesManager.Instance.GetCropDetails(itemDetails.itemCode) != null)
+        {
+            // Update grid properties with seed details
+            gridPropertyDetails.seedItemCode = itemDetails.itemCode;
+            gridPropertyDetails.growthDays = 0;
+
+            // Display planted crop at grid property details
+            GridPropertiesManager.Instance.DisplayPlantedCrop(gridPropertyDetails);
+
+            // Remove item from inventory
+            EventHandler.CallRemoveSelectedItemFromInventoryEvent();
+
+            // Make planting sound
+            AudioManager.Instance.PlaySound(SoundName.effectPlantingSound);
+
+        }
+
+    }
+
     private void HoeGroundAtCursor(GridPropertyDetails gridPropertyDetails, Vector3Int playerDirection)
     {
         //Play sound
         AudioManager.Instance.PlaySound(SoundName.effectHoe);
 
         // Trigger animation
-        StartCoroutine(HoeGroundAtCursorRoutine(playerDirection, gridPropertyDetails));
+        StartCoroutine(HoeGroundAtCursorCoroutine(playerDirection, gridPropertyDetails));
     }
 
-    private IEnumerator HoeGroundAtCursorRoutine(Vector3Int playerDirection, GridPropertyDetails gridPropertyDetails)
+    private IEnumerator HoeGroundAtCursorCoroutine(Vector3Int playerDirection, GridPropertyDetails gridPropertyDetails)
     {
         PlayerInputIsDisabled = true;
         playerToolUseDisabled = true;
 
         // Set tool animation to hoe in override animation
-        toolCharacterAttribute.partVariantType = PartVariantType.hoe;
-        characterAttributeCustomisationList.Clear();
-        characterAttributeCustomisationList.Add(toolCharacterAttribute);
-        animationOverrides.ApplyCharacterCustomizationParameters(characterAttributeCustomisationList);
+        toolPart.partVariantType = PartVariantType.hoe;
+        characterAttributeCustomizationList.Clear();
+        characterAttributeCustomizationList.Add(toolPart);
+        animationOverrides.ApplyCharacterCustomizationParameters(characterAttributeCustomizationList);
 
         if (playerDirection == Vector3Int.right)
         {
@@ -537,19 +582,19 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         AudioManager.Instance.PlaySound(SoundName.effectWateringCan);
 
         // Trigger animation
-        StartCoroutine(WaterGroundAtCursorRoutine(playerDirection, gridPropertyDetails));
+        StartCoroutine(WaterGroundAtCursorCoroutine(playerDirection, gridPropertyDetails));
     }
 
-    private IEnumerator WaterGroundAtCursorRoutine(Vector3Int playerDirection, GridPropertyDetails gridPropertyDetails)
+    private IEnumerator WaterGroundAtCursorCoroutine(Vector3Int playerDirection, GridPropertyDetails gridPropertyDetails)
     {
         PlayerInputIsDisabled = true;
         playerToolUseDisabled = true;
 
         // Set tool animation to watering can in override animation
-        toolCharacterAttribute.partVariantType = PartVariantType.wateringCan;
-        characterAttributeCustomisationList.Clear();
-        characterAttributeCustomisationList.Add(toolCharacterAttribute);
-        animationOverrides.ApplyCharacterCustomizationParameters(characterAttributeCustomisationList);
+        toolPart.partVariantType = PartVariantType.wateringCan;
+        characterAttributeCustomizationList.Clear();
+        characterAttributeCustomizationList.Add(toolPart);
+        animationOverrides.ApplyCharacterCustomizationParameters(characterAttributeCustomizationList);
 
         // TODO: If there is water in the watering can
         toolEffect = ToolEffect.watering;
@@ -592,25 +637,50 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         playerToolUseDisabled = false;
     }
 
+    private void ReapInPlayerDirectionAtCursor(ItemDetails itemDetails, Vector3Int playerDirection)
+    {
+        StartCoroutine(ReapInPlayerDirectionAtCursorCoroutine(itemDetails, playerDirection));
+    }
+
+    private IEnumerator ReapInPlayerDirectionAtCursorCoroutine(ItemDetails itemDetails, Vector3Int playerDirection)
+    {
+        PlayerInputIsDisabled = true;
+        playerToolUseDisabled = true;
+
+        // Set tool animation to scythe in override animation
+        toolPart.partVariantType = PartVariantType.scythe;
+        characterAttributeCustomizationList.Clear();
+        characterAttributeCustomizationList.Add(toolPart);
+        animationOverrides.ApplyCharacterCustomizationParameters(characterAttributeCustomizationList);
+
+        // Reap in player direction
+        UseToolInPlayerDirection(itemDetails, playerDirection);
+
+        yield return useToolAnimationPause;
+
+        PlayerInputIsDisabled = false;
+        playerToolUseDisabled = false;
+    }
+
     private void ChopInPlayerDirection(GridPropertyDetails gridPropertyDetails, ItemDetails equippedItemDetails, Vector3Int playerDirection)
     {
         // Play sound
         AudioManager.Instance.PlaySound(SoundName.effectAxe);
 
         // Trigger animation
-        StartCoroutine(ChopInPlayerDirectionRoutine(gridPropertyDetails, equippedItemDetails, playerDirection));
+        StartCoroutine(ChopInPlayerDirectionCoroutine(gridPropertyDetails, equippedItemDetails, playerDirection));
     }
 
-        private IEnumerator ChopInPlayerDirectionRoutine(GridPropertyDetails gridPropertyDetails, ItemDetails equippedItemDetails, Vector3Int playerDirection)
+    private IEnumerator ChopInPlayerDirectionCoroutine(GridPropertyDetails gridPropertyDetails, ItemDetails equippedItemDetails, Vector3Int playerDirection)
     {
         PlayerInputIsDisabled = true;
         playerToolUseDisabled = true;
 
         // Set tool animation to axe in override animation
-        toolCharacterAttribute.partVariantType = PartVariantType.axe;
-        characterAttributeCustomisationList.Clear();
-        characterAttributeCustomisationList.Add(toolCharacterAttribute);
-        animationOverrides.ApplyCharacterCustomizationParameters(characterAttributeCustomisationList);
+        toolPart.partVariantType = PartVariantType.axe;
+        characterAttributeCustomizationList.Clear();
+        characterAttributeCustomizationList.Add(toolPart);
+        animationOverrides.ApplyCharacterCustomizationParameters(characterAttributeCustomizationList);
 
         ProcessCropWithEquippedItemInPlayerDirection(playerDirection, equippedItemDetails, gridPropertyDetails);
 
@@ -664,10 +734,10 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         playerToolUseDisabled = true;
 
         // Set tool animation to pickaxe in override animation
-        toolCharacterAttribute.partVariantType = PartVariantType.pickaxe;
-        characterAttributeCustomisationList.Clear();
-        characterAttributeCustomisationList.Add(toolCharacterAttribute);
-        animationOverrides.ApplyCharacterCustomizationParameters(characterAttributeCustomisationList);
+        toolPart.partVariantType = PartVariantType.pickaxe;
+        characterAttributeCustomizationList.Clear();
+        characterAttributeCustomizationList.Add(toolPart);
+        animationOverrides.ApplyCharacterCustomizationParameters(characterAttributeCustomizationList);
 
         ProcessCropWithEquippedItemInPlayerDirection(playerDirection, equippedItemDetails, gridPropertyDetails);
 
@@ -675,32 +745,6 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
         // After animation pause
         yield return afterUseToolAnimationPause;
-
-        PlayerInputIsDisabled = false;
-        playerToolUseDisabled = false;
-    }
-
-
-    private void ReapInPlayerDirectionAtCursor(ItemDetails itemDetails, Vector3Int playerDirection)
-    {
-        StartCoroutine(ReapInPlayerDirectionAtCursorRoutine(itemDetails, playerDirection));
-    }
-
-    private IEnumerator ReapInPlayerDirectionAtCursorRoutine(ItemDetails itemDetails, Vector3Int playerDirection)
-    {
-        PlayerInputIsDisabled = true;
-        playerToolUseDisabled = true;
-
-        // Set tool animation to scythe in override animation
-        toolCharacterAttribute.partVariantType = PartVariantType.scythe;
-        characterAttributeCustomisationList.Clear();
-        characterAttributeCustomisationList.Add(toolCharacterAttribute);
-        animationOverrides.ApplyCharacterCustomizationParameters(characterAttributeCustomisationList);
-
-        // Reap in player direction
-        UseToolInPlayerDirection(itemDetails, playerDirection);
-
-        yield return useToolAnimationPause;
 
         PlayerInputIsDisabled = false;
         playerToolUseDisabled = false;
@@ -847,30 +891,31 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         }
     }
 
-
-    // TODO: Remove
-    /// <summary>
-    /// Temp routine for test input
-    /// </summary>
-    private void PlayerTestInput()
+    private void ResetAnimationTriggers()
     {
-        // Trigger Advance Time
-        if (Input.GetKey(KeyCode.T))
-        {
-            TimeManager.Instance.TestAdvanceGameMinute();
-        }
-
-        // Trigger Advance Day
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            TimeManager.Instance.TestAdvanceGameDay();
-        }
-
+        isPickingRight = false;
+        isPickingLeft = false;
+        isPickingUp = false;
+        isPickingDown = false;
+        isUsingToolRight = false;
+        isUsingToolLeft = false;
+        isUsingToolUp = false;
+        isUsingToolDown = false;
+        isLiftingToolRight = false;
+        isLiftingToolLeft = false;
+        isLiftingToolUp = false;
+        isLiftingToolDown = false;
+        isSwingingToolRight = false;
+        isSwingingToolLeft = false;
+        isSwingingToolUp = false;
+        isSwingingToolDown = false;
+        toolEffect = ToolEffect.none;
     }
+
+
 
     private void ResetMovement()
     {
-        // Reset movement
         xInput = 0f;
         yInput = 0f;
         isRunning = false;
@@ -880,10 +925,10 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
     public void DisablePlayerInputAndResetMovement()
     {
-        DisablePlayerInput();
+        PlayerInputIsDisabled = true;
         ResetMovement();
 
-        // Send event to any listeners for player movement input
+        // 发送事件到用于玩家移动输入的任何监听器
         EventHandler.CallMovementEvent(xInput, yInput, isWalking, isRunning, isIdle, isCarrying, toolEffect,
             isUsingToolRight, isUsingToolLeft, isUsingToolUp, isUsingToolDown,
             isLiftingToolRight, isLiftingToolLeft, isLiftingToolUp, isLiftingToolDown,
@@ -892,15 +937,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
              false, false, false, false);
     }
 
-    public void DisablePlayerInput()
-    {
-        PlayerInputIsDisabled = true;
-    }
 
-    public void EnablePlayerInput()
-    {
-        PlayerInputIsDisabled = false;
-    }
 
     public void ClearCarriedItem()
     {
@@ -908,10 +945,10 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         equippedItemSpriteRenderer.color = new Color(1f, 1f, 1f, 0f);
 
         // Apply base character arms customisation
-        armsCharacterAttribute.partVariantType = PartVariantType.none;
-        characterAttributeCustomisationList.Clear();
-        characterAttributeCustomisationList.Add(armsCharacterAttribute);
-        animationOverrides.ApplyCharacterCustomizationParameters(characterAttributeCustomisationList);
+        armsPart.partVariantType = PartVariantType.none;
+        characterAttributeCustomizationList.Clear();
+        characterAttributeCustomizationList.Add(armsPart);
+        animationOverrides.ApplyCharacterCustomizationParameters(characterAttributeCustomizationList);
 
         isCarrying = false;
     }
@@ -925,10 +962,10 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
             equippedItemSpriteRenderer.color = new Color(1f, 1f, 1f, 1f);
 
             // Apply 'carry' character arms customisation
-            armsCharacterAttribute.partVariantType = PartVariantType.carry;
-            characterAttributeCustomisationList.Clear();
-            characterAttributeCustomisationList.Add(armsCharacterAttribute);
-            animationOverrides.ApplyCharacterCustomizationParameters(characterAttributeCustomisationList);
+            armsPart.partVariantType = PartVariantType.carry;
+            characterAttributeCustomizationList.Clear();
+            characterAttributeCustomizationList.Add(armsPart);
+            animationOverrides.ApplyCharacterCustomizationParameters(characterAttributeCustomizationList);
 
             isCarrying = true;
         }
@@ -945,17 +982,17 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         return new Vector3(transform.position.x, transform.position.y + Settings.playerCentreYOffset, transform.position.z);
     }
 
-    public void ISaveableRegister()
+    public void SaveableRegister()
     {
-        SaveLoadManager.Instance.iSaveableObjectList.Add(this);
+        SaveLoadManager.Instance.saveableObjectList.Add(this);
     }
 
-    public void ISaveableDeregister()
+    public void SaveableDeregister()
     {
-        SaveLoadManager.Instance.iSaveableObjectList.Remove(this);
+        SaveLoadManager.Instance.saveableObjectList.Remove(this);
     }
 
-    public GameObjectSave ISaveableSave()
+    public GameObjectSave SaveData()
     {
         // Delete saveScene for game object if it already exists
         GameObjectSave.sceneData.Remove(Settings.PersistentScene);
@@ -964,13 +1001,13 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         SceneSave sceneSave = new SceneSave();
 
         // Create Vector3 Dictionary
-        sceneSave.vector3Dictionary = new Dictionary<string, Vector3Serializable>();
+        sceneSave.vector3Dictionary = new Dictionary<string, Vector3>();
 
         //  Create String Dictionary
         sceneSave.stringDictionary = new Dictionary<string, string>();
 
         // Add Player position to Vector3 dictionary
-        Vector3Serializable vector3Serializable = new Vector3Serializable(transform.position.x, transform.position.y, transform.position.z);
+        Vector3 vector3Serializable = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         sceneSave.vector3Dictionary.Add("playerPosition", vector3Serializable);
 
         // Add Current Scene Name to string dictionary
@@ -986,7 +1023,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
     }
 
 
-    public void ISaveableLoad(GameSave gameSave)
+    public void LoadData(GameSave gameSave)
     {
         if (gameSave.gameObjectData.TryGetValue(ISaveableUniqueID, out GameObjectSave gameObjectSave))
         {
@@ -994,7 +1031,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
             if (gameObjectSave.sceneData.TryGetValue(Settings.PersistentScene, out SceneSave sceneSave))
             {
                 // Get player position
-                if (sceneSave.vector3Dictionary != null && sceneSave.vector3Dictionary.TryGetValue("playerPosition", out Vector3Serializable playerPosition))
+                if (sceneSave.vector3Dictionary != null && sceneSave.vector3Dictionary.TryGetValue("playerPosition", out Vector3 playerPosition))
                 {
                     transform.position = new Vector3(playerPosition.x, playerPosition.y, playerPosition.z);
                 }
@@ -1024,48 +1061,14 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         }
     }
 
-    public void ISaveableStoreScene(string sceneName)
+    public void StoreScene(string sceneName)
     {
         // Nothing required here since the player is on a persistent scene;
     }
 
 
-    public void ISaveableRestoreScene(string sceneName)
+    public void RestoreScene(string sceneName)
     {
         // Nothing required here since the player is on a persistent scene;
     }
-
-
-
-    private void SetPlayerDirection(Direction playerDirection)
-    {
-        switch (playerDirection)
-        {
-            case Direction.up:
-                // set idle up trigger
-                EventHandler.CallMovementEvent(0f, 0f, false, false, false, false, ToolEffect.none, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false);
-
-                break;
-
-            case Direction.down:
-                // set idle down trigger
-                EventHandler.CallMovementEvent(0f, 0f, false, false, false, false, ToolEffect.none, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false);
-                break;
-
-            case Direction.left:
-                EventHandler.CallMovementEvent(0f, 0f, false, false, false, false, ToolEffect.none, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false);
-                break;
-
-            case Direction.right:
-                EventHandler.CallMovementEvent(0f, 0f, false, false, false, false, ToolEffect.none, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true);
-                break;
-
-            default:
-                // set idle down trigger
-                EventHandler.CallMovementEvent(0f, 0f, false, false, false, false, ToolEffect.none, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false);
-
-                break;
-        }
-    }
-
 }

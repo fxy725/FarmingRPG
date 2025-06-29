@@ -3,9 +3,10 @@ using UnityEngine;
 
 public class PoolManager : SingletonMonobehaviour<PoolManager>
 {
-    private Dictionary<int, Queue<GameObject>> poolDictionary = new Dictionary<int, Queue<GameObject>>();
-    [SerializeField] private Pool[] pool = null;
-    [SerializeField] private Transform objectPoolTransform = null;
+    private Dictionary<int, Queue<GameObject>> poolDictionary = new();
+    [SerializeField] private Pool[] pools;
+    [SerializeField] private Transform poolManagerTransform;
+
 
 
     [System.Serializable]
@@ -15,24 +16,26 @@ public class PoolManager : SingletonMonobehaviour<PoolManager>
         public GameObject prefab;
     }
 
+
+
     private void Start()
     {
-        // Create object pools on start
-        for (int i = 0; i < pool.Length; i++)
+        for (int i = 0; i < pools.Length; i++)
         {
-            CreatePool(pool[i].prefab, pool[i].poolSize);
+            CreatePool(pools[i].prefab, pools[i].poolSize);
         }
     }
+
 
 
     private void CreatePool(GameObject prefab, int poolSize)
     {
         int poolKey = prefab.GetInstanceID();
-        string prefabName = prefab.name; // get prefab name
+        string prefabName = prefab.name;
 
-        GameObject parentGameObject = new GameObject(prefabName + "Anchor"); // create parent gameobject to parent the child objects to
+        GameObject parentGameObject = new(prefabName + "Anchor"); // 创建父物体，用于挂载子物体
 
-        parentGameObject.transform.SetParent(objectPoolTransform);
+        parentGameObject.transform.SetParent(poolManagerTransform);
 
 
         if (!poolDictionary.ContainsKey(poolKey))
@@ -41,7 +44,7 @@ public class PoolManager : SingletonMonobehaviour<PoolManager>
 
             for (int i = 0; i < poolSize; i++)
             {
-                GameObject newObject = Instantiate(prefab, parentGameObject.transform) as GameObject;
+                GameObject newObject = Instantiate(prefab, parentGameObject.transform);
                 newObject.SetActive(false);
 
                 poolDictionary[poolKey].Enqueue(newObject);
@@ -55,7 +58,7 @@ public class PoolManager : SingletonMonobehaviour<PoolManager>
 
         if (poolDictionary.ContainsKey(poolKey))
         {
-            // Get object from pool queue
+            // 从对象池中获取对象
             GameObject objectToReuse = GetObjectFromPool(poolKey);
 
             ResetObject(position, rotation, objectToReuse, prefab);
@@ -64,7 +67,7 @@ public class PoolManager : SingletonMonobehaviour<PoolManager>
         }
         else
         {
-            Debug.Log("No object pool for " + prefab);
+            Debug.Log(prefab + "没有对象池");
             return null;
         }
     }
@@ -75,7 +78,7 @@ public class PoolManager : SingletonMonobehaviour<PoolManager>
         GameObject objectToReuse = poolDictionary[poolKey].Dequeue();
         poolDictionary[poolKey].Enqueue(objectToReuse);
 
-           if (objectToReuse.activeSelf == true)
+        if (objectToReuse.activeSelf == true)
         {
             objectToReuse.SetActive(false);
         }

@@ -1,52 +1,55 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Newtonsoft.Json;
 
 public class SaveLoadManager : SingletonMonobehaviour<SaveLoadManager>
 {
 
     public GameSave gameSave;
-    public List<ISaveable> iSaveableObjectList; //可保存的所有对象的列表
+
+    public List<ISaveable> saveableObjectList; //可保存的所有对象的列表,由实现ISaveable的类来添加移除元素
+
+    private string filePath;
+
+
 
     protected override void Awake()
     {
         base.Awake();
 
-        iSaveableObjectList = new List<ISaveable>();
+        gameSave = new GameSave();
+        saveableObjectList = new List<ISaveable>();
+        filePath = Application.persistentDataPath + "/WildHopeCreek.json";
     }
+
+
 
     public void LoadDataFromFile()
     {
-        BinaryFormatter bf = new BinaryFormatter();
-
-        if (File.Exists(Application.persistentDataPath + "/WildHopeCreek.dat"))
+        if (File.Exists(filePath))
         {
-            gameSave = new GameSave();
+            string json = File.ReadAllText(filePath);
 
-            FileStream file = File.Open(Application.persistentDataPath + "/WildHopeCreek.dat", FileMode.Open);
-
-            gameSave = (GameSave)bf.Deserialize(file);
+            gameSave = JsonConvert.DeserializeObject<GameSave>(json);
 
             // 遍历所有可保存对象并应用保存数据
-            for (int i = iSaveableObjectList.Count - 1; i > -1; i--)
+            for (int i = saveableObjectList.Count - 1; i > -1; i--)
             {
-                if (gameSave.gameObjectData.ContainsKey(iSaveableObjectList[i].ISaveableUniqueID))
+                if (gameSave.gameObjectData.ContainsKey(saveableObjectList[i].ISaveableUniqueID))
                 {
-                    iSaveableObjectList[i].ISaveableLoad(gameSave);
+                    saveableObjectList[i].LoadData(gameSave);
                 }
+                // 如果可保存对象的唯一ID不在gameObjectData的键中，那么销毁该对象。
                 // else if iSaveableObject unique ID is not in the game object data then destroy object
                 else
                 {
-                    Component component = (Component)iSaveableObjectList[i];
+                    Component component = (Component)saveableObjectList[i];
                     Destroy(component.gameObject);
                 }
             }
-
-            file.Close();
         }
-
         UIManager.Instance.DisablePauseMenu();
     }
 
@@ -54,38 +57,35 @@ public class SaveLoadManager : SingletonMonobehaviour<SaveLoadManager>
     {
         gameSave = new GameSave();
 
-        // loop through all ISaveable objects and generate save data
-        foreach (ISaveable iSaveableObject in iSaveableObjectList)
+        // 遍历所有可保存的对象与生成保存数据
+        foreach (ISaveable saveableObject in saveableObjectList)
         {
-            gameSave.gameObjectData.Add(iSaveableObject.ISaveableUniqueID, iSaveableObject.ISaveableSave());
+            gameSave.gameObjectData.Add(saveableObject.ISaveableUniqueID, saveableObject.SaveData());
         }
 
-        BinaryFormatter bf = new BinaryFormatter();
+        string json = JsonConvert.SerializeObject(gameSave, Formatting.Indented);
 
-        FileStream file = File.Open(Application.persistentDataPath + "/WildHopeCreek.dat", FileMode.Create);
-
-        bf.Serialize(file, gameSave);
-
-        file.Close();
+        File.WriteAllText(filePath, json);
 
         UIManager.Instance.DisablePauseMenu();
     }
 
+
     public void StoreCurrentSceneData()
     {
-        // loop through all ISaveable objects and trigger store scene data for each
-        foreach (ISaveable iSaveableObject in iSaveableObjectList)
+        // 遍历所有可保存对象并触发存储场景数据
+        foreach (ISaveable iSaveableObject in saveableObjectList)
         {
-            iSaveableObject.ISaveableStoreScene(SceneManager.GetActiveScene().name);
+            iSaveableObject.StoreScene(SceneManager.GetActiveScene().name);
         }
     }
 
     public void RestoreCurrentSceneData()
     {
-        // loop through all ISaveable objects and trigger restore scene data for each
-        foreach (ISaveable iSaveableObject in iSaveableObjectList)
+        // 遍历所有可保存对象并触发恢复场景数据
+        foreach (ISaveable iSaveableObject in saveableObjectList)
         {
-            iSaveableObject.ISaveableRestoreScene(SceneManager.GetActiveScene().name);
+            iSaveableObject.RestoreScene(SceneManager.GetActiveScene().name);
         }
     }
 }

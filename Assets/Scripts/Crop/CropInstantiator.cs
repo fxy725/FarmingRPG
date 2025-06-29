@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class CropInstantiator : MonoBehaviour
 {
-    private Grid grid;
+    private UnityEngine.Grid grid;
     [SerializeField] private int daysSinceDug = -1;
     [SerializeField] private int daysSinceWatered = -1;
     [ItemCodeDescription]
@@ -28,7 +28,7 @@ public class CropInstantiator : MonoBehaviour
     private void InstantiateCropPrefabs()
     {
         // Get grid gameobject
-        grid = GameObject.FindFirstObjectByType<Grid>();
+        grid = GameObject.FindFirstObjectByType<UnityEngine.Grid>();
 
         // Get grid position for crop
         Vector3Int cropGridPosition = grid.WorldToCell(transform.position);

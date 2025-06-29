@@ -10,7 +10,7 @@ public class GameObjectSave
         sceneData = new Dictionary<string, SceneSave>();
     }
 
-    public GameObjectSave(Dictionary<string,SceneSave> sceneData)
+    public GameObjectSave(Dictionary<string, SceneSave> sceneData)
     {
         this.sceneData = sceneData;
     }
