@@ -24,30 +24,30 @@ public class NPCPath : MonoBehaviour
     {
         ClearPath();
 
-        // If schedule event is for the same scene as the current NPC scene
+        // 如果计划事件是与当前NPC场景相同的场景
         if (npcScheduleEvent.toSceneName == npcMovement.npcCurrentScene)
         {
             Vector2Int npcCurrentGridPosition = (Vector2Int)npcMovement.npcCurrentGridPosition;
 
             Vector2Int npcTargetGridPosition = (Vector2Int)npcScheduleEvent.toGridCoordinate;
 
-            // Build path and add movement steps to movement step stack
+            // 构建路径并添加移动步骤到移动步骤堆栈
             NPCManager.Instance.BuildPath(npcScheduleEvent.toSceneName, npcCurrentGridPosition, npcTargetGridPosition, npcMovementStepStack);
 
 
         }
-        // else if the schedule event is for a location in another scene
+        // 如果计划事件是另一个场景中的位置
         else if (npcScheduleEvent.toSceneName != npcMovement.npcCurrentScene)
         {
             SceneRoute sceneRoute;
 
-            // Get scene route matchingSchedule
+            // 获取匹配计划的场景路由
             sceneRoute = NPCManager.Instance.GetSceneRoute(npcMovement.npcCurrentScene.ToString(), npcScheduleEvent.toSceneName.ToString());
 
-            // Has a valid scene route been found?
+            // 是否找到有效的场景路由？
             if (sceneRoute != null)
             {
-                // Loop through scene paths in reverse order
+                // 反向遍历场景路径
 
                 for (int i = sceneRoute.scenePathList.Count - 1; i >= 0; i--)
                 {
@@ -55,30 +55,30 @@ public class NPCPath : MonoBehaviour
 
                     ScenePath scenePath = sceneRoute.scenePathList[i];
 
-                    // Check if this is the final destination
+                    // 检查这是否是最终目的地
                     if (scenePath.toGridCell.x >= Settings.maxGridWidth || scenePath.toGridCell.y >= Settings.maxGridHeight)
                     {
-                        // If so use final destination grid cell
+                        // 如果是，则使用最终目的地网格单元
                         toGridX = npcScheduleEvent.toGridCoordinate.x;
                         toGridY = npcScheduleEvent.toGridCoordinate.y;
                     }
                     else
                     {
-                        // else use scene path to position
+                        // 否则使用场景路径到位置
                         toGridX = scenePath.toGridCell.x;
                         toGridY = scenePath.toGridCell.y;
                     }
 
-                    // Check if this is the starting position
+                    // 检查这是否是起始位置
                     if (scenePath.fromGridCell.x >= Settings.maxGridWidth || scenePath.fromGridCell.y >= Settings.maxGridHeight)
                     {
-                        // if so use npc position
+                        // 如果是，则使用NPC位置
                         fromGridX = npcMovement.npcCurrentGridPosition.x;
                         fromGridY = npcMovement.npcCurrentGridPosition.y;
                     }
                     else
                     {
-                        // else use scene path from position
+                        // 否则使用场景路径从位置
                         fromGridX = scenePath.fromGridCell.x;
                         fromGridY = scenePath.fromGridCell.y;
                     }
@@ -87,31 +87,31 @@ public class NPCPath : MonoBehaviour
 
                     Vector2Int toGridPosition = new Vector2Int(toGridX, toGridY);
 
-                    // Build path and add movement steps to movement step stack
+                    // 构建路径并添加移动步骤到移动步骤堆栈
                     NPCManager.Instance.BuildPath(scenePath.sceneName, fromGridPosition, toGridPosition, npcMovementStepStack);
                 }
             }
         }
 
 
-        // If stack count >1, update times and then pop off 1st item which is the starting position
+        // 如果堆栈计数大于1，则更新时间并弹出第一个项目，即起始位置
         if (npcMovementStepStack.Count > 1)
         {
             UpdateTimesOnPath();
-            npcMovementStepStack.Pop(); // discard starting step
+            npcMovementStepStack.Pop(); // 丢弃起始步骤
 
-            // Set schedule event details in NPC movement
+            // 设置计划事件详情在NPC移动
             npcMovement.SetScheduleEventDetails(npcScheduleEvent);
         }
 
     }
 
     /// <summary>
-    /// Update the path movement steps with expected gametime
+    /// 更新路径移动步骤与预期游戏时间
     /// </summary>
     public void UpdateTimesOnPath()
     {
-        // Get current game time
+        // 获取当前游戏时间
         TimeSpan currentGameTime = TimeManager.Instance.GetGameTime();
 
         NPCMovementStep previousNPCMovementStep = null;
@@ -127,7 +127,7 @@ public class NPCPath : MonoBehaviour
 
             TimeSpan movementTimeStep;
 
-            // if diagonal
+            // 如果对角线
             if (MovementIsDiagonal(npcMovementStep, previousNPCMovementStep))
             {
                 movementTimeStep = new TimeSpan(0, 0, (int)(Settings.gridCellDiagonalSize / Settings.secondsPerGameSecond / npcMovement.npcNormalSpeed));
@@ -145,7 +145,7 @@ public class NPCPath : MonoBehaviour
     }
 
     /// <summary>
-    /// returns true if the previous movement step is diagonal to movement step, else returns false
+    /// 返回true如果前一个移动步骤是对角线移动步骤，否则返回false
     /// </summary>
     private bool MovementIsDiagonal(NPCMovementStep npcMovementStep, NPCMovementStep previousNPCMovementStep)
     {

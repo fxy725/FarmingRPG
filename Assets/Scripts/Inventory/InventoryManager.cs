@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISaveable
 {
-    private UIInventoryBar inventoryBar; //库存栏UI组件的引用
+    private UIInventoryBar inventoryBar;
 
     private Dictionary<int, ItemDetails> itemDetailsDictionary; // 物品详情字典，键为物品代码，值为物品详情
 
-    private int[] selectedInventoryItem; // 数组索引为库存列表，值为物品代码
+    private int[] selectedInventoryItem;
 
     public List<InventoryItem>[] inventoryLists;
 
@@ -26,13 +26,13 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
     {
         base.Awake();
 
-        // Create Inventory Lists
+        // 创建库存列表
         CreateInventoryLists();
 
-        // Create item details dictionary
+        // 创建物品详情字典
         CreateItemDetailsDictionary();
 
-        // Initailise selected inventory item array
+        // 初始化选定库存项数组
         selectedInventoryItem = new int[(int)InventoryLocation.count];
 
         for (int i = 0; i < selectedInventoryItem.Length; i++)
@@ -40,21 +40,19 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
             selectedInventoryItem[i] = -1;
         }
 
-        // Get unique ID for gameobject and create save data object
         ISaveableUniqueID = GetComponent<GenerateGUID>().GUID;
 
         GameObjectSave = new GameObjectSave();
     }
 
-    private void OnDisable()
-    {
-        SaveableDeregister();
-    }
-
-
     private void OnEnable()
     {
         SaveableRegister();
+    }
+
+    private void OnDisable()
+    {
+        SaveableDeregister();
     }
 
     private void Start()
@@ -71,15 +69,15 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
             inventoryLists[i] = new List<InventoryItem>();
         }
 
-        // initialise inventory list capacity array
+        // 初始化库存列表容量数组
         inventoryListCapacityIntArray = new int[(int)InventoryLocation.count];
 
-        // initialise player inventory list capacity
+        // 初始化玩家库存列表容量
         inventoryListCapacityIntArray[(int)InventoryLocation.player] = Settings.playerInitialInventoryCapacity;
     }
 
     /// <summary>
-    ///  Populates the itemDetailsDictionary from the scriptable object items list 
+    /// 从脚本对象物品列表填充 itemDetailsDictionary
     /// </summary>
     private void CreateItemDetailsDictionary()
     {
@@ -92,7 +90,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
     }
 
     /// <summary>
-    /// Add an item to the inventory list for the inventoryLocation and then destroy the gameObjectToDelete
+    /// 添加一个物品到库存列表，然后销毁 gameObjectToDelete
     /// </summary>
     public void AddItem(InventoryLocation inventoryLocation, Item item, GameObject gameObjectToDelete)
     {
@@ -102,14 +100,14 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
     }
 
     /// <summary>
-    /// Add an item to the inventory list for the inventoryLocation
+    /// 添加一个物品到库存列表
     /// </summary>
     public void AddItem(InventoryLocation inventoryLocation, Item item)
     {
         int itemCode = item.ItemCode;
         List<InventoryItem> inventoryList = inventoryLists[(int)inventoryLocation];
 
-        // Check if inventory already contains the item
+        // 检查库存是否已经包含该物品
         int itemPosition = FindItemInInventory(inventoryLocation, itemCode);
 
         if (itemPosition != -1)
@@ -121,18 +119,18 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
             AddItemAtPosition(inventoryList, itemCode);
         }
 
-        //  Send event that inventory has been updated
+        // 发送事件，库存已更新
         EventHandler.CallInventoryUpdatedEvent(inventoryLocation, inventoryLists[(int)inventoryLocation]);
     }
 
     /// <summary>
-    /// Add an item of type itemCode to the inventory list for the inventoryLocation
+    /// 添加一个物品到库存列表
     /// </summary>
     public void AddItem(InventoryLocation inventoryLocation, int itemCode)
     {
         List<InventoryItem> inventoryList = inventoryLists[(int)inventoryLocation];
 
-        // Check if inventory already contains the item
+        // 检查库存是否已经包含该物品
         int itemPosition = FindItemInInventory(inventoryLocation, itemCode);
 
         if (itemPosition != -1)
@@ -144,7 +142,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
             AddItemAtPosition(inventoryList, itemCode);
         }
 
-        //  Send event that inventory has been updated
+        // 发送事件，库存已更新
         EventHandler.CallInventoryUpdatedEvent(inventoryLocation, inventoryLists[(int)inventoryLocation]);
     }
 
@@ -152,7 +150,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
 
 
     /// <summary>
-    /// Add item to the end of the inventory
+    /// 添加一个物品到库存列表的末尾
     /// </summary>
     private void AddItemAtPosition(List<InventoryItem> inventoryList, int itemCode)
     {
@@ -166,7 +164,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
     }
 
     /// <summary>
-    /// Add item to position in the inventory
+    /// 添加一个物品到库存列表的指定位置
     /// </summary>
     private void AddItemAtPosition(List<InventoryItem> inventoryList, int itemCode, int position)
     {
@@ -182,7 +180,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
     }
 
     ///<summary>
-    ///Swap item at fromItem index with item at toItem index in inventoryLocation inventory list
+    /// 交换 inventoryLocation 库存列表中 fromItem 索引处的物品和 toItem 索引处的物品
     ///</summary>
 
     public void SwapInventoryItems(InventoryLocation inventoryLocation, int fromItem, int toItem)
@@ -197,13 +195,13 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
             inventoryLists[(int)inventoryLocation][toItem] = fromInventoryItem;
             inventoryLists[(int)inventoryLocation][fromItem] = toInventoryItem;
 
-            //  Send event that inventory has been updated
+            // 发送事件，库存已更新
             EventHandler.CallInventoryUpdatedEvent(inventoryLocation, inventoryLists[(int)inventoryLocation]);
         }
     }
 
     /// <summary>
-    /// Clear the selected inventory item for inventoryLocation
+    /// 清除 inventoryLocation 的选定库存项
     /// </summary>
     public void ClearSelectedInventoryItem(InventoryLocation inventoryLocation)
     {
@@ -213,8 +211,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
 
 
     /// <summary>
-    /// Find if an itemCode is already in the inventory. Returns the item position
-    /// in the inventory list, or -1 if the item is not in the inventory
+    /// 查找库存中是否包含 itemCode，如果包含则返回物品位置，否则返回-1
     /// </summary>
     public int FindItemInInventory(InventoryLocation inventoryLocation, int itemCode)
     {
@@ -248,7 +245,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
     }
 
     /// <summary>
-    /// Returns the itemDetails (from the SO_ItemList) for the currently selected item in the inventoryLocation , or null if an item isn't selected
+    /// 返回 inventoryLocation 的选定库存项的物品详情，如果选定项不存在则返回 null
     /// </summary>
     public ItemDetails GetSelectedInventoryItemDetails(InventoryLocation inventoryLocation)
     {
@@ -266,7 +263,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
 
 
     /// <summary>
-    /// Get the selected item for inventoryLocation - returns itemCode or -1 if nothing is selected
+    /// 获取 inventoryLocation 的选定库存项的物品代码，如果选定项不存在则返回-1
     /// </summary>
     private int GetSelectedInventoryItem(InventoryLocation inventoryLocation)
     {
@@ -279,38 +276,16 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
     // 获取物品类型描述 - 返回给定 ItemType 的物品类型描述字符串
     public string GetItemTypeDescription(ItemType itemType)
     {
-        string itemTypeDescription;
-        switch (itemType)
+        string itemTypeDescription = itemType switch
         {
-            case ItemType.Breaking_tool:
-                itemTypeDescription = Settings.BreakingTool;
-                break;
-
-            case ItemType.Chopping_tool:
-                itemTypeDescription = Settings.ChoppingTool;
-                break;
-
-            case ItemType.Hoeing_tool:
-                itemTypeDescription = Settings.HoeingTool;
-                break;
-
-            case ItemType.Reaping_tool:
-                itemTypeDescription = Settings.ReapingTool;
-                break;
-
-            case ItemType.Watering_tool:
-                itemTypeDescription = Settings.WateringTool;
-                break;
-
-            case ItemType.Collecting_tool:
-                itemTypeDescription = Settings.CollectingTool;
-                break;
-
-            default:
-                itemTypeDescription = itemType.ToString();
-                break;
-        }
-
+            ItemType.Breaking_tool => Settings.BreakingTool,
+            ItemType.Chopping_tool => Settings.ChoppingTool,
+            ItemType.Hoeing_tool => Settings.HoeingTool,
+            ItemType.Reaping_tool => Settings.ReapingTool,
+            ItemType.Watering_tool => Settings.WateringTool,
+            ItemType.Collecting_tool => Settings.CollectingTool,
+            _ => itemType.ToString(),
+        };
         return itemTypeDescription;
     }
 
@@ -326,20 +301,22 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
 
     public GameObjectSave SaveData()
     {
-        // Create new scene save
+        // 创建新的场景保存
         SceneSave sceneSave = new SceneSave();
 
-        // Remove any existing scene save for persistent scene for this gameobject
+        // 移除任何现有的场景保存，用于持久场景中的这个游戏对象
         GameObjectSave.sceneData.Remove(Settings.PersistentScene);
 
-        // Add inventory lists array to persistent scene save
+        // 添加库存列表数组到持久场景保存
         sceneSave.listInvItemArray = inventoryLists;
 
-        // Add  inventory list capacity array to persistent scene save
-        sceneSave.intArrayDictionary = new Dictionary<string, int[]>();
-        sceneSave.intArrayDictionary.Add("inventoryListCapacityArray", inventoryListCapacityIntArray);
+        // 添加库存列表容量数组到持久场景保存
+        sceneSave.intArrayDictionary = new Dictionary<string, int[]>
+        {
+            { "inventoryListCapacityArray", inventoryListCapacityIntArray }
+        };
 
-        // Add scene save for gameobject
+        // 添加场景保存到游戏对象
         GameObjectSave.sceneData.Add(Settings.PersistentScene, sceneSave);
 
         return GameObjectSave;
@@ -352,28 +329,28 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
         {
             GameObjectSave = gameObjectSave;
 
-            // Need to find inventory lists - start by trying to locate saveScene for game object
+            // 需要找到库存列表 - 首先尝试定位游戏对象的保存场景
             if (gameObjectSave.sceneData.TryGetValue(Settings.PersistentScene, out SceneSave sceneSave))
             {
-                // list inv items array exists for persistent scene
+                // 持久场景中存在列表库存项数组
                 if (sceneSave.listInvItemArray != null)
                 {
                     inventoryLists = sceneSave.listInvItemArray;
 
-                    //  Send events that inventory has been updated
+                    // 发送事件，库存已更新
                     for (int i = 0; i < (int)InventoryLocation.count; i++)
                     {
                         EventHandler.CallInventoryUpdatedEvent((InventoryLocation)i, inventoryLists[i]);
                     }
 
-                    // Clear any items player was carrying
+                    // 清除玩家携带的物品
                     Player.Instance.ClearCarriedItem();
 
-                    // Clear any highlights on inventory bar
+                    // 清除库存栏上的任何高亮
                     inventoryBar.ClearHighlightOnInventorySlots();
                 }
 
-                // int array dictionary exists for scene
+                // 场景中存在整数数组字典
                 if (sceneSave.intArrayDictionary != null && sceneSave.intArrayDictionary.TryGetValue("inventoryListCapacityArray", out int[] inventoryCapacityArray))
                 {
                     inventoryListCapacityIntArray = inventoryCapacityArray;
@@ -385,25 +362,25 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
 
     public void StoreScene(string sceneName)
     {
-        // Nothing required her since the inventory manager is on a persistent scene;
+        // 这里不需要做任何事情，因为库存管理器在持久场景中
     }
 
     public void RestoreScene(string sceneName)
     {
-        // Nothing required here since the inventory manager is on a persistent scene;
+        // 这里不需要做任何事情，因为库存管理器在持久
     }
 
 
 
 
     /// <summary>
-    /// Remove an item from the inventory, and create a game object at the position it was dropped
+    /// 从库存中移除一个物品，并在它被丢弃的位置创建一个游戏对象
     /// </summary>
     public void RemoveItem(InventoryLocation inventoryLocation, int itemCode)
     {
         List<InventoryItem> inventoryList = inventoryLists[(int)inventoryLocation];
 
-        // Check if inventory already contains the item
+        // 检查库存是否已经包含该物品
         int itemPosition = FindItemInInventory(inventoryLocation, itemCode);
 
         if (itemPosition != -1)
@@ -411,7 +388,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
             RemoveItemAtPosition(inventoryList, itemCode, itemPosition);
         }
 
-        //  Send event that inventory has been updated
+        // 发送事件，库存已更新
         EventHandler.CallInventoryUpdatedEvent(inventoryLocation, inventoryLists[(int)inventoryLocation]);
 
     }
@@ -435,7 +412,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
     }
 
     /// <summary>
-    /// Set the selected inventory item for inventoryLocation to itemCode
+    /// 设置 inventoryLocation 的选定库存项为 itemCode
     /// </summary>
     public void SetSelectedInventoryItem(InventoryLocation inventoryLocation, int itemCode)
     {

@@ -72,13 +72,12 @@ public class NPCMovement : MonoBehaviour
         animatorOverrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
         animator.runtimeAnimatorController = animatorOverrideController;
 
-        // Initialise target world position, target grid position & target scene to current
+        // 初始化Initialise target world position, target grid position & target scene to current
         npcTargetScene = npcCurrentScene;
         npcTargetGridPosition = npcCurrentGridPosition;
         npcTargetWorldPosition = transform.position;
     }
 
-    // Start is called before the first frame update
     private void Start()
     {
         waitForFixedUpdate = new WaitForFixedUpdate();
@@ -92,7 +91,7 @@ public class NPCMovement : MonoBehaviour
         {
             if (npcIsMoving == false)
             {
-                // set npc current and next grid position - to take into account the npc might be animating
+                // 设置NPC当前和下一个网格位置 - 考虑到NPC可能正在动画
                 npcCurrentGridPosition = GetGridPosition(transform.position);
                 npcNextGridPosition = npcCurrentGridPosition;
 
@@ -102,7 +101,7 @@ public class NPCMovement : MonoBehaviour
 
                     npcCurrentScene = npcMovementStep.sceneName;
 
-                    // If NPC is about the move to a new scene reset position to starting point in new scene and update the step times
+                    // 如果NPC即将移动到新场景，则重置位置到新场景的起点并更新步骤时间
                     if (npcCurrentScene != npcPreviousMovementStepScene)
                     {
                         npcCurrentGridPosition = (Vector3Int)npcMovementStep.gridCoordinate;
@@ -113,7 +112,7 @@ public class NPCMovement : MonoBehaviour
                     }
 
 
-                    // If NPC is in current scene then set NPC to active to make visible, pop the movement step off the stack and then call method to move NPC
+                    // 如果NPC在当前场景，则设置NPC为可见，弹出移动步骤并调用方法移动NPC
                     if (npcCurrentScene.ToString() == SceneManager.GetActiveScene().name)
                     {
                         SetNPCActiveInScene();
@@ -127,8 +126,8 @@ public class NPCMovement : MonoBehaviour
                         MoveToGridPosition(npcNextGridPosition, npcMovementStepTime, TimeManager.Instance.GetGameTime());
                     }
 
-                    // else if NPC is not in current scene then set NPC to inactive to make invisible
-                    // - once the movement step time is less than game time (in the past) then pop movement step off the stack and set NPC position to movement step position
+                    // 如果NPC不在当前场景，则设置NPC为不可见
+                    // - 一旦移动步骤时间小于游戏时间（过去），则弹出移动步骤并设置NPC位置到移动步骤位置
                     else
                     {
                         SetNPCInactiveInScene();
@@ -152,7 +151,7 @@ public class NPCMovement : MonoBehaviour
                     }
 
                 }
-                // else if no more NPC movement steps
+                // 如果没有任何NPC移动步骤
                 else
                 {
                     ResetMoveAnimation();
@@ -195,7 +194,7 @@ public class NPCMovement : MonoBehaviour
         animatorOverrideController[blankAnimation] = blankAnimation;
         animator.SetBool(Settings.eventAnimation, false);
 
-        // Clear any rotation on npc
+        // 清除NPC的旋转
         transform.rotation = Quaternion.identity;
     }
 
@@ -262,7 +261,7 @@ public class NPCMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// returns the grid position given the worldPosition
+    /// 返回网格位置
     /// </summary>
     private Vector3Int GetGridPosition(Vector3 worldPosition)
     {
@@ -277,13 +276,13 @@ public class NPCMovement : MonoBehaviour
     }
 
     /// <summary>
-    ///  returns the world position (centre of grid square) from gridPosition
+    /// 返回世界位置（网格方块的中心）
     /// </summary>
     public Vector3 GetWorldPosition(Vector3Int gridPosition)
     {
         Vector3 worldPosition = grid.CellToWorld(gridPosition);
 
-        // Get centre of grid square
+        // 获取网格方块的中心
         return new Vector3(worldPosition.x + Settings.gridCellSize / 2f, worldPosition.y + Settings.gridCellSize / 2f, worldPosition.z);
     }
 
@@ -299,24 +298,24 @@ public class NPCMovement : MonoBehaviour
             StopCoroutine(moveToGridPositionRoutine);
         }
 
-        // Reset move animation
+        // 重置移动动画
         ResetMoveAnimation();
 
-        // Clear event animation
+        // 清除事件动画
         ClearNPCEventAnimation();
         npcTargetAnimationClip = null;
 
-        // Reset idle animation
+        // 重置空闲动画
         ResetIdleAnimation();
 
-        // Set idle animation
+        // 设置空闲动画
         SetIdleAnimation();
     }
 
 
     private void InitialiseNPC()
     {
-        // Active in scene
+        // 在场景中激活
         if (npcCurrentScene.ToString() == SceneManager.GetActiveScene().name)
         {
             SetNPCActiveInScene();
@@ -328,15 +327,15 @@ public class NPCMovement : MonoBehaviour
 
         npcPreviousMovementStepScene = npcCurrentScene;
 
-        // Get NPC Current Grid Position
+        // 获取NPC当前网格位置
         npcCurrentGridPosition = GetGridPosition(transform.position);
 
-        // Set Next Grid Position and Target Grid Position to current Grid Position
+        // 设置下一个网格位置和目标网格位置为当前网格位置
         npcNextGridPosition = npcCurrentGridPosition;
         npcTargetGridPosition = npcCurrentGridPosition;
         npcTargetWorldPosition = GetWorldPosition(npcTargetGridPosition);
 
-        // Get NPC WorldPosition
+        // 获取NPC世界位置
         npcNextWorldPosition = GetWorldPosition(npcCurrentGridPosition);
     }
 
@@ -353,16 +352,16 @@ public class NPCMovement : MonoBehaviour
 
         npcNextWorldPosition = GetWorldPosition(gridPosition);
 
-        // If movement step time is in the future, otherwise skip and move NPC immediately to position
+        // 如果移动步骤时间在未来，否则跳过并立即移动NPC到位置
         if (npcMovementStepTime > gameTime)
         {
-            //calculate time difference in seconds
+            // 计算时间差（秒）
             float timeToMove = (float)(npcMovementStepTime.TotalSeconds - gameTime.TotalSeconds);
 
-            // Calculate speed
+            // 计算速度
             float npcCalculatedSpeed = Mathf.Max(npcMinSpeed, Vector3.Distance(transform.position, npcNextWorldPosition) / timeToMove / Settings.secondsPerGameSecond);
 
-            //// If speed is at least npc min speed and less than npc max speed  then process, otherwise skip and move NPC immediately to position
+            // 如果速度至少为NPC最小速度且小于NPC最大速度，则处理，否则跳过并立即移动NPC到位置
             if (npcCalculatedSpeed <= npcMaxSpeed)
             {
                 while (Vector3.Distance(transform.position, npcNextWorldPosition) > Settings.pixelSize)
@@ -385,21 +384,21 @@ public class NPCMovement : MonoBehaviour
 
     private void SetMoveAnimation(Vector3Int gridPosition)
     {
-        // Reset idle animation
+        // 重置空闲动画
         ResetIdleAnimation();
 
-        // Reset move animation
+        // 重置移动动画
         ResetMoveAnimation();
 
-        // get world position
+        // 获取世界位置
         Vector3 toWorldPosition = GetWorldPosition(gridPosition);
 
-        // get vector
+        // 获取向量
         Vector3 directionVector = toWorldPosition - transform.position;
 
         if (Mathf.Abs(directionVector.x) >= Mathf.Abs(directionVector.y))
         {
-            // Use left/right animation
+            // 使用左/右动画
             if (directionVector.x > 0)
             {
                 animator.SetBool(Settings.walkRight, true);
@@ -411,7 +410,7 @@ public class NPCMovement : MonoBehaviour
         }
         else
         {
-            //Use up/down animation
+            // 使用上/下动画
             if (directionVector.y > 0)
             {
                 animator.SetBool(Settings.walkUp, true);

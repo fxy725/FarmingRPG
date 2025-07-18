@@ -18,3 +18,4 @@ EditorBuildSettings:
     path: Assets/Scenes/Scene3_Cabin.unity
     guid: a0e498a3b7507fb4c8ad79e685e6a56c
   m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0

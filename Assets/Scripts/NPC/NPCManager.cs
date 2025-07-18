@@ -17,21 +17,21 @@ public class NPCManager : SingletonMonobehaviour<NPCManager>
     {
         base.Awake();
 
-        // Create sceneRoute dictionary
+        // 创建场景路由字典
         sceneRouteDictionary = new Dictionary<string, SceneRoute>();
 
         if (so_SceneRouteList.sceneRouteList.Count > 0)
         {
             foreach (SceneRoute so_sceneRoute in so_SceneRouteList.sceneRouteList)
             {
-                // Check for duplicate routes in dictionary
+                // 检查字典中是否存在重复的路由
                 if (sceneRouteDictionary.ContainsKey(so_sceneRoute.fromSceneName.ToString() + so_sceneRoute.toSceneName.ToString()))
                 {
                     Debug.Log("** Duplicate Scene Route Key Found ** Check for duplicate routes in the scriptable object scene route list");
                     continue;
                 }
 
-                // Add route to dictionary
+                // 添加路由到字典
                 sceneRouteDictionary.Add(so_sceneRoute.fromSceneName.ToString() + so_sceneRoute.toSceneName.ToString(), so_sceneRoute);
             }
         }
@@ -39,7 +39,7 @@ public class NPCManager : SingletonMonobehaviour<NPCManager>
 
         aStar = GetComponent<AStar>();
 
-        // Get NPC gameobjects in scene
+        // 获取场景中的NPC游戏对象
         npcArray = FindObjectsByType<NPC>(FindObjectsSortMode.None);
     }
 
@@ -80,7 +80,7 @@ public class NPCManager : SingletonMonobehaviour<NPCManager>
     {
         SceneRoute sceneRoute;
 
-        // Get scene route from dictionary
+        // 从字典获取场景路由
         if (sceneRouteDictionary.TryGetValue(fromSceneName + toSceneName, out sceneRoute))
         {
             return sceneRoute;

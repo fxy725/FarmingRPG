@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Attach to a crop prefab to set the values in the grid property dictionary
+/// 将Crop预制件附加到作物上，以设置网格属性字典中的值
 /// </summary>
 public class CropInstantiator : MonoBehaviour
 {
     private UnityEngine.Grid grid;
+
     [SerializeField] private int daysSinceDug = -1;
     [SerializeField] private int daysSinceWatered = -1;
     [ItemCodeDescription]
@@ -15,28 +16,30 @@ public class CropInstantiator : MonoBehaviour
     [SerializeField] private int growthDays = 0;
 
 
-    private void OnDisable()
-    {
-        EventHandler.InstantiateCropPrefabsEvent -= InstantiateCropPrefabs;
-    }
+
 
     private void OnEnable()
     {
         EventHandler.InstantiateCropPrefabsEvent += InstantiateCropPrefabs;
     }
 
+    private void OnDisable()
+    {
+        EventHandler.InstantiateCropPrefabsEvent -= InstantiateCropPrefabs;
+    }
+
     private void InstantiateCropPrefabs()
     {
-        // Get grid gameobject
+        // 获取网格游戏对象
         grid = GameObject.FindFirstObjectByType<UnityEngine.Grid>();
 
-        // Get grid position for crop
+        // 获取作物网格位置
         Vector3Int cropGridPosition = grid.WorldToCell(transform.position);
 
-        // Set Crop Grid Properties
+        // 设置作物网格属性
         SetCropGridProperties(cropGridPosition);
 
-        // Destroy this gameobject
+        // 销毁这个游戏对象
         Destroy(gameObject);
     }
 

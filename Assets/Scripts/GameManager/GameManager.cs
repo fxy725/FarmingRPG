@@ -13,7 +13,5 @@ public class GameManager : SingletonMonobehaviour<GameManager>
 
         // 设置初始天气为晴天
         currentWeather = Weather.dry;
-
-
     }
 }

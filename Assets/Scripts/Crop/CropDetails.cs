@@ -4,34 +4,33 @@
 public class CropDetails
 {
     [ItemCodeDescription]
-    public int seedItemCode;  // this is the item code for the corresponding seed
-    public int[] growthDays; // days growth for each stage
-    public GameObject[] growthPrefab;// prefab to use when instantiating growth stages
-    public Sprite[] growthSprite; // growth sprite
-    public Season[] seasons; // growth seasons
-    public Sprite harvestedSprite; // sprite used once harvested
+    public int seedItemCode;  // 这是对应种子的物品代码
+    public int[] growthDays; // 每个生长阶段的生长天数
+    public GameObject[] growthPrefab;// 生长阶段的预制件
+    public Sprite[] growthSprite; // 生长精灵
+    public Season[] seasons; // 生长季节
+    public Sprite harvestedSprite; // 收获精灵
     [ItemCodeDescription]
-    public int harvestedTransformItemCode; // if the item transforms into another item when harvested this item code will be populated
-    public bool hideCropBeforeHarvestedAnimation; // if the crop should be disabled before the harvested animation
-    public bool disableCropCollidersBeforeHarvestedAnimation;// if colliders on crop should be disabled to avoid the harvested animation effecting any other game objects
-    public bool isHarvestedAnimation; // true if harvested animation to be played on final growth stage prefab
-    public bool isHarvestActionEffect = false; // flag to determine whether there is a harvest action effect
+    public int harvestedTransformItemCode; // 如果物品在收获时变成另一个物品，这个物品代码将被填充
+    public bool hideCropBeforeHarvestedAnimation; // 如果作物在收获动画之前应该禁用
+    public bool disableCropCollidersBeforeHarvestedAnimation;// 如果作物上的碰撞器应该禁用以避免收获动画影响任何其他游戏对象
+    public bool isHarvestedAnimation; // 如果收获动画要在最终生长阶段的预制件上播放，则为true
+    public bool isHarvestActionEffect = false; // 标志来确定是否有一个收获动作效果
     public bool spawnCropProducedAtPlayerPosition;
-    public HarvestActionEffect harvestActionEffect; // the harvest action effect for the crop
-    public SoundName harvestSound; // the harvest sound for the crop
+    public HarvestActionEffect harvestActionEffect; // 作物的收获动作效果
+    public SoundName harvestSound; // 作物的收获声音
 
     [ItemCodeDescription]
-    public int[] harvestToolItemCode; // array of item codes for the tools that can harvest or 0 array elements if no tool required
-    public int[] requiredHarvestActions; // number of harvest actions required for corressponding tool in harvest tool item code array
+    public int[] harvestToolItemCode; // 工具的物品代码数组，可以收获或0数组元素如果没有工具
+    public int[] requiredHarvestActions; // 每个工具的收获动作数量
     [ItemCodeDescription]
-    public int[] cropProducedItemCode; // array of item codes produced for the harvested crop
-    public int[] cropProducedMinQuantity; // array of minimum quantities produced for the harvested crop
-    public int[] cropProducedMaxQuantity; // if max quantity is > min quantity then a random number of crops between min and max are produced
-    public int daysToRegrow; // days to regrow next crop or -1 if a single crop
+    public int[] cropProducedItemCode; // 收获的作物生产的物品代码
+    public int[] cropProducedMinQuantity; // 收获的作物生产的物品最小数量
+    public int[] cropProducedMaxQuantity; // 如果最大数量大于最小数量，则生产
 
 
     /// <summary>
-    /// returns true if the tool item code can be used to harvest this crop, else returns false
+    /// 如果工具物品代码可以用来收获这个作物，则返回true，否则返回false
     /// </summary>
     public bool CanUseToolToHarvestCrop(int toolItemCode)
     {
@@ -48,7 +47,7 @@ public class CropDetails
 
 
     /// <summary>
-    /// returns -1 if the tool can't be used to harvest this crop, else returns the number of harvest actions required by this tool
+    /// 如果工具不能用来收获这个作物，则返回-1，否则返回这个工具的收获动作数量
     /// </summary>
     public int RequiredHarvestActionsForTool(int toolItemCode)
     {

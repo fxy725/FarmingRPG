@@ -151,7 +151,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
             PlayerTestInput();
 
-            // Send event to any listeners for player movement input
+            // 发送事件到任何监听器用于玩家移动输入
             EventHandler.CallMovementEvent(xInput, yInput, isWalking, isRunning, isIdle, isCarrying, toolEffect,
                 isUsingToolRight, isUsingToolLeft, isUsingToolUp, isUsingToolDown,
                 isLiftingToolRight, isLiftingToolLeft, isLiftingToolUp, isLiftingToolDown,
@@ -201,7 +201,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
             isIdle = false;
             movementSpeed = Settings.runningSpeed;
 
-            // Capture player direction for save game
+            // 捕获玩家方向用于保存游戏
             if (xInput < 0)
             {
                 playerDirection = Direction.left;
@@ -231,13 +231,13 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
     // 测试输入的临时例程
     private void PlayerTestInput()
     {
-        // Trigger Advance Time
+        // 触发提前时间
         if (Input.GetKey(KeyCode.T))
         {
             TimeManager.Instance.TestAdvanceGameMinute();
         }
 
-        // Trigger Advance Day
+        // 触发提前天
         if (Input.GetKeyDown(KeyCode.G))
         {
             TimeManager.Instance.TestAdvanceGameDay();
@@ -271,10 +271,10 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
             {
                 if (gridCursor.CursorIsEnabled || cursor.CursorIsEnabled)
                 {
-                    // Get Cursor Grid Position
+                    // 获取光标网格位置
                     Vector3Int cursorGridPosition = gridCursor.GetGridPositionForCursor();
 
-                    // Get Player Grid Position
+                    // 获取玩家网格位置
                     Vector3Int playerGridPosition = gridCursor.GetGridPositionForPlayer();
 
                     ProcessPlayerClickInput(cursorGridPosition, playerGridPosition);
@@ -289,10 +289,10 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
         Vector3Int playerDirection = GetPlayerClickDirection(cursorGridPosition, playerGridPosition);
 
-        // Get Grid property details at cursor position (the GridCursor validation routine ensures that grid property details are not null)
+        // 获取光标位置的网格属性详情（GridCursor验证例程确保网格属性详情不为空）
         GridPropertyDetails gridPropertyDetails = GridPropertiesManager.Instance.GetGridPropertyDetails(cursorGridPosition.x, cursorGridPosition.y);
 
-        // Get Selected item details
+        // 获取选定的物品详情
         ItemDetails itemDetails = InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player);
 
         if (itemDetails != null)
@@ -392,13 +392,13 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         switch (playerDirection)
         {
             case Direction.up:
-                // set idle up trigger
+                // 设置空闲上触发器
                 EventHandler.CallMovementEvent(0f, 0f, false, false, false, false, ToolEffect.none, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false);
 
                 break;
 
             case Direction.down:
-                // set idle down trigger
+                // 设置空闲下触发器
                 EventHandler.CallMovementEvent(0f, 0f, false, false, false, false, ToolEffect.none, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false);
                 break;
 
@@ -411,7 +411,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
                 break;
 
             default:
-                // set idle down trigger
+                // 设置空闲下触发器
                 EventHandler.CallMovementEvent(0f, 0f, false, false, false, false, ToolEffect.none, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false);
 
                 break;
@@ -497,20 +497,20 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
     private void PlantSeedAtCursor(GridPropertyDetails gridPropertyDetails, ItemDetails itemDetails)
     {
-        // Process if we have cropdetails for the seed
+        // 处理如果种子有作物详情
         if (GridPropertiesManager.Instance.GetCropDetails(itemDetails.itemCode) != null)
         {
-            // Update grid properties with seed details
+            // 更新网格属性与种子详情
             gridPropertyDetails.seedItemCode = itemDetails.itemCode;
             gridPropertyDetails.growthDays = 0;
 
-            // Display planted crop at grid property details
+            // 显示种植的作物在网格属性详情
             GridPropertiesManager.Instance.DisplayPlantedCrop(gridPropertyDetails);
 
-            // Remove item from inventory
+            // 从库存中移除物品
             EventHandler.CallRemoveSelectedItemFromInventoryEvent();
 
-            // Make planting sound
+            // 播放种植声音
             AudioManager.Instance.PlaySound(SoundName.effectPlantingSound);
 
         }
@@ -519,10 +519,10 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
     private void HoeGroundAtCursor(GridPropertyDetails gridPropertyDetails, Vector3Int playerDirection)
     {
-        //Play sound
+        // 播放声音
         AudioManager.Instance.PlaySound(SoundName.effectHoe);
 
-        // Trigger animation
+        // 触发动画
         StartCoroutine(HoeGroundAtCursorCoroutine(playerDirection, gridPropertyDetails));
     }
 
@@ -531,7 +531,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         PlayerInputIsDisabled = true;
         playerToolUseDisabled = true;
 
-        // Set tool animation to hoe in override animation
+        // 设置工具动画为锄头在覆盖动画
         toolPart.partVariantType = PartVariantType.hoe;
         characterAttributeCustomizationList.Clear();
         characterAttributeCustomizationList.Add(toolPart);
@@ -556,20 +556,20 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
         yield return useToolAnimationPause;
 
-        // Set Grid property details for dug ground
+        // 设置网格属性详情为挖地
         if (gridPropertyDetails.daysSinceDug == -1)
         {
             gridPropertyDetails.daysSinceDug = 0;
         }
 
-        // Set grid property to dug
+        // 设置网格属性为挖地
         GridPropertiesManager.Instance.SetGridPropertyDetails(gridPropertyDetails.gridX, gridPropertyDetails.gridY, gridPropertyDetails);
 
-        // Display dug grid tiles
+        // 显示挖地网格方块
         GridPropertiesManager.Instance.DisplayDugGround(gridPropertyDetails);
 
 
-        // After animation pause
+        // 在动画暂停后
         yield return afterUseToolAnimationPause;
 
         PlayerInputIsDisabled = false;
@@ -578,10 +578,10 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
     private void WaterGroundAtCursor(GridPropertyDetails gridPropertyDetails, Vector3Int playerDirection)
     {
-        //Play sound
+        // 播放声音
         AudioManager.Instance.PlaySound(SoundName.effectWateringCan);
 
-        // Trigger animation
+        // 触发动画
         StartCoroutine(WaterGroundAtCursorCoroutine(playerDirection, gridPropertyDetails));
     }
 
@@ -590,13 +590,13 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         PlayerInputIsDisabled = true;
         playerToolUseDisabled = true;
 
-        // Set tool animation to watering can in override animation
+        // 设置工具动画为浇水壶在覆盖动画
         toolPart.partVariantType = PartVariantType.wateringCan;
         characterAttributeCustomizationList.Clear();
         characterAttributeCustomizationList.Add(toolPart);
         animationOverrides.ApplyCharacterCustomizationParameters(characterAttributeCustomizationList);
 
-        // TODO: If there is water in the watering can
+        // TODO: 如果浇水壶中有水
         toolEffect = ToolEffect.watering;
 
         if (playerDirection == Vector3Int.right)
@@ -618,19 +618,19 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
         yield return liftToolAnimationPause;
 
-        // Set Grid property details for watered ground
+        // 设置网格属性详情为浇水
         if (gridPropertyDetails.daysSinceWatered == -1)
         {
             gridPropertyDetails.daysSinceWatered = 0;
         }
 
-        // Set grid property to watered
+        // 设置网格属性为浇水
         GridPropertiesManager.Instance.SetGridPropertyDetails(gridPropertyDetails.gridX, gridPropertyDetails.gridY, gridPropertyDetails);
 
-        // Display watered grid tiles
+        // 显示浇水网格方块
         GridPropertiesManager.Instance.DisplayWateredGround(gridPropertyDetails);
 
-        // After animation pause
+        // 在动画暂停后
         yield return afterLiftToolAnimationPause;
 
         PlayerInputIsDisabled = false;
@@ -647,13 +647,13 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         PlayerInputIsDisabled = true;
         playerToolUseDisabled = true;
 
-        // Set tool animation to scythe in override animation
+        // 设置工具动画为镰刀在覆盖动画
         toolPart.partVariantType = PartVariantType.scythe;
         characterAttributeCustomizationList.Clear();
         characterAttributeCustomizationList.Add(toolPart);
         animationOverrides.ApplyCharacterCustomizationParameters(characterAttributeCustomizationList);
 
-        // Reap in player direction
+        // 在玩家方向收割
         UseToolInPlayerDirection(itemDetails, playerDirection);
 
         yield return useToolAnimationPause;
@@ -664,10 +664,10 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
     private void ChopInPlayerDirection(GridPropertyDetails gridPropertyDetails, ItemDetails equippedItemDetails, Vector3Int playerDirection)
     {
-        // Play sound
+        // 播放声音
         AudioManager.Instance.PlaySound(SoundName.effectAxe);
 
-        // Trigger animation
+        // 触发动画
         StartCoroutine(ChopInPlayerDirectionCoroutine(gridPropertyDetails, equippedItemDetails, playerDirection));
     }
 
@@ -676,7 +676,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         PlayerInputIsDisabled = true;
         playerToolUseDisabled = true;
 
-        // Set tool animation to axe in override animation
+        // 设置工具动画为斧头在覆盖动画
         toolPart.partVariantType = PartVariantType.axe;
         characterAttributeCustomizationList.Clear();
         characterAttributeCustomizationList.Add(toolPart);
@@ -686,7 +686,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
         yield return useToolAnimationPause;
 
-        // After animation pause
+        // 在动画暂停后
         yield return afterUseToolAnimationPause;
 
         PlayerInputIsDisabled = false;
@@ -697,7 +697,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
     private void CollectInPlayerDirection(GridPropertyDetails gridPropertyDetails, ItemDetails equippedItemDetails, Vector3Int playerDirection)
     {
-        // Play sound
+        // 播放声音
         AudioManager.Instance.PlaySound(SoundName.effectBasket);
 
         StartCoroutine(CollectInPlayerDirectionRoutine(gridPropertyDetails, equippedItemDetails, playerDirection));
@@ -713,7 +713,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
         yield return pickAnimationPause;
 
-        // After animation pause
+        // 在动画暂停后
         yield return afterPickAnimationPause;
 
         PlayerInputIsDisabled = false;
@@ -722,7 +722,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
     private void BreakInPlayerDirection(GridPropertyDetails gridPropertyDetails, ItemDetails equippedItemDetails, Vector3Int playerDirection)
     {
-        // Play sound
+        // 播放声音
         AudioManager.Instance.PlaySound(SoundName.effectPickaxe);
 
         StartCoroutine(BreakInPlayerDirectionRoutine(gridPropertyDetails, equippedItemDetails, playerDirection));
@@ -733,7 +733,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         PlayerInputIsDisabled = true;
         playerToolUseDisabled = true;
 
-        // Set tool animation to pickaxe in override animation
+        // 设置工具动画为镐在覆盖动画
         toolPart.partVariantType = PartVariantType.pickaxe;
         characterAttributeCustomizationList.Clear();
         characterAttributeCustomizationList.Add(toolPart);
@@ -743,7 +743,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
         yield return useToolAnimationPause;
 
-        // After animation pause
+        // 在动画暂停后
         yield return afterUseToolAnimationPause;
 
         PlayerInputIsDisabled = false;
@@ -776,32 +776,32 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
                     break;
             }
 
-            // Define centre point of square which will be used for collision testing
+            // 定义用于碰撞测试的正方形的中心点
             Vector2 point = new Vector2(GetPlayerCentrePosition().x + (playerDirection.x * (equippedItemDetails.itemUseRadius / 2f)), GetPlayerCentrePosition().y + playerDirection.y * (equippedItemDetails.itemUseRadius / 2f));
 
-            // Define size of the square which will be used for collision testing
+            // 定义用于碰撞测试的正方形的尺寸
             Vector2 size = new Vector2(equippedItemDetails.itemUseRadius, equippedItemDetails.itemUseRadius);
 
-            // Get Item components with 2D collider located in the square at the centre point defined (2d colliders tested limited to maxCollidersToTestPerReapSwing)
+            // 获取2D碰撞器位于定义的中心点正方形中的项目组件（2D碰撞器测试限制为maxCollidersToTestPerReapSwing）
             Item[] itemArray = HelperMethods.GetComponentsAtBoxLocationNonAlloc<Item>(Settings.maxCollidersToTestPerReapSwing, point, size, 0f);
 
             int reapableItemCount = 0;
 
-            // Loop through all items retrieved
+            // 遍历所有检索到的物品
             for (int i = itemArray.Length - 1; i >= 0; i--)
             {
                 if (itemArray[i] != null)
                 {
-                    // Destroy item game object if reapable
+                    // 如果物品可收割，则销毁物品游戏对象
                     if (InventoryManager.Instance.GetItemDetails(itemArray[i].ItemCode).itemType == ItemType.Reapable_scenary)
                     {
-                        // Effect position
+                        // 效果位置
                         Vector3 effectPosition = new Vector3(itemArray[i].transform.position.x, itemArray[i].transform.position.y + Settings.gridCellSize / 2f, itemArray[i].transform.position.z);
 
-                        // Trigger reaping effect
+                        // 触发收割效果
                         EventHandler.CallHarvestActionEffectEvent(effectPosition, HarvestActionEffect.reaping);
 
-                        //Play sound
+                        // 播放声音
                         AudioManager.Instance.PlaySound(SoundName.effectScythe);
 
                         Destroy(itemArray[i].gameObject);
@@ -817,7 +817,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
 
     /// <summary>
-    /// Method processes crop with equipped item in player direction
+    /// 方法处理玩家方向装备的作物
     /// </summary>
     private void ProcessCropWithEquippedItemInPlayerDirection(Vector3Int playerDirection, ItemDetails equippedItemDetails, GridPropertyDetails gridPropertyDetails)
     {
@@ -870,10 +870,10 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
                 break;
         }
 
-        // Get crop at cursor grid location
+        // 获取光标网格位置的作物
         Crop crop = GridPropertiesManager.Instance.GetCropObjectAtGridLocation(gridPropertyDetails);
 
-        // Execute Process Tool Action For crop
+        // 执行作物工具操作
         if (crop != null)
         {
             switch (equippedItemDetails.itemType)
@@ -944,7 +944,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         equippedItemSpriteRenderer.sprite = null;
         equippedItemSpriteRenderer.color = new Color(1f, 1f, 1f, 0f);
 
-        // Apply base character arms customisation
+        // 应用基础角色手臂定制
         armsPart.partVariantType = PartVariantType.none;
         characterAttributeCustomizationList.Clear();
         characterAttributeCustomizationList.Add(armsPart);
@@ -961,7 +961,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
             equippedItemSpriteRenderer.sprite = itemDetails.itemSprite;
             equippedItemSpriteRenderer.color = new Color(1f, 1f, 1f, 1f);
 
-            // Apply 'carry' character arms customisation
+            // 应用“携带”角色手臂定制
             armsPart.partVariantType = PartVariantType.carry;
             characterAttributeCustomizationList.Clear();
             characterAttributeCustomizationList.Add(armsPart);
@@ -973,7 +973,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
     public Vector3 GetPlayerViewportPosition()
     {
-        // Vector3 viewport position for player ((0,0) viewport bottom left, (1,1) viewport top right
+        // 玩家视口位置（（0,0）视口左下角，（1,1）视口右上角）
         return mainCamera.WorldToViewportPoint(transform.position);
     }
 
@@ -994,29 +994,29 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
     public GameObjectSave SaveData()
     {
-        // Delete saveScene for game object if it already exists
+        // 如果游戏对象已存在，则删除保存场景
         GameObjectSave.sceneData.Remove(Settings.PersistentScene);
 
-        // Create saveScene for game object
+        // 创建保存场景用于游戏对象
         SceneSave sceneSave = new SceneSave();
 
-        // Create Vector3 Dictionary
+        // 创建Vector3字典
         sceneSave.vector3Dictionary = new Dictionary<string, Vector3>();
 
-        //  Create String Dictionary
+        // 创建字符串字典
         sceneSave.stringDictionary = new Dictionary<string, string>();
 
-        // Add Player position to Vector3 dictionary
+        // 添加玩家位置到Vector3字典
         Vector3 vector3Serializable = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         sceneSave.vector3Dictionary.Add("playerPosition", vector3Serializable);
 
-        // Add Current Scene Name to string dictionary
+        // 添加当前场景名称到字符串字典
         sceneSave.stringDictionary.Add("currentScene", SceneManager.GetActiveScene().name);
 
-        // Add Player Direction to string dictionary
+        // 添加玩家方向到字符串字典
         sceneSave.stringDictionary.Add("playerDirection", playerDirection.ToString());
 
-        // Add sceneSave data for player game object
+        // 添加玩家游戏对象的场景保存数据
         GameObjectSave.sceneData.Add(Settings.PersistentScene, sceneSave);
 
         return GameObjectSave;
@@ -1027,25 +1027,25 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
     {
         if (gameSave.gameObjectData.TryGetValue(ISaveableUniqueID, out GameObjectSave gameObjectSave))
         {
-            // Get save data dictionary for scene
+            // 获取场景的保存数据字典
             if (gameObjectSave.sceneData.TryGetValue(Settings.PersistentScene, out SceneSave sceneSave))
             {
-                // Get player position
+                // 获取玩家位置
                 if (sceneSave.vector3Dictionary != null && sceneSave.vector3Dictionary.TryGetValue("playerPosition", out Vector3 playerPosition))
                 {
                     transform.position = new Vector3(playerPosition.x, playerPosition.y, playerPosition.z);
                 }
 
-                // Get String dictionary
+                // 获取字符串字典
                 if (sceneSave.stringDictionary != null)
                 {
-                    // Get player scene
+                    // 获取玩家场景
                     if (sceneSave.stringDictionary.TryGetValue("currentScene", out string currentScene))
                     {
                         SceneControllerManager.Instance.FadeAndLoadScene(currentScene, transform.position);
                     }
 
-                    // Get player direction
+                    // 获取玩家方向
                     if (sceneSave.stringDictionary.TryGetValue("playerDirection", out string playerDir))
                     {
                         bool playerDirFound = Enum.TryParse<Direction>(playerDir, true, out Direction direction);
@@ -1063,12 +1063,12 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
     public void StoreScene(string sceneName)
     {
-        // Nothing required here since the player is on a persistent scene;
+        // 这里不需要做任何事情，因为玩家在持久场景上
     }
 
 
     public void RestoreScene(string sceneName)
     {
-        // Nothing required here since the player is on a persistent scene;
+        // 这里不需要做任何事情，因为玩家在持久场景上
     }
 }

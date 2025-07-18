@@ -24,7 +24,7 @@ public class ItemNudge : MonoBehaviour
                 StartCoroutine(RotateClock());
             }
 
-            //Play rustle sound if player
+            // 播放玩家碰撞时的沙沙声
             if (collision.gameObject.tag == "Player")
             {
                 AudioManager.Instance.PlaySound(SoundName.effectRustle);
@@ -47,7 +47,7 @@ public class ItemNudge : MonoBehaviour
                 StartCoroutine(RotateClock());
             }
 
-            //Play rustle sound if player
+            // 播放玩家碰撞时的沙沙声
             if (collision.gameObject.tag == "Player")
             {
                 AudioManager.Instance.PlaySound(SoundName.effectRustle);

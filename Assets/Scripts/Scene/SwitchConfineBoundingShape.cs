@@ -1,5 +1,4 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
 using Cinemachine;
 
 public class SwitchConfineBoundingShape : MonoBehaviour
@@ -16,18 +15,18 @@ public class SwitchConfineBoundingShape : MonoBehaviour
     }
 
     /// <summary>
-    /// Switch the collider that cinemachine uses to define the edges of the screen
+    /// 切换cinemachine使用的collider来定义屏幕的边缘
     /// </summary>
     private void SwitchBoundingShape()
     {
-        //  Get the polygon collider on the 'boundsconfiner' gameobject which is used by Cinemachine to prevent the camera going beyond the screen edges
+        // 获取'boundsconfiner'游戏对象上的polygon collider，该collider由Cinemachine使用来防止摄像机超出屏幕边缘
         PolygonCollider2D polygonCollider2D = GameObject.FindGameObjectWithTag(Tags.BoundsConfiner).GetComponent<PolygonCollider2D>();
 
         CinemachineConfiner cinemachineConfiner = GetComponent<CinemachineConfiner>();
 
         cinemachineConfiner.m_BoundingShape2D = polygonCollider2D;
 
-        // since the confiner bounds have changed need to call this to clear the cache;
+        // 由于confiner边界已更改，需要调用此方法来清除缓存;
 
         cinemachineConfiner.InvalidatePathCache();
     }

@@ -39,6 +39,7 @@ public class VFXManager : SingletonMonobehaviour<VFXManager>
         effectGameObject.SetActive(false);
     }
 
+    // 显示收割动作效果
     private void DisplayHarvestActionEffect(Vector3 effectPosition, HarvestActionEffect harvestActionEffect)
     {
         switch (harvestActionEffect)

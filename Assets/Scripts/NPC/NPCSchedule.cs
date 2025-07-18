@@ -10,7 +10,7 @@ public class NPCSchedule : MonoBehaviour
 
     private void Awake()
     {
-        // Load NPC schedule event list into a sorted set
+        // 加载NPC计划事件列表到排序集
         npcScheduleEventSet = new SortedSet<NPCScheduleEvent>(new NPCScheduleEventSort());
 
         foreach (NPCScheduleEvent npcScheduleEvent in so_NPCScheduleEventList.npcScheduleEventList)
@@ -18,7 +18,7 @@ public class NPCSchedule : MonoBehaviour
             npcScheduleEventSet.Add(npcScheduleEvent);
         }
 
-        // Get NPC Path Component
+        // 获取NPC路径组件
         npcPath = GetComponent<NPCPath>();
 
     }
@@ -37,7 +37,7 @@ public class NPCSchedule : MonoBehaviour
     {
         int time = (gameHour * 100) + gameMinute;
 
-        //Attempt to get matching schedule
+        // 尝试获取匹配计划
 
         NPCScheduleEvent matchingNPCScheduleEvent = null;
 
@@ -45,7 +45,7 @@ public class NPCSchedule : MonoBehaviour
         {
             if (npcScheduleEvent.Time == time)
             {
-                // Time match now check if parameters match
+                // 时间匹配现在检查参数是否匹配
                 if (npcScheduleEvent.day != 0 && npcScheduleEvent.day != gameDay)
                     continue;
 
@@ -55,7 +55,7 @@ public class NPCSchedule : MonoBehaviour
                 if (npcScheduleEvent.weather != Weather.none && npcScheduleEvent.weather != GameManager.Instance.currentWeather)
                     continue;
 
-                //Schdule matches
+                // 计划匹配
                 // Debug.Log("Schedule Matches! " + npcScheduleEvent);
                 matchingNPCScheduleEvent = npcScheduleEvent;
                 break;
@@ -66,10 +66,10 @@ public class NPCSchedule : MonoBehaviour
             }
         }
 
-        // Now test is matchingSchedule!=null and do something;
+        // 现在测试匹配计划是否不为空并执行某些操作;
         if (matchingNPCScheduleEvent != null)
         {
-            // Build path for matching schedule
+            // 为匹配计划构建路径
             npcPath.BuildPath(matchingNPCScheduleEvent);
         }
     }

@@ -42,7 +42,7 @@ public class SaveLoadManager : SingletonMonobehaviour<SaveLoadManager>
                     saveableObjectList[i].LoadData(gameSave);
                 }
                 // 如果可保存对象的唯一ID不在gameObjectData的键中，那么销毁该对象。
-                // else if iSaveableObject unique ID is not in the game object data then destroy object
+                // 如果可保存对象的唯一ID不在gameObjectData的键中，那么销毁该对象。
                 else
                 {
                     Component component = (Component)saveableObjectList[i];

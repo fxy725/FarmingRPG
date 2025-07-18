@@ -58,13 +58,13 @@ public class AnimationOverrides : MonoBehaviour
                 }
             }
 
-            // Get base current animations for animator
+            // 获取Animator的基动画
             AnimatorOverrideController aoc = new AnimatorOverrideController(currentAnimator.runtimeAnimatorController);
             List<AnimationClip> animationsList = new List<AnimationClip>(aoc.animationClips);
 
             foreach (AnimationClip animationClip in animationsList)
             {
-                // find animation in dictionary
+                // 在字典中查找动画
                 SO_AnimationType so_AnimationType;
                 bool foundAnimation = animationTypeDictionaryByAnimation.TryGetValue(animationClip, out so_AnimationType);
 
@@ -84,7 +84,7 @@ public class AnimationOverrides : MonoBehaviour
                 }
             }
 
-            // Apply animation updates to animation override controller and then update animator with the new controller
+            // 应用动画更新到动画覆盖控制器，然后更新Animator
             aoc.ApplyOverrides(animsKeyValuePairList);
             currentAnimator.runtimeAnimatorController = aoc;
         }

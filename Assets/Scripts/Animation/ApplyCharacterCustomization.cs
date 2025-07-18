@@ -17,8 +17,8 @@ public class colorSwap
 
 public class ApplyCharacterCustomization : MonoBehaviour
 {
-    // Input Textures
-    [Header("Base Textures")]
+    // 输入纹理
+    [Header("基础纹理")]
     [SerializeField] private Texture2D maleFarmerBaseTexture = null;
     [SerializeField] private Texture2D femaleFarmerBaseTexture = null;
     [SerializeField] private Texture2D shirtsBaseTexture = null;
@@ -27,8 +27,8 @@ public class ApplyCharacterCustomization : MonoBehaviour
     [SerializeField] private Texture2D adornmentsBaseTexture = null;
     private Texture2D farmerBaseTexture;
 
-    // Created Textures
-    [Header("OutputBase Texture To Be Used For Animation")]
+    // 创建纹理
+    [Header("输出纹理")]
     [SerializeField] private Texture2D farmerBaseCustomised = null;
     [SerializeField] private Texture2D hairCustomised = null;
     [SerializeField] private Texture2D hatsCustomised = null;
@@ -37,40 +37,40 @@ public class ApplyCharacterCustomization : MonoBehaviour
     private Texture2D selectedShirt;
     private Texture2D selectedAdornment;
 
-    // Select Shirt Style
-    [Header("Select Shirt Style")]
+    // 选择衬衫样式
+    [Header("选择衬衫样式")]
     [Range(0, 1)]
     [SerializeField] private int inputShirtStyleNo = 0;
 
-    // Select Hair Style
-    [Header("Select Hair Style")]
+    // 选择发型样式
+    [Header("选择发型样式")]
     [Range(0, 2)]
     [SerializeField] private int inputHairStyleNo = 0;
 
-    // Select Hat Style
-    [Header("Select Hat Style")]
+    // 选择帽子样式
+    [Header("选择帽子样式")]
     [Range(0, 1)]
     [SerializeField] private int inputHatStyleNo = 0;
 
-    // Select Adornments Style
-    [Header("Select Adornments Style")]
+    // 选择装饰样式
+    [Header("选择装饰样式")]
     [Range(0, 2)]
     [SerializeField] private int inputAdornmentsStyleNo = 0;
 
-    // Select Skin Type
-    [Header("Select Skin Type")]
+    // 选择皮肤类型
+    [Header("选择皮肤类型")]
     [Range(0, 3)]
     [SerializeField] private int inputSkinType = 0;
 
-    // Select Sex
-    [Header("Select Sex: 0=Male, 1=Female")]
+    // 选择性别
+    [Header("选择性别: 0=男, 1=女")]
     [Range(0, 1)]
     [SerializeField] private int inputSex = 0;
 
-    // Select Hair Color
+    // 选择头发颜色
     [SerializeField] private Color inputHairColor = Color.black;
 
-    // Select Trouser Color
+    // 选择裤子颜色
     [SerializeField] private Color inputTrouserColor = Color.blue;
 
 
@@ -78,7 +78,7 @@ public class ApplyCharacterCustomization : MonoBehaviour
     private Vector2Int[,] bodyShirtOffsetArray;
     private Vector2Int[,] bodyAdornmentsOffsetArray;
 
-    // Dimensions
+    // 尺寸
     private int bodyRows = 21;
     private int bodyColumns = 6;
     private int farmerSpriteWidth = 16;
@@ -105,12 +105,12 @@ public class ApplyCharacterCustomization : MonoBehaviour
 
     private List<colorSwap> colorSwapList;
 
-    // Target arm colours for color replacement
+    // 目标手臂颜色用于颜色替换
     private Color32 armTargetColor1 = new Color32(77, 13, 13, 255);  // darkest
     private Color32 armTargetColor2 = new Color32(138, 41, 41, 255); // next darkest
     private Color32 armTargetColor3 = new Color32(172, 50, 50, 255); // lightest
 
-    // Target skin colours for color replacement
+    // 目标皮肤颜色用于颜色替换
     private Color32 skinTargetColor1 = new Color32(145, 117, 90, 255);  // darkest
     private Color32 skinTargetColor2 = new Color32(204, 155, 108, 255);  // next darkest
     private Color32 skinTargetColor3 = new Color32(207, 166, 128, 255);  // next darkest
@@ -119,10 +119,10 @@ public class ApplyCharacterCustomization : MonoBehaviour
 
     private void Awake()
     {
-        // Initialise color swap list
+        // 初始化颜色交换列表
         colorSwapList = new List<colorSwap>();
 
-        // Process Customisation
+        // 处理自定义
         ProcessCustomisation();
     }
 
@@ -149,7 +149,7 @@ public class ApplyCharacterCustomization : MonoBehaviour
 
     private void ProcessGender()
     {
-        // Set base spritesheet by gender
+        // 根据性别设置基础精灵表
         if (inputSex == 0)
         {
             farmerBaseTexture = maleFarmerBaseTexture;
@@ -159,78 +159,78 @@ public class ApplyCharacterCustomization : MonoBehaviour
             farmerBaseTexture = femaleFarmerBaseTexture;
         }
 
-        // Get base pixels
+        // 获取基础像素
         Color[] farmerBasePixels = farmerBaseTexture.GetPixels();
 
-        // Set changed base pixels
+        // 设置更改后的基础像素
         farmerBaseCustomised.SetPixels(farmerBasePixels);
         farmerBaseCustomised.Apply();
     }
 
     private void ProcessShirt()
     {
-        // Initialise body facing shirt array
+        // 初始化身体朝向衬衫数组
         bodyFacingArray = new Facing[bodyColumns, bodyRows];
 
-        // Populate body facing shirt array
+        // 填充身体朝向衬衫数组
         PopulateBodyFacingArray();
 
-        // Initialise body shirt offset array;
+        // 初始化身体衬衫偏移数组;
         bodyShirtOffsetArray = new Vector2Int[bodyColumns, bodyRows];
 
-        // Populate body shirt offset array
+        // 填充身体衬衫偏移数组
         PopulateBodyShirtOffsetArray();
 
-        // Create Selected Shirt Texture
+        // 创建选定的衬衫纹理
         AddShirtToTexture(inputShirtStyleNo);
 
-        // Apply shirt texture to base
+        // 应用衬衫纹理到基础
         ApplyShirtTextureToBase();
     }
 
     private void ProcessArms()
     {
-        // Get arm pixels to recolor
+        // 获取手臂像素以重新着色
         Color[] farmerPixelsToRecolour = farmerBaseTexture.GetPixels(0, 0, 288, farmerBaseTexture.height);
 
-        // Populate Arm Color Swap List
+        // 填充手臂颜色交换列表
         PopulateArmColorSwapList();
 
-        // Change arm colours
+        // 改变手臂颜色
         ChangePixelColors(farmerPixelsToRecolour, colorSwapList);
 
-        // Set recoloured pixels
+        // 设置重新着色的像素
         farmerBaseCustomised.SetPixels(0, 0, 288, farmerBaseTexture.height, farmerPixelsToRecolour);
 
-        // Apply texture changes
+        // 应用纹理更改
         farmerBaseCustomised.Apply();
     }
 
     private void ProcessTrousers()
     {
-        // Get trouser pixels to recolor
+        // 获取裤子像素以重新着色
         Color[] farmerTrouserPixels = farmerBaseTexture.GetPixels(288, 0, 96, farmerBaseTexture.height);
 
-        // Change trouser colours
+        // 改变裤子颜色
         TintPixelColors(farmerTrouserPixels, inputTrouserColor);
 
-        // Set changed trouser pixels
+        // 设置更改后的裤子像素
         farmerBaseCustomised.SetPixels(288, 0, 96, farmerBaseTexture.height, farmerTrouserPixels);
 
-        // Apply texture changes
+        // 应用纹理更改
         farmerBaseCustomised.Apply();
 
     }
 
     private void ProcessHair()
     {
-        // Create Selected Hair Texture
+        // 创建选定的头发纹理
         AddHairToTexture(inputHairStyleNo);
 
-        // Get hair pixels to recolor
+        // 获取头发像素以重新着色
         Color[] farmerSelectedHairPixels = hairCustomised.GetPixels();
 
-        // Tint hair pixels
+        // 着色头发像素
         TintPixelColors(farmerSelectedHairPixels, inputHairColor);
 
         hairCustomised.SetPixels(farmerSelectedHairPixels);
@@ -240,44 +240,44 @@ public class ApplyCharacterCustomization : MonoBehaviour
 
     private void ProcessSkin()
     {
-        // Get skin pixels to recolor
+        // 获取皮肤像素以重新着色
         Color[] farmerPixelsToRecolour = farmerBaseCustomised.GetPixels(0, 0, 288, farmerBaseTexture.height);
 
-        // Populate Skin Color Swap List
+        // 填充皮肤颜色交换列表
         PopulateSkinColorSwapList(inputSkinType);
 
-        // Change skin colours
+        // 改变皮肤颜色
         ChangePixelColors(farmerPixelsToRecolour, colorSwapList);
 
-        // Set recoloured pixels
+        // 设置重新着色的像素
         farmerBaseCustomised.SetPixels(0, 0, 288, farmerBaseTexture.height, farmerPixelsToRecolour);
 
-        // Apply texture changes
+        // 应用纹理更改
         farmerBaseCustomised.Apply();
     }
 
     private void ProcessHat()
     {
-        // Create Selected Hat Texture
+        // 创建选定的帽子纹理
         AddHatToTexture(inputHatStyleNo);
     }
 
     private void ProcessAdornments()
     {
-        // Initialise body adornments offset array;
+        // 初始化身体装饰偏移数组;
         bodyAdornmentsOffsetArray = new Vector2Int[bodyColumns, bodyRows];
 
-        // Populate body adornments offset array
+        // 填充身体装饰偏移数组
         PopulateBodyAdornmentsOffsetArray();
 
-        // Create Selected Adornments Texture
+        // 创建选定的装饰纹理
         AddAdornmentsToTexture(inputAdornmentsStyleNo);
 
-        //Create new adornments base texture
+        // 创建新的装饰基础纹理
         farmerBaseAdornmentsUpdated = new Texture2D(farmerBaseTexture.width, farmerBaseTexture.height);
         farmerBaseAdornmentsUpdated.filterMode = FilterMode.Point;
 
-        // Set adornments base texture to transparent
+        // 设置装饰基础纹理为透明
         SetTextureToTransparent(farmerBaseAdornmentsUpdated);
         ApplyAdornmentsTextureToBase();
     }
@@ -285,24 +285,24 @@ public class ApplyCharacterCustomization : MonoBehaviour
 
     private void MergeCustomisations()
     {
-        // Farmer Shirt Pixels
+        // 农民衬衫像素
         Color[] farmerShirtPixels = farmerBaseShirtsUpdated.GetPixels(0, 0, bodyColumns * farmerSpriteWidth, farmerBaseTexture.height);
-        // Farmer Trouser Pixels
+        // 农民裤子像素
         Color[] farmerTrouserPixelsSelection = farmerBaseCustomised.GetPixels(288, 0, 96, farmerBaseTexture.height);
-        // Farmer Adornments Pixels
+        // 农民装饰像素
         Color[] farmerAdornmentsPixels = farmerBaseAdornmentsUpdated.GetPixels(0, 0, bodyColumns * farmerSpriteWidth, farmerBaseTexture.height);
 
-        // Farmer Body Pixels
+        // 农民身体像素
         Color[] farmerBodyPixels = farmerBaseCustomised.GetPixels(0, 0, bodyColumns * farmerSpriteWidth, farmerBaseTexture.height);
 
         MergeColourArray(farmerBodyPixels, farmerTrouserPixelsSelection);
         MergeColourArray(farmerBodyPixels, farmerShirtPixels);
         MergeColourArray(farmerBodyPixels, farmerAdornmentsPixels);
 
-        // Paste merged  pixels
+        // 粘贴合并的像素
         farmerBaseCustomised.SetPixels(0, 0, bodyColumns * farmerSpriteWidth, farmerBaseTexture.height, farmerBodyPixels);
 
-        // Apply texture changes
+        // 应用纹理更改
         farmerBaseCustomised.Apply();
     }
 
@@ -315,7 +315,7 @@ public class ApplyCharacterCustomization : MonoBehaviour
 
         rightAdornmentsPixels = selectedAdornment.GetPixels(0, adornmentsSpriteHeight * 0, adornmentsSpriteWidth, adornmentsSpriteHeight);
 
-        // Loop through base texture and apply adornments pixels
+        // 遍历基础纹理并应用装饰像素
 
         for (int x = 0; x < bodyColumns; x++)
         {
@@ -330,19 +330,19 @@ public class ApplyCharacterCustomization : MonoBehaviour
                     pixelY += bodyAdornmentsOffsetArray[x, y].y;
                 }
 
-                // Switch on facing direction
+                // 根据朝向切换
                 switch (bodyFacingArray[x, y])
                 {
                     case Facing.none:
                         break;
 
                     case Facing.front:
-                        // Populate front adornments pixels
+                        // 填充前装饰像素
                         farmerBaseAdornmentsUpdated.SetPixels(pixelX, pixelY, adornmentsSpriteWidth, adornmentsSpriteHeight, frontAdornmentsPixels);
                         break;
 
                     case Facing.right:
-                        // Populate right adornments pixels
+                        // 填充右装饰像素
                         farmerBaseAdornmentsUpdated.SetPixels(pixelX, pixelY, adornmentsSpriteWidth, adornmentsSpriteHeight, rightAdornmentsPixels);
                         break;
 
@@ -352,13 +352,13 @@ public class ApplyCharacterCustomization : MonoBehaviour
             }
         }
 
-        // Apply adornments texture pixels
+        // 应用装饰纹理像素
         farmerBaseAdornmentsUpdated.Apply();
     }
 
     private void TintPixelColors(Color[] basePixelArray, Color tintColor)
     {
-        // Loop through pixels to tint
+        // 遍历像素以着色
         for (int i = 0; i < basePixelArray.Length; i++)
         {
             basePixelArray[i].r = basePixelArray[i].r * tintColor.r;
@@ -369,10 +369,10 @@ public class ApplyCharacterCustomization : MonoBehaviour
 
     private void PopulateArmColorSwapList()
     {
-        // Clear color swap list
+        // 清除颜色交换列表
         colorSwapList.Clear();
 
-        // Arm replacement colors
+        // 手臂替换颜色
         colorSwapList.Add(new colorSwap(armTargetColor1, selectedShirt.GetPixel(0, 7)));
         colorSwapList.Add(new colorSwap(armTargetColor2, selectedShirt.GetPixel(0, 6)));
         colorSwapList.Add(new colorSwap(armTargetColor3, selectedShirt.GetPixel(0, 5)));
@@ -380,11 +380,11 @@ public class ApplyCharacterCustomization : MonoBehaviour
 
     private void PopulateSkinColorSwapList(int skinType)
     {
-        // Clear color swap list
+        // 清除颜色交换列表
         colorSwapList.Clear();
 
-        // Skin replacement colors
-        // Switch on skin type
+        // 皮肤替换颜色
+        // 根据皮肤类型切换
         switch (skinType)
         {
             case 0:
@@ -429,7 +429,7 @@ public class ApplyCharacterCustomization : MonoBehaviour
     {
         for (int i = 0; i < baseArray.Length; i++)
         {
-            // Loop through color swap list
+            // 遍历颜色交换列表
             if (colorSwapList.Count > 0)
             {
                 for (int j = 0; j < colorSwapList.Count; j++)
@@ -461,15 +461,15 @@ public class ApplyCharacterCustomization : MonoBehaviour
         {
             if (mergeArray[i].a > 0)
             {
-                //Merge array has color
+                // 合并数组有颜色
                 if (mergeArray[i].a >= 1)
                 {
-                    // Fully replace
+                    // 完全替换
                     baseArray[i] = mergeArray[i];
                 }
                 else
                 {
-                    //Interpolate colors
+                    // 插值颜色
                     float alpha = mergeArray[i].a;
 
                     baseArray[i].r += (mergeArray[i].r - baseArray[i].r) * alpha;
@@ -483,14 +483,14 @@ public class ApplyCharacterCustomization : MonoBehaviour
 
     private void AddHairToTexture(int hairStyleNo)
     {
-        // Calculate coordinates for hair pixels
+        // 计算头发像素的坐标
         int y = (hairStyleNo / hairStylesInSpriteWidth) * hairTextureHeight;
         int x = (hairStyleNo % hairStylesInSpriteWidth) * hairTextureWidth;
 
-        // Get hair pixels
+        // 获取头发像素
         Color[] hairPixels = hairBaseTexture.GetPixels(x, y, hairTextureWidth, hairTextureHeight);
 
-        // Apply selected hair pixels to texture
+        // 应用选定的头发像素到纹理
         hairCustomised.SetPixels(hairPixels);
         hairCustomised.Apply();
     }
@@ -498,32 +498,32 @@ public class ApplyCharacterCustomization : MonoBehaviour
 
     private void AddHatToTexture(int hatStyleNo)
     {
-        // Calculate coordinates for hat pixels
+        // 计算帽子像素的坐标
         int y = (hatStyleNo / hatStylesInSpriteWidth) * hatTextureHeight;
         int x = (hatStyleNo % hatStylesInSpriteWidth) * hatTextureWidth;
 
-        // Get hat pixels
+        // 获取帽子像素
         Color[] hatPixels = hatsBaseTexture.GetPixels(x, y, hatTextureWidth, hatTextureHeight);
 
-        // Apply selected hat pixels to texture
+        // 应用选定的帽子像素到纹理
         hatsCustomised.SetPixels(hatPixels);
         hatsCustomised.Apply();
     }
 
     private void AddAdornmentsToTexture(int adornmentsStyleNo)
     {
-        // Create adornment texture
+        // 创建装饰纹理
         selectedAdornment = new Texture2D(adornmentsTextureWidth, adornmentsTextureHeight);
         selectedAdornment.filterMode = FilterMode.Point;
 
-        // Calculate coordinates for adornments pixels
+        // 计算装饰像素的坐标
         int y = (adornmentsStyleNo / adornmentsStylesInSpriteWidth) * adornmentsTextureHeight;
         int x = (adornmentsStyleNo % adornmentsStylesInSpriteWidth) * adornmentsTextureWidth;
 
-        // Get adornments pixels
+        // 获取装饰像素
         Color[] adornmentsPixels = adornmentsBaseTexture.GetPixels(x, y, adornmentsTextureWidth, adornmentsTextureHeight);
 
-        // Apply selected adornments pixels to texture
+        // 应用选定的装饰像素到纹理
         selectedAdornment.SetPixels(adornmentsPixels);
         selectedAdornment.Apply();
     }
@@ -532,29 +532,29 @@ public class ApplyCharacterCustomization : MonoBehaviour
 
     private void AddShirtToTexture(int shirtStyleNo)
     {
-        // Create shirt texture
+        // 创建衬衫纹理
         selectedShirt = new Texture2D(shirtTextureWidth, shirtTextureHeight);
         selectedShirt.filterMode = FilterMode.Point;
 
-        // Calculate coordinates for shirt pixels
+        // 计算衬衫像素的坐标
         int y = (shirtStyleNo / shirtStylesInSpriteWidth) * shirtTextureHeight;
         int x = (shirtStyleNo % shirtStylesInSpriteWidth) * shirtTextureWidth;
 
-        // Get shirts pixels
+        // 获取衬衫像素
         Color[] shirtPixels = shirtsBaseTexture.GetPixels(x, y, shirtTextureWidth, shirtTextureHeight);
 
-        // Apply selected shirt pixels to texture
+        // 应用选定的衬衫像素到纹理
         selectedShirt.SetPixels(shirtPixels);
         selectedShirt.Apply();
     }
 
     private void ApplyShirtTextureToBase()
     {
-        // Create new shirt base texture
+        // 创建新的衬衫基础纹理
         farmerBaseShirtsUpdated = new Texture2D(farmerBaseTexture.width, farmerBaseTexture.height);
         farmerBaseShirtsUpdated.filterMode = FilterMode.Point;
 
-        // Set shirt base texture to transparent
+        // 设置衬衫基础纹理为透明
         SetTextureToTransparent(farmerBaseShirtsUpdated);
 
         Color[] frontShirtPixels;
@@ -565,7 +565,7 @@ public class ApplyCharacterCustomization : MonoBehaviour
         backShirtPixels = selectedShirt.GetPixels(0, shirtSpriteHeight * 0, shirtSpriteWidth, shirtSpriteHeight);
         rightShirtPixels = selectedShirt.GetPixels(0, shirtSpriteHeight * 2, shirtSpriteWidth, shirtSpriteHeight);
 
-        // Loop through base texture and apply shirt pixels
+        // 遍历基础纹理并应用衬衫像素
 
         for (int x = 0; x < bodyColumns; x++)
         {
@@ -583,24 +583,24 @@ public class ApplyCharacterCustomization : MonoBehaviour
                     pixelY += bodyShirtOffsetArray[x, y].y;
                 }
 
-                // Switch on facing direction
+                // 根据朝向切换
                 switch (bodyFacingArray[x, y])
                 {
                     case Facing.none:
                         break;
 
                     case Facing.front:
-                        // Populate front shirt pixels
+                        // 填充前衬衫像素
                         farmerBaseShirtsUpdated.SetPixels(pixelX, pixelY, shirtSpriteWidth, shirtSpriteHeight, frontShirtPixels);
                         break;
 
                     case Facing.back:
-                        // Populate back shirt pixels
+                        // 填充后衬衫像素
                         farmerBaseShirtsUpdated.SetPixels(pixelX, pixelY, shirtSpriteWidth, shirtSpriteHeight, backShirtPixels);
                         break;
 
                     case Facing.right:
-                        // Populate right shirt pixels
+                        // 填充右衬衫像素
                         farmerBaseShirtsUpdated.SetPixels(pixelX, pixelY, shirtSpriteWidth, shirtSpriteHeight, rightShirtPixels);
                         break;
 
@@ -610,13 +610,13 @@ public class ApplyCharacterCustomization : MonoBehaviour
             }
         }
 
-        // Apply shirt texture pixels
+        // 应用衬衫纹理像素
         farmerBaseShirtsUpdated.Apply();
     }
 
     private void SetTextureToTransparent(Texture2D texture2D)
     {
-        // Fill texture with transparency
+        // 填充纹理为透明
         Color[] fill = new Color[texture2D.height * texture2D.width];
         for (int i = 0; i < fill.Length; i++)
         {

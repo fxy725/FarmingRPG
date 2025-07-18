@@ -42,6 +42,6 @@ public class NPCScheduleEvent
 
     public override string ToString()
     {
-        return $"Time: {Time}, Priority: {priority}, Day: {day} Weather: {weather}, Season: {season}";
+        return $"时间: {Time}, 优先级: {priority}, 天: {day} 天气: {weather}, 季节: {season}";
     }
 }

@@ -15,25 +15,19 @@ public delegate void MovementDelegate(float inputX, float inputY, bool isWalking
 // EventHandler静态类包含了静态事件与与调用事件的静态方法
 public static class EventHandler
 {
-    // DropSelectedItemEvent 丢弃选定物品事件
+    //库存事件
+    // DropSelectedItemEvent 丢弃选定项事件
     public static event Action DropSelectedItemEvent;
     public static void CallDropSelectedItemEvent()
     {
         DropSelectedItemEvent?.Invoke();
     }
 
-    // RemoveSelectedItemFromInventoryEvent 从库存中移除选定物品事件
+    // RemoveSelectedItemFromInventoryEvent 从库存中移除选定项事件
     public static event Action RemoveSelectedItemFromInventoryEvent;
     public static void CallRemoveSelectedItemFromInventoryEvent()
     {
         RemoveSelectedItemFromInventoryEvent?.Invoke();
-    }
-
-    // HarvestActionEffectEvent 收割动作效果事件
-    public static event Action<Vector3, HarvestActionEffect> HarvestActionEffectEvent;
-    public static void CallHarvestActionEffectEvent(Vector3 effectPosition, HarvestActionEffect harvestActionEffect)
-    {
-        HarvestActionEffectEvent?.Invoke(effectPosition, harvestActionEffect);
     }
 
     // InventoryUpdatedEvent 库存更新事件
@@ -41,6 +35,17 @@ public static class EventHandler
     public static void CallInventoryUpdatedEvent(InventoryLocation inventoryLocation, List<InventoryItem> inventoryList)
     {
         InventoryUpdatedEvent?.Invoke(inventoryLocation, inventoryList);
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    // HarvestActionEffectEvent 收割动作效果事件
+    public static event Action<Vector3, HarvestActionEffect> HarvestActionEffectEvent;
+    public static void CallHarvestActionEffectEvent(Vector3 effectPosition, HarvestActionEffect harvestActionEffect)
+    {
+        HarvestActionEffectEvent?.Invoke(effectPosition, harvestActionEffect);
     }
 
     // InstantiateCropPrefabsEvent 实例化作物预制体事件

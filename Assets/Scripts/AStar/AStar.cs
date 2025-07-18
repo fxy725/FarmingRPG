@@ -3,11 +3,13 @@ using UnityEngine;
 
 public class AStar : MonoBehaviour
 {
-    [Header("图块与图块地图参考")] [Header("选项")] [SerializeField]
+    [Header("图块与图块地图参考")]
+    [Header("选项")]
+    [SerializeField]
     private bool observeMovementPenalties = true; // 是否观察移动惩罚
 
-    [Range(0, 20)] [SerializeField] private int pathMovementPenalty = 0;
-    [Range(0, 20)] [SerializeField] private int defaultMovementPenalty = 0;
+    [Range(0, 20)][SerializeField] private int pathMovementPenalty = 0;
+    [Range(0, 20)][SerializeField] private int defaultMovementPenalty = 0;
 
     private Grid grid;
     private Node startNode;
@@ -62,28 +64,28 @@ public class AStar : MonoBehaviour
     }
 
     /// <summary>
-    ///  Returns true if a path has been found
+    ///  如果找到路径则返回true
     /// </summary>
     private bool FindShortestPath()
     {
-        // Add start node to open list
+        // 将起始节点添加到开放列表
         openNodeList.Add(startNode);
 
-        // Loop through open node list until empty
+        // 遍历开放列表直到空
         while (openNodeList.Count > 0)
         {
-            // Sort List
+            // 排序列表
             openNodeList.Sort();
 
-            //  current node = the node in the open list with the lowest fCost
+            //  当前节点 = 开放列表中fCost最低的节点
             Node currentNode = openNodeList[0];
             openNodeList.RemoveAt(0);
 
-            // add current node to the closed list
+            // 将当前节点添加到关闭列表
             closedNodeList.Add(currentNode);
 
-            // if the current node = target node
-            //      then finish
+            // 如果当前节点 = 目标节点
+            //      则完成
 
             if (currentNode == targetNode)
             {
@@ -91,7 +93,7 @@ public class AStar : MonoBehaviour
                 break;
             }
 
-            // evaluate fcost for each neighbour of the current node
+            // 评估当前节点的每个邻居的fCost
             EvaluateCurrentNodeNeighbours(currentNode);
         }
 
@@ -111,7 +113,7 @@ public class AStar : MonoBehaviour
 
         Node validNeighbourNode;
 
-        // Loop through all directions
+        // 遍历所有方向
         for (int i = -1; i <= 1; i++)
         {
             for (int j = -1; j <= 1; j++)
@@ -124,7 +126,7 @@ public class AStar : MonoBehaviour
 
                 if (validNeighbourNode != null)
                 {
-                    // Calculate new gcost for neighbour
+                    // 计算邻居的新gCost
                     int newCostToNeighbour;
 
                     if (observeMovementPenalties)
@@ -168,14 +170,14 @@ public class AStar : MonoBehaviour
 
     private Node GetValidNodeNeighbour(int neighboutNodeXPosition, int neighbourNodeYPosition)
     {
-        // If neighbour node position is beyond grid then return null
+        // 如果邻居节点位置超出网格则返回null
         if (neighboutNodeXPosition >= gridWidth || neighboutNodeXPosition < 0 || neighbourNodeYPosition >= gridHeight ||
             neighbourNodeYPosition < 0)
         {
             return null;
         }
 
-        // if neighbour is an obstacle or neighbour is in the closed list then skip
+        // 如果邻居是障碍物或邻居在关闭列表中则跳过
         Node neighbourNode = grid.GetGridNode(neighboutNodeXPosition, neighbourNodeYPosition);
 
         if (neighbourNode.isObstacle || closedNodeList.Contains(neighbourNode))
@@ -191,29 +193,29 @@ public class AStar : MonoBehaviour
     private bool PopulateGridNodesFromGridPropertiesDictionary(SceneName sceneName, Vector2Int startGridPosition,
         Vector2Int endGridPosition)
     {
-        // Get grid properties dictionary for the scene
+        // 获取场景的网格属性字典
         SceneSave sceneSave;
 
         if (GridPropertiesManager.Instance.GameObjectSave.sceneData.TryGetValue(sceneName.ToString(), out sceneSave))
         {
-            // Get Dict grid property details
+            // 获取网格属性细节字典
             if (sceneSave.gridPropertyDetailsDictionary != null)
             {
-                // Get grid height and width
+                // 获取网格高度和宽度
                 if (GridPropertiesManager.Instance.GetGridDimensions(sceneName, out Vector2Int gridDimensions,
                         out Vector2Int gridOrigin))
                 {
-                    // Create nodes grid based on grid properties dictionary
+                    // 根据网格属性字典创建节点网格
                     grid = new Grid(gridDimensions.x, gridDimensions.y);
                     gridWidth = gridDimensions.x;
                     gridHeight = gridDimensions.y;
                     originX = gridOrigin.x;
                     originY = gridOrigin.y;
 
-                    // Create openNodeList
+                    // 创建开放节点列表
                     openNodeList = new List<Node>();
 
-                    // Create closed Node List
+                    // 创建关闭节点列表
                     closedNodeList = new HashSet<Node>();
                 }
                 else
@@ -221,13 +223,13 @@ public class AStar : MonoBehaviour
                     return false;
                 }
 
-                // Populate start node
+                // 填充起始节点
                 startNode = grid.GetGridNode(startGridPosition.x - gridOrigin.x, startGridPosition.y - gridOrigin.y);
 
-                // Populate target node
+                // 填充目标节点
                 targetNode = grid.GetGridNode(endGridPosition.x - gridOrigin.x, endGridPosition.y - gridOrigin.y);
 
-                // populate obstacle and path info for grid
+                // 填充网格的障碍物和路径信息
                 for (int x = 0; x < gridDimensions.x; x++)
                 {
                     for (int y = 0; y < gridDimensions.y; y++)
@@ -238,7 +240,7 @@ public class AStar : MonoBehaviour
 
                         if (gridPropertyDetails != null)
                         {
-                            // If NPC obstacle
+                            // 如果NPC障碍物
                             if (gridPropertyDetails.isNPCObstacle == true)
                             {
                                 Node node = grid.GetGridNode(x, y);

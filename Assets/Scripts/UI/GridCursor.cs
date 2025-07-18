@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class GridCursor : MonoBehaviour
 {
     private Canvas canvas;
-    private UnityEngine.Grid grid;
+    private UnityEngine.Grid grid; // 防止与自定义的Grid类冲突
     private Camera mainCamera;
     [SerializeField] private Image cursorImage = null;
     [SerializeField] private RectTransform cursorRectTransform = null;
@@ -25,24 +25,22 @@ public class GridCursor : MonoBehaviour
     private bool _cursorIsEnabled = false;
     public bool CursorIsEnabled { get => _cursorIsEnabled; set => _cursorIsEnabled = value; }
 
-    private void OnDisable()
-    {
-        EventHandler.AfterSceneLoadEvent -= SceneLoaded;
-    }
-
     private void OnEnable()
     {
         EventHandler.AfterSceneLoadEvent += SceneLoaded;
     }
 
-    // Start is called before the first frame update
+    private void OnDisable()
+    {
+        EventHandler.AfterSceneLoadEvent -= SceneLoaded;
+    }
+
     private void Start()
     {
         mainCamera = Camera.main;
         canvas = GetComponentInParent<Canvas>();
     }
 
-    // Update is called once per frame
     private void Update()
     {
         if (CursorIsEnabled)
@@ -55,16 +53,16 @@ public class GridCursor : MonoBehaviour
     {
         if (grid != null)
         {
-            // Get grid position for cursor
+            // 获取鼠标的网格位置
             Vector3Int gridPosition = GetGridPositionForCursor();
 
-            // Get grid position for player
+            // 获取玩家的网格位置
             Vector3Int playerGridPosition = GetGridPositionForPlayer();
 
-            // Set cursor sprite
+            // 设置光标的精灵图
             SetCursorValidity(gridPosition, playerGridPosition);
 
-            // Get rect transform position for cursor
+            // 获取光标的矩形变换位置
             cursorRectTransform.position = GetRectTransformPositionForCursor(gridPosition);
 
             return gridPosition;
@@ -84,7 +82,7 @@ public class GridCursor : MonoBehaviour
     {
         SetCursorToValid();
 
-        // Check item use radius is valid
+        // 检查物品使用半径是否有效
         if (Mathf.Abs(cursorGridPosition.x - playerGridPosition.x) > ItemUseGridRadius
             || Mathf.Abs(cursorGridPosition.y - playerGridPosition.y) > ItemUseGridRadius)
         {
@@ -92,7 +90,7 @@ public class GridCursor : MonoBehaviour
             return;
         }
 
-        // Get selected item details
+        // 获取选定的物品详细信息
         ItemDetails itemDetails = InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player);
 
         if (itemDetails == null)
@@ -101,12 +99,12 @@ public class GridCursor : MonoBehaviour
             return;
         }
 
-        // Get grid property details at cursor position
+        // 获取光标位置的网格属性详细信息
         GridPropertyDetails gridPropertyDetails = GridPropertiesManager.Instance.GetGridPropertyDetails(cursorGridPosition.x, cursorGridPosition.y);
 
         if (gridPropertyDetails != null)
         {
-            // Determine cursor validity based on inventory item selected and grid property details
+            // 根据选定的库存项目和网格属性详细信息确定光标有效性
             switch (itemDetails.itemType)
             {
                 case ItemType.Seed:
@@ -157,7 +155,7 @@ public class GridCursor : MonoBehaviour
     }
 
     /// <summary>
-    /// Set the cursor to be invalid
+    /// 设置光标为无效
     /// </summary>
     private void SetCursorToInvalid()
     {
@@ -166,7 +164,7 @@ public class GridCursor : MonoBehaviour
     }
 
     /// <summary>
-    /// Set the cursor to be valid
+    /// 设置光标为有效
     /// </summary>
     private void SetCursorToValid()
     {
@@ -175,7 +173,7 @@ public class GridCursor : MonoBehaviour
     }
 
     /// <summary>
-    /// Test cursor validity for a commodity for the target gridPropertyDetails. Returns true if valid, false if invalid
+    /// 测试商品的光标有效性
     /// </summary>
     private bool IsCursorValidForCommodity(GridPropertyDetails gridPropertyDetails)
     {
@@ -183,7 +181,7 @@ public class GridCursor : MonoBehaviour
     }
 
     /// <summary>
-    /// Set cursor validity for a seed for the target gridPropertyDetails. Returns true if valid, false if invalid
+    /// 设置种子光标有效性
     /// </summary>
     private bool IsCursorValidForSeed(GridPropertyDetails gridPropertyDetails)
     {
@@ -191,29 +189,29 @@ public class GridCursor : MonoBehaviour
     }
 
     /// <summary>
-    /// Sets the cursor as either valid or invalid for the tool for the target gridPropertyDetails. Returns true if valid or false if invalid
+    /// 设置工具光标有效性
     /// </summary>
     private bool IsCursorValidForTool(GridPropertyDetails gridPropertyDetails, ItemDetails itemDetails)
     {
-        // Switch on tool
+        // 根据工具类型设置光标有效性
         switch (itemDetails.itemType)
         {
             case ItemType.Hoeing_tool:
                 if (gridPropertyDetails.isDiggable == true && gridPropertyDetails.daysSinceDug == -1)
                 {
-                    #region Need to get any items at location so we can check if they are reapable
+                    #region 需要获取位置上的物品，以便检查它们是否可收割
 
-                    // Get world position for cursor
+                    // 获取光标的世界位置
                     Vector3 cursorWorldPosition = new Vector3(GetWorldPositionForCursor().x + 0.5f, GetWorldPositionForCursor().y + 0.5f, 0f);
 
-                    // Get list of items at cursor location
+                    // 获取光标位置上的物品列表
                     List<Item> itemList = new List<Item>();
 
                     HelperMethods.GetComponentsAtBoxLocation<Item>(out itemList, cursorWorldPosition, Settings.cursorSize, 0f);
 
-                    #endregion Need to get any items at location so we can check if they are reapable
+                    #endregion 需要获取位置上的物品，以便检查它们是否可收割
 
-                    // Loop through items found to see if any are reapable type - we are not going to let the player dig where there are reapable scenary items
+                    // 遍历找到的物品，查看是否有可收割的物品类型 - 我们不会让玩家在可收割的场景物品上挖掘
                     bool foundReapable = false;
 
                     foreach (Item item in itemList)
@@ -253,21 +251,21 @@ public class GridCursor : MonoBehaviour
             case ItemType.Collecting_tool:
             case ItemType.Breaking_tool:
 
-                // Check if item can be harvested with item selected, check item is fully grown
+                // 检查物品是否可以被收割，检查物品是否完全成熟
 
-                // Check if seed planted
+                // 检查种子是否种植
                 if (gridPropertyDetails.seedItemCode != -1)
                 {
-                    // Get crop details for seed
+                    // 获取种子的作物详细信息
                     CropDetails cropDetails = so_CropDetailsList.GetCropDetails(gridPropertyDetails.seedItemCode);
 
-                    // if crop details found
+                    // 如果找到作物详细信息
                     if (cropDetails != null)
                     {
-                        // Check if crop fully grown
+                        // 检查作物是否完全成熟
                         if (gridPropertyDetails.growthDays >= cropDetails.growthDays[cropDetails.growthDays.Length - 1])
                         {
-                            // Check if crop can be harvested with tool selected
+                            // 检查作物是否可以用工具收割
                             if (cropDetails.CanUseToolToHarvestCrop(itemDetails.itemCode))
                             {
                                 return true;

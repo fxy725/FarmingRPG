@@ -17,26 +17,26 @@ public class Crop : MonoBehaviour
 
     public void ProcessToolAction(ItemDetails equippedItemDetails, bool isToolRight, bool isToolLeft, bool isToolDown, bool isToolUp)
     {
-        // Get grid property details
+        // 获取网格属性细节
         GridPropertyDetails gridPropertyDetails = GridPropertiesManager.Instance.GetGridPropertyDetails(cropGridPosition.x, cropGridPosition.y);
 
         if (gridPropertyDetails == null)
             return;
 
-        // Get seed item details
+        // 获取种子物品细节
         ItemDetails seedItemDetails = InventoryManager.Instance.GetItemDetails(gridPropertyDetails.seedItemCode);
         if (seedItemDetails == null)
             return;
 
-        // Get crop details
+        // 获取作物细节
         CropDetails cropDetails = GridPropertiesManager.Instance.GetCropDetails(seedItemDetails.itemCode);
         if (cropDetails == null)
             return;
 
-        // Get animator for crop if present
+        // 获取作物的动画器
         Animator animator = GetComponentInChildren<Animator>();
 
-        // Trigger tool animation
+        // 触发工具动画
         if (animator != null)
         {
             if (isToolRight || isToolUp)
@@ -49,23 +49,23 @@ public class Crop : MonoBehaviour
             }
         }
 
-        // Trigger tool particle effect on crop
+        // 触发作物上的工具粒子效果
         if (cropDetails.isHarvestActionEffect)
         {
             EventHandler.CallHarvestActionEffectEvent(harvestActionEffectTransform.position, cropDetails.harvestActionEffect);
         }
 
 
-        // Get required harvest actions for tool
+        // 获取工具所需收获动作
         int requiredHarvestActions = cropDetails.RequiredHarvestActionsForTool(equippedItemDetails.itemCode);
         if (requiredHarvestActions == -1)
-            return; // this tool can't be used to harvest this crop
+            return; // 这个工具不能用来收获这个作物
 
 
-        // Increment harvest action count
+        // 增加收获动作计数
         harvestActionCount += 1;
 
-        // Check if required harvest actions made
+        // 检查是否满足所需收获动作
         if (harvestActionCount >= requiredHarvestActions)
             HarvestCrop(isToolRight, isToolUp, cropDetails, gridPropertyDetails, animator);
     }
@@ -73,10 +73,10 @@ public class Crop : MonoBehaviour
     private void HarvestCrop(bool isUsingToolRight, bool isUsingToolUp, CropDetails cropDetails, GridPropertyDetails gridPropertyDetails, Animator animator)
     {
 
-        // Is there a harvested animation
+        // 是否有收获动画
         if (cropDetails.isHarvestedAnimation && animator != null)
         {
-            // If harvest sprite then add to sprite renderer
+            // 如果收获精灵则添加到精灵渲染器
             if (cropDetails.harvestedSprite != null)
             {
                 if (cropHarvestedSpriteRenderer != null)
@@ -95,29 +95,29 @@ public class Crop : MonoBehaviour
             }
         }
 
-        // Is there a harvested sound
+        // 是否有收获声音
         if (cropDetails.harvestSound != SoundName.none)
         {
             AudioManager.Instance.PlaySound(cropDetails.harvestSound);
         }
 
 
-        // Delete crop from grid properties
+        // 从网格属性中删除作物
         gridPropertyDetails.seedItemCode = -1;
         gridPropertyDetails.growthDays = -1;
         gridPropertyDetails.daysSinceLastHarvest = -1;
         gridPropertyDetails.daysSinceWatered = -1;
 
-        // Should the crop be hidden before the harvested animation
+        // 在收获动画之前是否隐藏作物
         if (cropDetails.hideCropBeforeHarvestedAnimation)
         {
             GetComponentInChildren<SpriteRenderer>().enabled = false;
         }
 
-        // Should box colliders be disabled before harvest
+        // 在收获之前是否禁用盒子碰撞器
         if (cropDetails.disableCropCollidersBeforeHarvestedAnimation)
         {
-            // Disable any box colliders
+            // 禁用任何盒子碰撞器
             Collider2D[] collider2Ds = GetComponentsInChildren<Collider2D>();
             foreach (Collider2D collider2D in collider2Ds)
             {
@@ -127,7 +127,7 @@ public class Crop : MonoBehaviour
 
         GridPropertiesManager.Instance.SetGridPropertyDetails(gridPropertyDetails.gridX, gridPropertyDetails.gridY, gridPropertyDetails);
 
-        // Is there a harvested animation - Destroy this crop game object after animation completed
+        // 是否有收获动画 - 在动画完成后销毁这个作物游戏对象
         if (cropDetails.isHarvestedAnimation && animator != null)
         {
             StartCoroutine(ProcessHarvestActionsAfterAnimation(cropDetails, gridPropertyDetails, animator));
@@ -153,7 +153,7 @@ public class Crop : MonoBehaviour
     {
         SpawnHarvestedItems(cropDetails);
 
-        // Does this crop transform into another crop
+        // 这个作物是否变成另一个作物
         if (cropDetails.harvestedTransformItemCode > 0)
         {
             CreateHarvestedTransformCrop(cropDetails, gridPropertyDetails);
@@ -165,12 +165,12 @@ public class Crop : MonoBehaviour
 
     private void SpawnHarvestedItems(CropDetails cropDetails)
     {
-        // Spawn the item(s) to be produced
+        // 生成要生产的物品
         for (int i = 0; i < cropDetails.cropProducedItemCode.Length; i++)
         {
             int cropsToProduce;
 
-            // Calculate how many crops to produce
+            // 计算要生产多少作物
             if (cropDetails.cropProducedMinQuantity[i] == cropDetails.cropProducedMaxQuantity[i] ||
                 cropDetails.cropProducedMaxQuantity[i] < cropDetails.cropProducedMinQuantity[i])
             {
@@ -186,12 +186,12 @@ public class Crop : MonoBehaviour
                 Vector3 spawnPosition;
                 if (cropDetails.spawnCropProducedAtPlayerPosition)
                 {
-                    //  Add item to the players inventory
+                    // 添加物品到玩家库存
                     InventoryManager.Instance.AddItem(InventoryLocation.player, cropDetails.cropProducedItemCode[i]);
                 }
                 else
                 {
-                    // Random position
+                    // 随机位置
                     spawnPosition = new Vector3(transform.position.x + Random.Range(-1f, 1f), transform.position.y + Random.Range(-1f, 1f), 0f);
                     SceneItemsManager.Instance.InstantiateSceneItem(cropDetails.cropProducedItemCode[i], spawnPosition);
                 }
@@ -201,7 +201,7 @@ public class Crop : MonoBehaviour
 
     private void CreateHarvestedTransformCrop(CropDetails cropDetails, GridPropertyDetails gridPropertyDetails)
     {
-        // Update crop in grid properties
+        // 更新网格属性中的作物
         gridPropertyDetails.seedItemCode = cropDetails.harvestedTransformItemCode;
         gridPropertyDetails.growthDays = 0;
         gridPropertyDetails.daysSinceLastHarvest = -1;
@@ -209,7 +209,7 @@ public class Crop : MonoBehaviour
 
         GridPropertiesManager.Instance.SetGridPropertyDetails(gridPropertyDetails.gridX, gridPropertyDetails.gridY, gridPropertyDetails);
 
-        // Display planted crop
+        // 显示种植的作物
         GridPropertiesManager.Instance.DisplayPlantedCrop(gridPropertyDetails);
     }
 

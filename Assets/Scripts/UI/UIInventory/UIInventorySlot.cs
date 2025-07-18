@@ -3,36 +3,37 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerClickHandler, IPointerExitHandler
 {
     private Camera mainCamera;
     private Canvas parentCanvas;
     private Transform parentItem;
+    public TextMeshProUGUI textMeshProUGUI;
+
+
     private GridCursor gridCursor;
     private Cursor cursor;
+    [SerializeField] private UIInventoryBar inventoryBar; // 父对象的InventoryBar行为组件的引用
+
+
     public GameObject draggedItem;
+    [SerializeField] private GameObject inventoryTextBoxPrefab; // InventoryTextBox预制件资产的引用
+    [SerializeField] private GameObject itemPrefab; // Item预制件资产的引用
 
     public Image inventorySlotHighlight;
     public Image inventorySlotImage;
-    public TextMeshProUGUI textMeshProUGUI;
-    [SerializeField] private UIInventoryBar inventoryBar = null;
-    [SerializeField] private GameObject inventoryTextBoxPrefab = null;
-    [HideInInspector] public bool isSelected = false;
-    [HideInInspector] public ItemDetails itemDetails;
-    [SerializeField] private GameObject itemPrefab = null;
+
+    [HideInInspector] public bool isSelected;
     [HideInInspector] public int itemQuantity;
-    [SerializeField] private int slotNumber = 0;
+    [SerializeField] private int slotNumber;
+    [HideInInspector] public ItemDetails itemDetails;
+
+
+
 
     private void Awake()
     {
         parentCanvas = GetComponentInParent<Canvas>();
-    }
-
-    private void OnDisable()
-    {
-        EventHandler.AfterSceneLoadEvent -= SceneLoaded;
-        EventHandler.RemoveSelectedItemFromInventoryEvent -= RemoveSelectedItemFromInventory;
-        EventHandler.DropSelectedItemEvent -= DropSelectedItemAtMousePosition;
     }
 
     private void OnEnable()
@@ -40,6 +41,13 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         EventHandler.AfterSceneLoadEvent += SceneLoaded;
         EventHandler.RemoveSelectedItemFromInventoryEvent += RemoveSelectedItemFromInventory;
         EventHandler.DropSelectedItemEvent += DropSelectedItemAtMousePosition;
+    }
+
+    private void OnDisable()
+    {
+        EventHandler.AfterSceneLoadEvent -= SceneLoaded;
+        EventHandler.RemoveSelectedItemFromInventoryEvent -= RemoveSelectedItemFromInventory;
+        EventHandler.DropSelectedItemEvent -= DropSelectedItemAtMousePosition;
     }
 
     private void Start()
@@ -241,44 +249,25 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         }
     }
 
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        // if left click
-        if (eventData.button == PointerEventData.InputButton.Left)
-        {
-            // if inventory slot currently selected then deselect
-            if (isSelected == true)
-            {
-                ClearSelectedItem();
-            }
-            else
-            {
-                if (itemQuantity > 0)
-                {
-                    SetSelectedItem();
-                }
-            }
-        }
-    }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        // Populate text box with item details
+        // 在文本框中显示物品的详细信息
         if (itemQuantity != 0)
         {
-            // Instantiate inventory text box
+            // 实例化库存文本框
             inventoryBar.inventoryTextBoxGameobject = Instantiate(inventoryTextBoxPrefab, transform.position, Quaternion.identity);
             inventoryBar.inventoryTextBoxGameobject.transform.SetParent(parentCanvas.transform, false);
 
             UIInventoryTextBox inventoryTextBox = inventoryBar.inventoryTextBoxGameobject.GetComponent<UIInventoryTextBox>();
 
-            // Set item type description
+            // 设置物品类型描述
             string itemTypeDescription = InventoryManager.Instance.GetItemTypeDescription(itemDetails.itemType);
 
-            // Populate text box
-            inventoryTextBox.SetTextboxText(itemDetails.itemDescription, itemTypeDescription, "", itemDetails.itemLongDescription, "", "");
+            // 填充文本框
+            inventoryTextBox.SetTextboxText(itemTypeDescription, itemDetails.itemDescription, "", itemDetails.itemLongDescription, "", "");
 
-            // Set text box position according to inventory bar position
+            // 根据库存栏位置设置文本框位置
             if (inventoryBar.IsInventoryBarPositionBottom)
 
             {
@@ -289,6 +278,26 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             {
                 inventoryBar.inventoryTextBoxGameobject.GetComponent<RectTransform>().pivot = new Vector2(0.5f, 1f);
                 inventoryBar.inventoryTextBoxGameobject.transform.position = new Vector3(transform.position.x, transform.position.y - 50f, transform.position.z);
+            }
+        }
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        // 如果左键点击
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            // 如果库存槽当前选中则取消选中
+            if (isSelected == true)
+            {
+                ClearSelectedItem();
+            }
+            else
+            {
+                if (itemQuantity > 0)
+                {
+                    SetSelectedItem();
+                }
             }
         }
     }

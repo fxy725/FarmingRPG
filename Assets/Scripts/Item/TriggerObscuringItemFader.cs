@@ -5,13 +5,13 @@ public class TriggerObscuringItemFader : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Get the gameobject we have collided with, and then get all the Obscuring Item Fader components on it and its children - and then trigger the fade out
+        // 获取碰撞的游戏对象，然后获取它和它的子对象上的所有 Obscuring Item Fader 组件，并触发淡出
 
         ObscuringItemFader[] obscuringItemFader = collision.gameObject.GetComponentsInChildren<ObscuringItemFader>();
 
         if (obscuringItemFader.Length > 0)
         {
-            for(int i=0; i<obscuringItemFader.Length; i++)
+            for (int i = 0; i < obscuringItemFader.Length; i++)
             {
                 obscuringItemFader[i].FadeOut();
             }
@@ -20,7 +20,7 @@ public class TriggerObscuringItemFader : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        // Get the gameobject we have collided with, and then get all the Obscuring Item Fader components on it and its children - and then trigger the fade in
+        // 获取碰撞的游戏对象，然后获取它和它的子对象上的所有 Obscuring Item Fader 组件，并触发淡入
 
         ObscuringItemFader[] obscuringItemFader = collision.gameObject.GetComponentsInChildren<ObscuringItemFader>();
 

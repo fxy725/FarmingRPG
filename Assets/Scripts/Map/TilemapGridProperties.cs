@@ -12,7 +12,7 @@ public class TilemapGridProperties : MonoBehaviour
 
     private void OnEnable()
     {
-        // Only populate in the editor
+        // 仅在编辑器中填充
         if (!Application.IsPlaying(gameObject))
         {
             tilemap = GetComponent<Tilemap>();
@@ -25,14 +25,14 @@ public class TilemapGridProperties : MonoBehaviour
     }
 
     private void OnDisable()
-    {        // Only populate in the editor
+    {        // 仅在编辑器中填充
         if (!Application.IsPlaying(gameObject))
         {
             UpdateGridProperties();
 
             if (gridProperties != null)
             {
-                // This is required to ensure that the updated gridproperties gameobject gets saved when the game is saved - otherwise they are not saved.
+                // 这是必需的，以确保在游戏保存时更新网格属性游戏对象被保存 - 否则它们不会被保存。
                 EditorUtility.SetDirty(gridProperties);
             }
         }
@@ -40,10 +40,10 @@ public class TilemapGridProperties : MonoBehaviour
 
     private void UpdateGridProperties()
     {
-        // Compress timemap bounds
+        // 压缩瓦片地图边界
         tilemap.CompressBounds();
 
-        // Only populate in the editor
+        // 仅在编辑器中填充
         if (!Application.IsPlaying(gameObject))
         {
             if (gridProperties != null)
@@ -68,7 +68,7 @@ public class TilemapGridProperties : MonoBehaviour
     }
 
     private void Update()
-    {        // Only populate in the editor
+    {        // 仅在编辑器中填充
         if (!Application.IsPlaying(gameObject))
         {
             Debug.Log("DISABLE PROPERTY TILEMAPS");

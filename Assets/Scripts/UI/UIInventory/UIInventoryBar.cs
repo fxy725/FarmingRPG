@@ -1,29 +1,26 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class UIInventoryBar : MonoBehaviour
 {
-    [SerializeField] private Sprite blank16x16sprite = null;
-    [SerializeField] private UIInventorySlot[] inventorySlot = null;
-    public GameObject inventoryBarDraggedItem;
-    [HideInInspector] public GameObject inventoryTextBoxGameobject;
-
+    [SerializeField] private Sprite blank16x16sprite;
 
     private RectTransform rectTransform;
 
-    private bool _isInventoryBarPositionBottom = true;
+    [SerializeField] private UIInventorySlot[] inventorySlots;
 
+    public GameObject inventoryBarDraggedItem;
+    [HideInInspector] public GameObject inventoryTextBoxGameobject;
+
+    private bool _isInventoryBarPositionBottom = true;
     public bool IsInventoryBarPositionBottom { get => _isInventoryBarPositionBottom; set => _isInventoryBarPositionBottom = value; }
+
+
+
 
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
-    }
-
-    private void OnDisable()
-    {
-        EventHandler.InventoryUpdatedEvent -= InventoryUpdated;
     }
 
     private void OnEnable()
@@ -31,28 +28,32 @@ public class UIInventoryBar : MonoBehaviour
         EventHandler.InventoryUpdatedEvent += InventoryUpdated;
     }
 
-    // Update is called once per frame
+    private void OnDisable()
+    {
+        EventHandler.InventoryUpdatedEvent -= InventoryUpdated;
+    }
+
     private void Update()
     {
-        // Switch inventory bar position depending on player position
+        // 根据玩家位置切换库存栏位置
         SwitchInventoryBarPosition();
     }
 
     /// <summary>
-    /// Clear all highlights from the inventory bar
+    /// 清除库存栏所有高亮
     /// </summary>
     public void ClearHighlightOnInventorySlots()
     {
-        if (inventorySlot.Length > 0)
+        if (inventorySlots.Length > 0)
         {
-            // loop through inventory slots and clear highlight sprites
-            for (int i = 0; i < inventorySlot.Length; i++)
+            // 遍历库存栏并清除高亮
+            for (int i = 0; i < inventorySlots.Length; i++)
             {
-                if (inventorySlot[i].isSelected)
+                if (inventorySlots[i].isSelected)
                 {
-                    inventorySlot[i].isSelected = false;
-                    inventorySlot[i].inventorySlotHighlight.color = new Color(0f, 0f, 0f, 0f);
-                    // Update inventory to show item as not selected
+                    inventorySlots[i].isSelected = false;
+                    inventorySlots[i].inventorySlotHighlight.color = new Color(0f, 0f, 0f, 0f);
+                    // 更新库存以显示项目未选中
                     InventoryManager.Instance.ClearSelectedInventoryItem(InventoryLocation.player);
                 }
             }
@@ -62,16 +63,14 @@ public class UIInventoryBar : MonoBehaviour
 
     private void ClearInventorySlots()
     {
-        if (inventorySlot.Length > 0)
+        if (inventorySlots.Length > 0)
         {
-            // loop through inventory slots and update with blank sprite
-            for (int i = 0; i < inventorySlot.Length; i++)
-
+            for (int i = 0; i < inventorySlots.Length; i++)
             {
-                inventorySlot[i].inventorySlotImage.sprite = blank16x16sprite;
-                inventorySlot[i].textMeshProUGUI.text = "";
-                inventorySlot[i].itemDetails = null;
-                inventorySlot[i].itemQuantity = 0;
+                inventorySlots[i].inventorySlotImage.sprite = blank16x16sprite;
+                inventorySlots[i].textMeshProUGUI.text = "";
+                inventorySlots[i].itemDetails = null;
+                inventorySlots[i].itemQuantity = 0;
                 SetHighlightedInventorySlots(i);
             }
         }
@@ -84,10 +83,10 @@ public class UIInventoryBar : MonoBehaviour
         {
             ClearInventorySlots();
 
-            if (inventorySlot.Length > 0 && inventoryList.Count > 0)
+            if (inventorySlots.Length > 0 && inventoryList.Count > 0)
             {
-                // loop through inventory slots and update with corresponding inventory list item
-                for (int i = 0; i < inventorySlot.Length; i++)
+                // 遍历库存栏并更新对应库存列表项
+                for (int i = 0; i < inventorySlots.Length; i++)
                 {
                     if (i < inventoryList.Count)
                     {
@@ -98,11 +97,11 @@ public class UIInventoryBar : MonoBehaviour
 
                         if (itemDetails != null)
                         {
-                            // add images and details to inventory item slot
-                            inventorySlot[i].inventorySlotImage.sprite = itemDetails.itemSprite;
-                            inventorySlot[i].textMeshProUGUI.text = inventoryList[i].itemQuantity.ToString();
-                            inventorySlot[i].itemDetails = itemDetails;
-                            inventorySlot[i].itemQuantity = inventoryList[i].itemQuantity;
+                            // 添加图像和详细信息到库存项槽
+                            inventorySlots[i].inventorySlotImage.sprite = itemDetails.itemSprite;
+                            inventorySlots[i].textMeshProUGUI.text = inventoryList[i].itemQuantity.ToString();
+                            inventorySlots[i].itemDetails = itemDetails;
+                            inventorySlots[i].itemQuantity = inventoryList[i].itemQuantity;
                             SetHighlightedInventorySlots(i);
 
                         }
@@ -118,14 +117,14 @@ public class UIInventoryBar : MonoBehaviour
 
 
     /// <summary>
-    ///  Set the selected highlight if set on all inventory item positions
+    ///  设置所有库存项目位置上的选中高亮
     /// </summary>
     public void SetHighlightedInventorySlots()
     {
-        if (inventorySlot.Length > 0)
+        if (inventorySlots.Length > 0)
         {
-            // loop through inventory slots and clear highlight sprites
-            for (int i = 0; i < inventorySlot.Length; i++)
+            // 遍历库存栏并清除高亮
+            for (int i = 0; i < inventorySlots.Length; i++)
             {
                 SetHighlightedInventorySlots(i);
             }
@@ -133,18 +132,18 @@ public class UIInventoryBar : MonoBehaviour
     }
 
     /// <summary>
-    ///  Set the selected highlight if set on an inventory item for a given slot item position
+    ///  设置给定库存项目位置上的选中高亮
     /// </summary>
     public void SetHighlightedInventorySlots(int itemPosition)
     {
-        if (inventorySlot.Length > 0 && inventorySlot[itemPosition].itemDetails != null)
+        if (inventorySlots.Length > 0 && inventorySlots[itemPosition].itemDetails != null)
         {
-            if (inventorySlot[itemPosition].isSelected)
+            if (inventorySlots[itemPosition].isSelected)
             {
-                inventorySlot[itemPosition].inventorySlotHighlight.color = new Color(1f, 1f, 1f, 1f);
+                inventorySlots[itemPosition].inventorySlotHighlight.color = new Color(1f, 1f, 1f, 1f);
 
-                // Update inventory to show item as selected
-                InventoryManager.Instance.SetSelectedInventoryItem(InventoryLocation.player, inventorySlot[itemPosition].itemDetails.itemCode);
+                // 更新库存以显示项目已选中
+                InventoryManager.Instance.SetSelectedInventoryItem(InventoryLocation.player, inventorySlots[itemPosition].itemDetails.itemCode);
             }
         }
     }
@@ -156,7 +155,7 @@ public class UIInventoryBar : MonoBehaviour
 
         if (playerViewportPosition.y > 0.3f && IsInventoryBarPositionBottom == false)
         {
-            // transform.position = new Vector3(transform.position.x, 7.5f, 0f); // this was changed to control the recttransform see below
+            // transform.position = new Vector3(transform.position.x, 7.5f, 0f); // 这被改变为控制recttransform，见下面
             rectTransform.pivot = new Vector2(0.5f, 0f);
             rectTransform.anchorMin = new Vector2(0.5f, 0f);
             rectTransform.anchorMax = new Vector2(0.5f, 0f);
@@ -166,7 +165,7 @@ public class UIInventoryBar : MonoBehaviour
         }
         else if (playerViewportPosition.y <= 0.3f && IsInventoryBarPositionBottom == true)
         {
-            //transform.position = new Vector3(transform.position.x, mainCamera.pixelHeight - 120f, 0f);// this was changed to control the recttransform see below
+            //transform.position = new Vector3(transform.position.x, mainCamera.pixelHeight - 120f, 0f);// 这被改变为控制recttransform，见下面
             rectTransform.pivot = new Vector2(0.5f, 1f);
             rectTransform.anchorMin = new Vector2(0.5f, 1f);
             rectTransform.anchorMax = new Vector2(0.5f, 1f);
@@ -178,20 +177,20 @@ public class UIInventoryBar : MonoBehaviour
 
     public void DestroyCurrentlyDraggedItems()
     {
-        for (int i = 0; i < inventorySlot.Length; i++)
+        for (int i = 0; i < inventorySlots.Length; i++)
         {
-            if (inventorySlot[i].draggedItem != null)
+            if (inventorySlots[i].draggedItem != null)
             {
-                Destroy(inventorySlot[i].draggedItem);
+                Destroy(inventorySlots[i].draggedItem);
             }
         }
     }
 
     public void ClearCurrentlySelectedItems()
     {
-        for (int i = 0; i < inventorySlot.Length; i++)
+        for (int i = 0; i < inventorySlots.Length; i++)
         {
-            inventorySlot[i].ClearSelectedItem();
+            inventorySlots[i].ClearSelectedItem();
         }
     }
 

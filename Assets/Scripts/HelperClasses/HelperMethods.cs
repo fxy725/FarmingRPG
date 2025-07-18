@@ -13,7 +13,7 @@ public static class HelperMethods
 
         Collider2D[] collider2DArray = Physics2D.OverlapPointAll(positionToCheck);
 
-        // Loop through all colliders to get an object of type T
+        // 遍历所有碰撞器以获取类型为T的对象
 
         T tComponent = default;
 

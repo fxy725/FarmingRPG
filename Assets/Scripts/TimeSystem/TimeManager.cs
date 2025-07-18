@@ -70,7 +70,6 @@ public class TimeManager : SingletonMonobehaviour<TimeManager>, ISaveable
     {
         if (!gameClockPaused) // 如果游戏时钟没有暂停
         {
-            // 
             GameTick();
         }
     }
@@ -150,7 +149,7 @@ public class TimeManager : SingletonMonobehaviour<TimeManager>, ISaveable
 
         }
 
-        // Call to advance game second event would go here if required
+        // 如果需要，这里可以调用更新游戏秒事件
     }
 
     private string GetDayOfWeek()
@@ -232,30 +231,30 @@ public class TimeManager : SingletonMonobehaviour<TimeManager>, ISaveable
 
     public GameObjectSave SaveData()
     {
-        // Delete existing scene save if exists
+        // 如果存在，则删除现有场景保存
         GameObjectSave.sceneData.Remove(Settings.PersistentScene);
 
-        // Create new scene save
+        // 创建新的场景保存
         SceneSave sceneSave = new SceneSave();
 
-        // Create new int dictionary
+        // 创建新的int字典
         sceneSave.intDictionary = new Dictionary<string, int>();
 
-        // Create new string dictionary
+        // 创建新的字符串字典
         sceneSave.stringDictionary = new Dictionary<string, string>();
 
-        // Add values to the int dictionary
+        // 添加值到int字典
         sceneSave.intDictionary.Add("gameYear", gameYear);
         sceneSave.intDictionary.Add("gameDay", gameDay);
         sceneSave.intDictionary.Add("gameHour", gameHour);
         sceneSave.intDictionary.Add("gameMinute", gameMinute);
         sceneSave.intDictionary.Add("gameSecond", gameSecond);
 
-        // Add values to the string dictionary
+        // 添加值到字符串字典
         sceneSave.stringDictionary.Add("gameDayOfWeek", gameDayOfWeek);
         sceneSave.stringDictionary.Add("gameSeason", gameSeason.ToString());
 
-        // Add scene save to game object for persistent scene
+        // 添加场景保存到游戏对象
         GameObjectSave.sceneData.Add(Settings.PersistentScene, sceneSave);
 
         return GameObjectSave;
@@ -263,18 +262,18 @@ public class TimeManager : SingletonMonobehaviour<TimeManager>, ISaveable
 
     public void LoadData(GameSave gameSave)
     {
-        // Get saved gameobject from gameSave data
+        // 从gameSave数据中获取保存的游戏对象
         if (gameSave.gameObjectData.TryGetValue(ISaveableUniqueID, out GameObjectSave gameObjectSave))
         {
             GameObjectSave = gameObjectSave;
 
-            // Get savedscene data for gameObject
+            // 获取保存的场景数据
             if (GameObjectSave.sceneData.TryGetValue(Settings.PersistentScene, out SceneSave sceneSave))
             {
-                // if int and string dictionaries are found
+                // 如果int和字符串字典已找到
                 if (sceneSave.intDictionary != null && sceneSave.stringDictionary != null)
                 {
-                    // populate saved int values
+                    // 填充保存的int值
                     if (sceneSave.intDictionary.TryGetValue("gameYear", out int savedGameYear))
                         gameYear = savedGameYear;
 
@@ -290,7 +289,7 @@ public class TimeManager : SingletonMonobehaviour<TimeManager>, ISaveable
                     if (sceneSave.intDictionary.TryGetValue("gameSecond", out int savedGameSecond))
                         gameSecond = savedGameSecond;
 
-                    // populate string saved values
+                    // 填充保存的字符串值
                     if (sceneSave.stringDictionary.TryGetValue("gameDayOfWeek", out string savedGameDayOfWeek))
                         gameDayOfWeek = savedGameDayOfWeek;
 
@@ -302,13 +301,13 @@ public class TimeManager : SingletonMonobehaviour<TimeManager>, ISaveable
                         }
                     }
 
-                    // Zero gametick
+                    // 重置游戏刻度
                     gameTick = 0f;
 
-                    // Trigger advance minute event
+                    // 触发更新游戏分钟事件
                     EventHandler.CallAdvanceGameMinuteEvent(gameYear, gameSeason, gameDay, gameDayOfWeek, gameHour, gameMinute, gameSecond);
 
-                    // Refresh game clock
+                    // 刷新游戏时钟
                 }
             }
         }

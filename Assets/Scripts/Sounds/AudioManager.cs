@@ -23,7 +23,7 @@ public class AudioManager : SingletonMonobehaviour<AudioManager>
     [SerializeField] private AudioMixerSnapshot gameAmbientSnapshot = null;
 
     [Header("Other")]
-    // Sound list and dictionary
+    // 声音列表和字典
     [SerializeField] private SO_SoundList so_soundList = null;
 
     [SerializeField] private SO_SceneSoundsList so_sceneSoundsList = null;
@@ -42,19 +42,19 @@ public class AudioManager : SingletonMonobehaviour<AudioManager>
     {
         base.Awake();
 
-        // Initialise sound dictionary
+        // 初始化声音字典
         soundDictionary = new Dictionary<SoundName, SoundItem>();
 
-        // Load sound dictionary with sounds
+        // 加载声音字典
         foreach (SoundItem soundItem in so_soundList.soundDetails)
         {
             soundDictionary.Add(soundItem.soundName, soundItem);
         }
 
-        // Initialise scene sounds dictionary
+        // 初始化场景声音字典
         sceneSoundsDictionary = new Dictionary<SceneName, SceneSoundsItem>();
 
-        // Load scene sounds dictionary
+        // 加载场景声音字典
         foreach (SceneSoundsItem sceneSoundsItem in so_sceneSoundsList.sceneSoundsDetails)
         {
             sceneSoundsDictionary.Add(sceneSoundsItem.sceneName, sceneSoundsItem);
@@ -79,10 +79,10 @@ public class AudioManager : SingletonMonobehaviour<AudioManager>
 
         float musicPlayTime = defaultSceneMusicPlayTimeSeconds;
 
-        // Try Get current scene
+        // 尝试获取当前场景
         if (Enum.TryParse<SceneName>(SceneManager.GetActiveScene().name, true, out SceneName currentSceneName))
         {
-            // Get Music and Ambient Sounds For Scene
+            // 获取场景的音乐和环境声音
             if (sceneSoundsDictionary.TryGetValue(currentSceneName, out SceneSoundsItem sceneSoundsItem))
             {
                 soundDictionary.TryGetValue(sceneSoundsItem.musicForScene, out musicSoundItem);
@@ -93,13 +93,13 @@ public class AudioManager : SingletonMonobehaviour<AudioManager>
                 return;
             }
 
-            // Stop any scene sounds already playing
+            // 停止任何正在播放的场景声音
             if (playSceneSoundsCoroutine != null)
             {
                 StopCoroutine(playSceneSoundsCoroutine);
             }
 
-            // Play scene ambient sounds and music
+            // 播放场景环境声音和音乐
             playSceneSoundsCoroutine = StartCoroutine(PlaySceneSoundsRoutine(musicPlayTime, musicSoundItem, ambientSoundItem));
         }
     }
@@ -109,16 +109,16 @@ public class AudioManager : SingletonMonobehaviour<AudioManager>
 
         if (musicSoundItem != null && ambientSoundItem != null)
         {
-            // Start with ambient sound
+            // 从环境声音开始
             PlayAmbientSoundClip(ambientSoundItem, 0f);
 
-            // Wait for random range of seconds before playing music
+            // 等待随机范围的秒数再播放音乐
             yield return new WaitForSeconds(UnityEngine.Random.Range(sceneMusicStartMinSecs, sceneMusicStartMaxSecs));
 
-            // Play music
+            // 播放音乐
             PlayMusicSoundClip(musicSoundItem, musicTransitionSecs);
 
-            // Wait for music play seconds before transitioning to ambient sounds
+            // 等待音乐播放秒数再过渡到环境声音
             yield return new WaitForSeconds(musicPlaySeconds);
 
             // Play ambient sound clip
@@ -128,36 +128,36 @@ public class AudioManager : SingletonMonobehaviour<AudioManager>
 
     private void PlayMusicSoundClip(SoundItem musicSoundItem, float transitionTimeSeconds)
     {
-        // Set Volume
+        // 设置音量
         gameAudioMixer.SetFloat("MusicVolume", ConvertSoundVolumeDecimalFractionToDecibels(musicSoundItem.soundVolume));
 
-        // Set clip & play
+        // 设置剪辑并播放
         gameMusicAudioSource.clip = musicSoundItem.soundClip;
         gameMusicAudioSource.Play();
 
-        // Transition to music snapshot
+        // 过渡到音乐快照
         gameMusicSnapshot.TransitionTo(transitionTimeSeconds);
     }
 
     private void PlayAmbientSoundClip(SoundItem ambientSoundItem, float transitionTimeSeconds)
     {
-        // Set Volume
+        // 设置音量
         gameAudioMixer.SetFloat("AmbientVolume", ConvertSoundVolumeDecimalFractionToDecibels(ambientSoundItem.soundVolume));
 
-        // Set clip & play
+        // 设置剪辑并播放
         ambientSoundAudioSource.clip = ambientSoundItem.soundClip;
         ambientSoundAudioSource.Play();
 
-        // Transition to ambient
+        // 过渡到环境
         gameAmbientSnapshot.TransitionTo(transitionTimeSeconds);
     }
 
     /// <summary>
-    /// Convert volumeDecimalFraction to -80 to +20 decibel range
+    /// 将volumeDecimalFraction转换为-80到+20分贝范围
     /// </summary>
     private float ConvertSoundVolumeDecimalFractionToDecibels(float volumeDecimalFraction)
     {
-        // Convert volume from decimal fraction to -80 to +20 decibel range
+        // 将音量从十进制分数转换为-80到+20分贝范围
 
         return (volumeDecimalFraction * 100f - 80f);
     }

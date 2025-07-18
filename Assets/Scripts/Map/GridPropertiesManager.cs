@@ -55,14 +55,14 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
 
     private void ClearDisplayGroundDecorations()
     {
-        // Remove ground decorations
+        // 移除地面装饰
         groundDecoration1.ClearAllTiles();
         groundDecoration2.ClearAllTiles();
     }
 
     private void ClearDisplayAllPlantedCrops()
     {
-        // Destroy all crops in scene
+        // 销毁场景中的所有作物
 
         Crop[] cropArray;
         cropArray = FindObjectsByType<Crop>(FindObjectsSortMode.None);
@@ -82,7 +82,7 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
 
     public void DisplayDugGround(GridPropertyDetails gridPropertyDetails)
     {
-        // Dug
+        // 已挖掘
         if (gridPropertyDetails.daysSinceDug > -1)
         {
             ConnectDugGround(gridPropertyDetails);
@@ -91,7 +91,7 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
 
     public void DisplayWateredGround(GridPropertyDetails gridPropertyDetails)
     {
-        // Watered
+        // 已浇水
         if (gridPropertyDetails.daysSinceWatered > -1)
         {
             ConnectWateredGround(gridPropertyDetails);
@@ -101,12 +101,12 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
 
     private void ConnectDugGround(GridPropertyDetails gridPropertyDetails)
     {
-        // Select tile based on surrounding dug tiles
+        // 根据周围已挖掘的方块选择方块
 
         Tile dugTile0 = SetDugTile(gridPropertyDetails.gridX, gridPropertyDetails.gridY);
         groundDecoration1.SetTile(new Vector3Int(gridPropertyDetails.gridX, gridPropertyDetails.gridY, 0), dugTile0);
 
-        // Set 4 tiles if dug surrounding current tile - up, down, left, right now that this central tile has been dug
+        // 如果周围有已挖掘的方块，则设置4个方块
 
         GridPropertyDetails adjacentGridPropertyDetails;
 
@@ -140,12 +140,12 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
 
     private void ConnectWateredGround(GridPropertyDetails gridPropertyDetails)
     {
-        // Select tile based on surrounding watered tiles
+        // 根据周围已浇水的方块选择方块
 
         Tile wateredTile0 = SetWateredTile(gridPropertyDetails.gridX, gridPropertyDetails.gridY);
         groundDecoration2.SetTile(new Vector3Int(gridPropertyDetails.gridX, gridPropertyDetails.gridY, 0), wateredTile0);
 
-        // Set 4 tiles if watered surrounding current tile - up, down, left, right now that this central tile has been watered
+        // 如果周围有已浇水的方块，则设置4个方块
 
         GridPropertyDetails adjacentGridPropertyDetails;
 
@@ -180,14 +180,14 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
 
     private Tile SetDugTile(int xGrid, int yGrid)
     {
-        //Get whether surrounding tiles (up,down,left, and right) are dug or not
+        // 获取周围方块是否已挖掘
 
         bool upDug = IsGridSquareDug(xGrid, yGrid + 1);
         bool downDug = IsGridSquareDug(xGrid, yGrid - 1);
         bool leftDug = IsGridSquareDug(xGrid - 1, yGrid);
         bool rightDug = IsGridSquareDug(xGrid + 1, yGrid);
 
-        #region Set appropriate tile based on whether surrounding tiles are dug or not
+        #region 根据周围方块是否已挖掘选择方块
 
         if (!upDug && !downDug && !rightDug && !leftDug)
         {
@@ -256,7 +256,7 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
 
         return null;
 
-        #endregion Set appropriate tile based on whether surrounding tiles are dug or not
+        #endregion 根据周围方块是否已挖掘选择方块
     }
 
     private bool IsGridSquareDug(int xGrid, int yGrid)
@@ -279,14 +279,14 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
 
     private Tile SetWateredTile(int xGrid, int yGrid)
     {
-        // Get whether surrounding tiles (up,down,left, and right) are watered or not
+        // 获取周围方块是否已浇水
 
         bool upWatered = IsGridSquareWatered(xGrid, yGrid + 1);
         bool downWatered = IsGridSquareWatered(xGrid, yGrid - 1);
         bool leftWatered = IsGridSquareWatered(xGrid - 1, yGrid);
         bool rightWatered = IsGridSquareWatered(xGrid + 1, yGrid);
 
-        #region Set appropriate tile based on whether surrounding tiles are watered or not
+        #region 根据周围方块是否已浇水选择方块
 
         if (!upWatered && !downWatered && !rightWatered && !leftWatered)
         {
@@ -355,7 +355,7 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
 
         return null;
 
-        #endregion Set appropriate tile based on whether surrounding tiles are watered or not
+        #endregion 根据周围方块是否已浇水选择方块
     }
 
     private bool IsGridSquareWatered(int xGrid, int yGrid)
@@ -378,7 +378,7 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
 
     private void DisplayGridPropertyDetails()
     {
-        // Loop through all grid items
+        // 遍历所有网格项
         foreach (KeyValuePair<string, GridPropertyDetails> item in gridPropertyDictionary)
         {
             GridPropertyDetails gridPropertyDetails = item.Value;
@@ -392,21 +392,21 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
     }
 
     /// <summary>
-    /// Display planted crop for gridpropertyDetails
+    /// 显示种植的作物
     /// </summary>
     public void DisplayPlantedCrop(GridPropertyDetails gridPropertyDetails)
     {
         if (gridPropertyDetails.seedItemCode > -1)
         {
-            // get crop details
+            // 获取作物详情
             CropDetails cropDetails = so_CropDetailsList.GetCropDetails(gridPropertyDetails.seedItemCode);
 
             if (cropDetails != null)
             {
-                // prefab to use
+                // 使用的预制体
                 GameObject cropPrefab;
 
-                // instantiate crop prefab at grid location
+                // 实例化作物预制体
                 int growthStages = cropDetails.growthDays.Length;
 
                 int currentGrowthStage = 0;
@@ -440,18 +440,17 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
 
 
     /// <summary>
-    /// This initialises the grid property dictionary with the values from the SO_GridProperties assets and stores the values for each scene in
-    /// GameObjectSave sceneData
+    /// 初始化网格属性字典
     /// </summary>
     private void InitialiseGridProperties()
     {
-        // Loop through all gridproperties in the array
+        // 遍历所有网格属性
         foreach (SO_GridProperties so_GridProperties in so_gridPropertiesArray)
         {
-            // Create dictionary of grid property details
+            // 创建网格属性详情字典
             Dictionary<string, GridPropertyDetails> gridPropertyDictionary = new Dictionary<string, GridPropertyDetails>();
 
-            // Populate grid property dictionary - Iterate through all the grid properties in the so gridproperties list
+            // 填充网格属性字典 - 遍历所有网格属性
             foreach (GridProperty gridProperty in so_GridProperties.gridPropertyList)
             {
                 GridPropertyDetails gridPropertyDetails;
@@ -492,24 +491,24 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
                 SetGridPropertyDetails(gridProperty.gridCoordinate.x, gridProperty.gridCoordinate.y, gridPropertyDetails, gridPropertyDictionary);
             }
 
-            // Create scene save for this gameobject
+            // 创建场景保存
             SceneSave sceneSave = new SceneSave();
 
-            // Add grid property dictionary to scene save data
+            // 添加网格属性字典到场景保存数据
             sceneSave.gridPropertyDetailsDictionary = gridPropertyDictionary;
 
-            // If starting scene set the gridPropertyDictionary member variable to the current iteration
+            // 如果起始场景，则将网格属性字典成员变量设置为当前迭代
             if (so_GridProperties.sceneName.ToString() == SceneControllerManager.Instance.startingSceneName.ToString())
             {
                 this.gridPropertyDictionary = gridPropertyDictionary;
             }
 
-            // Add bool dictionary and set first time scene loaded to true
+            // 添加布尔字典并设置第一次场景加载为 true
             sceneSave.boolDictionary = new Dictionary<string, bool>();
             sceneSave.boolDictionary.Add("isFirstTimeSceneLoaded", true);
 
 
-            // Add scene save to game object scene data
+            // 添加场景保存到游戏对象场景数据
             GameObjectSave.sceneData.Add(so_GridProperties.sceneName.ToString(), sceneSave);
         }
     }
@@ -528,29 +527,29 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
 
 
 
-        // Get Grid
+        // 获取网格
         grid = GameObject.FindFirstObjectByType<UnityEngine.Grid>();
 
-        // Get tilemaps
+        // 获取瓦片地图
         groundDecoration1 = GameObject.FindGameObjectWithTag(Tags.GroundDecoration1).GetComponent<Tilemap>();
         groundDecoration2 = GameObject.FindGameObjectWithTag(Tags.GroundDecoration2).GetComponent<Tilemap>();
 
     }
 
     /// <summary>
-    /// Returns the gridPropertyDetails at the gridlocation for the supplied dictionary, or null if no properties exist at that location.
+    /// 返回网格属性详情
     /// </summary>
     public GridPropertyDetails GetGridPropertyDetails(int gridX, int gridY, Dictionary<string, GridPropertyDetails> gridPropertyDictionary)
     {
-        // Construct key from coordinate
+        // 从坐标构造键
         string key = "x" + gridX + "y" + gridY;
 
         GridPropertyDetails gridPropertyDetails;
 
-        // Check if grid property details exist forcoordinate and retrieve
+        // 检查网格属性详情是否存在
         if (!gridPropertyDictionary.TryGetValue(key, out gridPropertyDetails))
         {
-            // if not found
+            // 如果未找到
             return null;
         }
         else
@@ -560,14 +559,14 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
     }
 
     /// <summary>
-    ///  Returns the Crop object at the gridX, gridY position or null if no crop was found
+    /// 返回网格位置的作物对象或 null 如果未找到作物
     /// </summary>
     public Crop GetCropObjectAtGridLocation(GridPropertyDetails gridPropertyDetails)
     {
         Vector3 worldPosition = grid.GetCellCenterWorld(new Vector3Int(gridPropertyDetails.gridX, gridPropertyDetails.gridY, 0));
         Collider2D[] collider2DArray = Physics2D.OverlapPointAll(worldPosition);
 
-        // Loop through colliders to get crop game object
+        // 遍历碰撞器获取作物游戏对象
         Crop crop = null;
 
         for (int i = 0; i < collider2DArray.Length; i++)
@@ -584,7 +583,7 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
     }
 
     /// <summary>
-    /// Returns Crop Details for the provided seedItemCode
+    /// 返回种子代码的作物详情
     /// </summary>
     public CropDetails GetCropDetails(int seedItemCode)
     {
@@ -594,7 +593,7 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
 
 
     /// <summary>
-    /// Get the grid property details for the tile at (gridX,gridY).  If no grid property details exist null is returned and can assume that all grid property details values are null or false
+    /// 获取网格位置的网格属性详情
     /// </summary>
     public GridPropertyDetails GetGridPropertyDetails(int gridX, int gridY)
     {
@@ -602,7 +601,7 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
     }
 
     /// <summary>
-    /// for sceneName this method returns a Vector2Int with the grid dimensions for that scene, or Vector2Int.zero if scene not found
+    /// 对于场景名称，此方法返回一个 Vector2Int，其中包含该场景的网格维度，或 Vector2Int.zero 如果场景未找到
     /// </summary>
 
     public bool GetGridDimensions(SceneName sceneName, out Vector2Int gridDimensions, out Vector2Int gridOrigin)
@@ -610,7 +609,7 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
         gridDimensions = Vector2Int.zero;
         gridOrigin = Vector2Int.zero;
 
-        // loop through scenes
+        // 遍历场景
         foreach (SO_GridProperties so_GridProperties in so_gridPropertiesArray)
         {
             if (so_GridProperties.sceneName == sceneName)
@@ -641,7 +640,7 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
         {
             GameObjectSave = gameObjectSave;
 
-            // Restore data for current scene
+            // 恢复当前场景的数据
             RestoreScene(SceneManager.GetActiveScene().name);
         }
     }
@@ -654,37 +653,37 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
 
     public void RestoreScene(string sceneName)
     {
-        // Get sceneSave for scene - it exists since we created it in initialise
+        // 获取场景保存 - 它存在，因为我们创建了它
         if (GameObjectSave.sceneData.TryGetValue(sceneName, out SceneSave sceneSave))
         {
-            // get grid property details dictionary - it exists since we created it in initialise
+            // 获取网格属性详情字典 - 它存在，因为我们创建了它
             if (sceneSave.gridPropertyDetailsDictionary != null)
             {
                 gridPropertyDictionary = sceneSave.gridPropertyDetailsDictionary;
             }
 
-            // get dictionary of bools - it exists since we created it in initialise
+            // 获取布尔字典 - 它存在，因为我们创建了它
             if (sceneSave.boolDictionary != null && sceneSave.boolDictionary.TryGetValue("isFirstTimeSceneLoaded", out bool storedIsFirstTimeSceneLoaded))
             {
                 isFirstTimeSceneLoaded = storedIsFirstTimeSceneLoaded;
             }
 
-            // Instantiate any crop prefabs initially present in the scene
+            // 实例化场景中初始存在的作物预制体
             if (isFirstTimeSceneLoaded)
                 EventHandler.CallInstantiateCropPrefabsEvent();
 
 
-            // If grid properties exist
+            // 如果网格属性存在
             if (gridPropertyDictionary.Count > 0)
             {
-                // grid property details found for the current scene destroy existing ground decoration
+                // 网格属性详情找到当前场景，销毁现有地面装饰
                 ClearDisplayGridPropertyDetails();
 
-                // Instantiate grid property details for current scene
+                // 实例化当前场景的网格属性详情
                 DisplayGridPropertyDetails();
             }
 
-            // Update first time scene loaded bool
+            // 更新第一次场景加载布尔值
             if (isFirstTimeSceneLoaded == true)
             {
                 isFirstTimeSceneLoaded = false;
@@ -696,7 +695,7 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
 
     public GameObjectSave SaveData()
     {
-        // Store current scene data
+        // 存储当前场景数据
         StoreScene(SceneManager.GetActiveScene().name);
 
         return GameObjectSave;
@@ -705,25 +704,25 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
 
     public void StoreScene(string sceneName)
     {
-        // Remove sceneSave for scene
+        // 移除场景保存
         GameObjectSave.sceneData.Remove(sceneName);
 
-        // Create sceneSave for scene
+        // 创建场景保存
         SceneSave sceneSave = new SceneSave();
 
-        // create & add dict grid property details dictionary
+        // 创建并添加网格属性详情字典
         sceneSave.gridPropertyDetailsDictionary = gridPropertyDictionary;
 
-        // create & add bool dictionary for first time scene loaded
+        // 创建并添加布尔字典
         sceneSave.boolDictionary = new Dictionary<string, bool>();
         sceneSave.boolDictionary.Add("isFirstTimeSceneLoaded", isFirstTimeSceneLoaded);
 
-        // Add scene save to game object scene data
+        // 添加场景保存到游戏对象场景数据
         GameObjectSave.sceneData.Add(sceneName, sceneSave);
     }
 
     /// <summary>
-    /// Set the grid property details to gridPropertyDetails for the tile at (gridX,gridY) for current scene
+    /// 设置网格属性详情
     /// </summary>
     public void SetGridPropertyDetails(int gridX, int gridY, GridPropertyDetails gridPropertyDetails)
     {
@@ -731,29 +730,29 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
     }
 
     /// <summary>
-    /// Set the grid property details to gridPropertyDetails for the tile at (gridX,gridY) for the gridpropertyDictionary.
+    /// 设置网格属性详情
     /// </summary>
     public void SetGridPropertyDetails(int gridX, int gridY, GridPropertyDetails gridPropertyDetails, Dictionary<string, GridPropertyDetails> gridPropertyDictionary)
     {
-        // Construct key from coordinate
+        // 从坐标构造键
         string key = "x" + gridX + "y" + gridY;
 
         gridPropertyDetails.gridX = gridX;
         gridPropertyDetails.gridY = gridY;
 
-        // Set value
+        // 设置值
         gridPropertyDictionary[key] = gridPropertyDetails;
     }
 
     private void AdvanceDay(int gameYear, Season gameSeason, int gameDay, string gameDayOfWeek, int gameHour, int gameMinute, int gameSecond)
     {
-        // Clear Display All Grid Property Details
+        // 清除所有网格属性详情
         ClearDisplayGridPropertyDetails();
 
-        // Loop through all scenes - by looping through all gridproperties in the array
+        // 遍历所有场景 - 通过遍历所有网格属性
         foreach (SO_GridProperties so_GridProperties in so_gridPropertiesArray)
         {
-            // Get gridpropertydetails dictionary for scene
+            // 获取场景的网格属性详情字典
             if (GameObjectSave.sceneData.TryGetValue(so_GridProperties.sceneName.ToString(), out SceneSave sceneSave))
             {
                 if (sceneSave.gridPropertyDetailsDictionary != null)
@@ -766,19 +765,19 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
 
                         #region Update all grid properties to reflect the advance in the day
 
-                        // If a crop is planted
+                        // 如果作物已种植
                         if (gridPropertyDetails.growthDays > -1)
                         {
                             gridPropertyDetails.growthDays += 1;
                         }
 
-                        // If ground is watered, then clear water
+                        // 如果地面已浇水，则清除水
                         if (gridPropertyDetails.daysSinceWatered > -1)
                         {
                             gridPropertyDetails.daysSinceWatered = -1;
                         }
 
-                        // Set gridpropertydetails
+                        // 设置网格属性详情
                         SetGridPropertyDetails(gridPropertyDetails.gridX, gridPropertyDetails.gridY, gridPropertyDetails, sceneSave.gridPropertyDetailsDictionary);
 
                         #endregion Update all grid properties to reflect the advance in the day
@@ -787,7 +786,7 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
             }
         }
 
-        // Display grid property details to reflect changed values
+        // 显示网格属性详情以反映更改的值
         DisplayGridPropertyDetails();
     }
 }

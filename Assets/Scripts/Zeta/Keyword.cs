@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace Playground.Keyword // namespace
+namespace Keyword // namespace
 {
     public class Representation
     {

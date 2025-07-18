@@ -29,14 +29,14 @@ public class SceneItemsManager : SingletonMonobehaviour<SceneItemsManager>, ISav
     }
 
     /// <summary>
-    /// Destroy items currently in the scene
+    /// 销毁当前场景中的物品
     /// </summary>
     private void DestroySceneItems()
     {
-        // Get all items in the scene
+        // 获取场景中的所有物品
         Item[] itemsInScene = GameObject.FindObjectsByType<Item>(FindObjectsSortMode.None);
 
-        // Loop through all scene items and destroy them
+        // 遍历所有场景物品并销毁它们
         for (int i = itemsInScene.Length - 1; i > -1; i--)
         {
             Destroy(itemsInScene[i].gameObject);
@@ -87,7 +87,7 @@ public class SceneItemsManager : SingletonMonobehaviour<SceneItemsManager>, ISav
         {
             GameObjectSave = gameObjectSave;
 
-            // Restore data for current scene
+            // 恢复当前场景的数据
             RestoreScene(SceneManager.GetActiveScene().name);
         }
     }
@@ -100,10 +100,10 @@ public class SceneItemsManager : SingletonMonobehaviour<SceneItemsManager>, ISav
         {
             if (sceneSave.listSceneItem != null)
             {
-                // scene list items found - destroy existing items in scene
+                // 场景列表物品找到 - 销毁场景中的现有物品
                 DestroySceneItems();
 
-                // now instantiate the list of scene items
+                // 现在实例化场景物品列表
                 InstantiateSceneItems(sceneSave.listSceneItem);
             }
         }
@@ -116,7 +116,7 @@ public class SceneItemsManager : SingletonMonobehaviour<SceneItemsManager>, ISav
 
     public GameObjectSave SaveData()
     {
-        // Store current scene data
+        // 存储当前场景数据
         StoreScene(SceneManager.GetActiveScene().name);
 
         return GameObjectSave;
@@ -126,14 +126,14 @@ public class SceneItemsManager : SingletonMonobehaviour<SceneItemsManager>, ISav
 
     public void StoreScene(string sceneName)
     {
-        // Remove old scene save for gameObject if exists
+        // 如果存在，则删除游戏对象的旧场景保存
         GameObjectSave.sceneData.Remove(sceneName);
 
-        // Get all items in the scene
+        // 获取场景中的所有物品
         List<SceneItem> sceneItemList = new List<SceneItem>();
         Item[] itemsInScene = FindObjectsByType<Item>(FindObjectsSortMode.None);
 
-        // Loop through all scene items
+        // 遍历所有场景物品
         foreach (Item item in itemsInScene)
         {
             SceneItem sceneItem = new SceneItem();
@@ -141,15 +141,15 @@ public class SceneItemsManager : SingletonMonobehaviour<SceneItemsManager>, ISav
             sceneItem.position = new Vector3(item.transform.position.x, item.transform.position.y, item.transform.position.z);
             sceneItem.itemName = item.name;
 
-            // Add scene item to list
+            // 添加场景物品到列表
             sceneItemList.Add(sceneItem);
         }
 
-        // Create list scene items in scene save and set to scene item list
+        // 创建场景物品列表并在场景保存中设置为场景物品列表
         SceneSave sceneSave = new SceneSave();
         sceneSave.listSceneItem = sceneItemList;
 
-        // Add scene save to gameobject
+        // 添加场景保存到游戏对象
         GameObjectSave.sceneData.Add(sceneName, sceneSave);
     }
 }

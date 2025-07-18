@@ -89,7 +89,7 @@ MonoBehaviour:
     canBeCarried: 0
   - itemCode: 10006
     itemType: 0
-    itemDescription: "\u6B27\u9632\u98CE\u7C7D"
+    itemDescription: "\u9632\u98CE\u8349\u7C7D"
     itemSprite: {fileID: 21300000, guid: 7da78110e28e0f74aaa3ef4a41f4c0ed, type: 3}
     itemLongDescription: "\u9632\u98CE\u8349\u79CD\u5B50\u9700\u89815\u5929\u624D\u80FD\u53D1\u82BD\u3002"
     itemUseGridRadius: 2
