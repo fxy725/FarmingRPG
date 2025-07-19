@@ -57,7 +57,6 @@
     <Compile Include="Assets\Scripts\GameManager\GameManager.cs" />
     <Compile Include="Assets\Scripts\TimeSystem\GameClock.cs" />
     <Compile Include="Assets\Scripts\Zeta\Playground.cs" />
-    <Compile Include="Assets\Scripts\Zeta\Note.cs" />
     <Compile Include="Assets\Scripts\SaveSystem\SceneSave.cs" />
     <Compile Include="Assets\Scripts\Zeta\as.cs" />
     <Compile Include="Assets\Scripts\Map\GridProperty.cs" />

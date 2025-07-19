@@ -313,7 +313,7 @@ public class GridCursor : MonoBehaviour
     {
         return grid.WorldToCell(Player.Instance.transform.position);
     }
-
+    //
     public Vector2 GetRectTransformPositionForCursor(Vector3Int gridPosition)
     {
         Vector3 gridWorldPosition = grid.CellToWorld(gridPosition);

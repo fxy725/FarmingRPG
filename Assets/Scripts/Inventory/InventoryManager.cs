@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISaveable
 {
-    private UIInventoryBar inventoryBar;
+    private UIInventoryBar inventoryBar; //库存栏UI组件的引用
 
     private Dictionary<int, ItemDetails> itemDetailsDictionary; // 物品详情字典，键为物品代码，值为物品详情
 
