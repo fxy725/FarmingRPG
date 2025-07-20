@@ -52,7 +52,7 @@ MonoBehaviour:
     canBeCarried: 1
   - itemCode: 10003
     itemType: 2
-    itemDescription: "\u4E00\u4E2A\u7B80\u6613\u6D12\u6C34\u58F6"
+    itemDescription: "\u6D12\u6C34\u58F6"
     itemSprite: {fileID: 21300136, guid: 853ac38383c680342ac7e688bf29b197, type: 3}
     itemLongDescription: "\u7B80\u6734\u7684\u6C34\u58F6\u2014\u2014\u4EFB\u4F55\u6709\u62B1\u8D1F\u7684\u519C\u4EBA\u5FC5\u5907\u7684\u5DE5\u5177\u3002"
     itemUseGridRadius: 1
@@ -64,7 +64,7 @@ MonoBehaviour:
     canBeCarried: 0
   - itemCode: 10004
     itemType: 3
-    itemDescription: "\u4E00\u628A\u666E\u901A\u9504\u5934"
+    itemDescription: "\u9504\u5934"
     itemSprite: {fileID: 21300052, guid: 853ac38383c680342ac7e688bf29b197, type: 3}
     itemLongDescription: "\u4E00\u628A\u7ED3\u5B9E\u8010\u7528\u7684\u57FA\u7840\u9504\u5934\u2014\u2014\u975E\u5E38\u9002\u5408\u7FFB\u677E\u571F\u58E4\uFF0C\u4E3A\u64AD\u79CD\u505A\u597D\u51C6\u5907\u3002"
     itemUseGridRadius: 1
@@ -76,7 +76,7 @@ MonoBehaviour:
     canBeCarried: 0
   - itemCode: 10005
     itemType: 4
-    itemDescription: "\u4E00\u628A\u666E\u901A\u65A7\u5934"
+    itemDescription: "\u65A7\u5934"
     itemSprite: {fileID: 21300010, guid: 853ac38383c680342ac7e688bf29b197, type: 3}
     itemLongDescription: "\u4E00\u628A\u950B\u5229\u8010\u7528\u7684\u57FA\u7840\u65A7\u5934
       - \u780D\u6811\u5229\u5668\u3002"
@@ -101,9 +101,9 @@ MonoBehaviour:
     canBeCarried: 1
   - itemCode: 10007
     itemType: 1
-    itemDescription: "\u6B27\u6D32\u9632\u98CE\u8349"
+    itemDescription: "\u9632\u98CE\u8349"
     itemSprite: {fileID: 21300000, guid: 0a1268bf801d5304ebf16458d7309ac1, type: 3}
-    itemLongDescription: "\u6B27\u6D32\u9632\u98CE\u8349\u5BCC\u542B\u7EA4\u7EF4\u548C\u7EF4\u751F\u7D20\u3002"
+    itemLongDescription: "\u9632\u98CE\u8349\u5BCC\u542B\u7EA4\u7EF4\u548C\u7EF4\u751F\u7D20\u3002"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 0
@@ -140,7 +140,7 @@ MonoBehaviour:
     itemDescription: "\u5CE1\u8C37\u680E\u6811\u6869"
     itemSprite: {fileID: 7154603021615155856, guid: d241c496741a12d4290e12ba81dd6724,
       type: 3}
-    itemLongDescription: 
+    itemLongDescription: "\u751F\u957F\u4E8E\u5CE1\u8C37\u7684\u680E\u6811\u88AB\u780D\u4F10\u7559\u4E0B\u7684\u6811\u6869\u3002"
     itemUseGridRadius: 0
     itemUseRadius: 0
     isStartingItem: 0
@@ -153,7 +153,7 @@ MonoBehaviour:
     itemDescription: "\u84DD\u6749\u6811\u6869"
     itemSprite: {fileID: -341119608263849502, guid: 5d22327a2a3d2a049a8a59a708d527fe,
       type: 3}
-    itemLongDescription: "\u4E00\u68F5\u84DD\u6749\u7684\u6811\u6869"
+    itemLongDescription: "\u4E00\u68F5\u84DD\u6749\u7684\u6811\u6869\u3002"
     itemUseGridRadius: 0
     itemUseRadius: 0
     isStartingItem: 0
@@ -175,7 +175,7 @@ MonoBehaviour:
     canBeCarried: 0
   - itemCode: 10013
     itemType: 5
-    itemDescription: "\u4E00\u628A\u57FA\u7840\u9550\u5B50"
+    itemDescription: "\u9550\u5B50"
     itemSprite: {fileID: 21300094, guid: 853ac38383c680342ac7e688bf29b197, type: 3}
     itemLongDescription: "\u4E00\u628A\u7ED3\u5B9E\u8010\u7528\u7684\u57FA\u7840\u9550\u2014\u2014\u975E\u5E38\u9002\u5408\u7528\u6765\u7834\u5F00\u5CA9\u77F3\u3002"
     itemUseGridRadius: 1
@@ -187,9 +187,9 @@ MonoBehaviour:
     canBeCarried: 0
   - itemCode: 10014
     itemType: 0
-    itemDescription: "\u4E00\u5757\u77F3\u5934\uFF0C\u4E00\u7C92\u79CD\u5B50"
+    itemDescription: "\u788E\u77F3"
     itemSprite: {fileID: 21300000, guid: 4fb548784c08c2c40b86a99493efa98d, type: 3}
-    itemLongDescription: 
+    itemLongDescription: "\u5B83\u4EEC\u6CA1\u4EC0\u4E48\u7279\u522B\u7684\u3002"
     itemUseGridRadius: 0
     itemUseRadius: 0
     isStartingItem: 0
@@ -211,9 +211,9 @@ MonoBehaviour:
     canBeCarried: 1
   - itemCode: 10016
     itemType: 0
-    itemDescription: "\u4ECE\u77F3\u5934\u5230\u79CD\u5B50"
+    itemDescription: "\u786C\u77F3\u5934"
     itemSprite: {fileID: 21300000, guid: ffd3a07e9702a614284d1e5a4be9f532, type: 3}
-    itemLongDescription: 
+    itemLongDescription: "\u6BD4\u8D77\u666E\u901A\u77F3\u5934\u66F4\u52A0\u786C\u3002"
     itemUseGridRadius: 0
     itemUseRadius: 0
     isStartingItem: 0
@@ -223,7 +223,7 @@ MonoBehaviour:
     canBeCarried: 0
   - itemCode: 10017
     itemType: 6
-    itemDescription: "\u4E00\u628A\u6536\u5272\u7528\u7684\u666E\u901A\u9570\u5200"
+    itemDescription: "\u9570\u5200"
     itemSprite: {fileID: 21300506, guid: 853ac38383c680342ac7e688bf29b197, type: 3}
     itemLongDescription: "\u4E00\u628A\u950B\u5229\u7684\u666E\u901A\u9570\u5200
       - \u975E\u5E38\u9002\u5408\u5272\u8349\u3002"
@@ -236,9 +236,9 @@ MonoBehaviour:
     canBeCarried: 0
   - itemCode: 10018
     itemType: 8
-    itemDescription: "\u83491"
+    itemDescription: "\u9EC4\u827E\u8349"
     itemSprite: {fileID: 21300000, guid: 207ad99171e171b418bcaaa396d5a6f6, type: 3}
-    itemLongDescription: 
+    itemLongDescription: "\u542C\u8BF4\u5B83\u53EF\u4EE5\u7528\u4E8E\u5236\u836F\uFF0C\u4F46\u6CA1\u4EBA\u77E5\u9053\u600E\u4E48\u505A\u3002"
     itemUseGridRadius: 0
     itemUseRadius: 0
     isStartingItem: 0
@@ -248,9 +248,9 @@ MonoBehaviour:
     canBeCarried: 0
   - itemCode: 10019
     itemType: 8
-    itemDescription: "\u83492"
+    itemDescription: "\u838E\u838E\u8349"
     itemSprite: {fileID: 21300000, guid: e452dd2aa629f624390a9ba516a7c47e, type: 3}
-    itemLongDescription: 
+    itemLongDescription: "\u838E\u838E\u8349\u67D4\u8F6F\u53C8\u8302\u76DB\uFF0C\u52A8\u7269\u559C\u6B22\u5728\u9644\u8FD1\u73A9\u800D\u3002"
     itemUseGridRadius: 0
     itemUseRadius: 0
     isStartingItem: 0
@@ -262,7 +262,7 @@ MonoBehaviour:
     itemType: 1
     itemDescription: "\u5927\u9EBB"
     itemSprite: {fileID: 21300000, guid: 25925800440b0e84f9533a314ddca6b5, type: 3}
-    itemLongDescription: "\u5927\u9EBB"
+    itemLongDescription: "\u5927\u9EBB\uFF0C\u5BF9\uFF0C\u5C31\u662F\u4F60\u60F3\u7684\u5927\u9EBB\u3002"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 0
@@ -272,9 +272,9 @@ MonoBehaviour:
     canBeCarried: 1
   - itemCode: 10021
     itemType: 8
-    itemDescription: "\u5E26\u523A\u7684\u4ED9\u4EBA\u638C"
+    itemDescription: "\u4ED9\u4EBA\u638C"
     itemSprite: {fileID: 21300000, guid: 37e09848a493a0a4b89a743f73f75963, type: 3}
-    itemLongDescription: "\u5E26\u523A\u7684\u4ED9\u4EBA\u638C"
+    itemLongDescription: "\u5E26\u523A\u7684\u4ED9\u4EBA\u638C\uFF0C\u5C0F\u5FC3\u522B\u88AB\u624E\uFF01"
     itemUseGridRadius: 0
     itemUseRadius: 0
     isStartingItem: 0
@@ -286,7 +286,7 @@ MonoBehaviour:
     itemType: 9
     itemDescription: "\u6905\u5B50"
     itemSprite: {fileID: 21300000, guid: 2a61f48c8f2dfed4da6f2f8e2485ee15, type: 3}
-    itemLongDescription: "\u6905\u5B50"
+    itemLongDescription: "\u5E73\u5E73\u65E0\u5947\u7684\u6905\u5B50\uFF0C\u65E2\u4E0D\u8212\u9002\u4E5F\u4E0D\u534E\u4E3D\uFF0C\u4F46\u8DB3\u591F\u8010\u7528\u3002"
     itemUseGridRadius: 0
     itemUseRadius: 0
     isStartingItem: 0
@@ -298,7 +298,7 @@ MonoBehaviour:
     itemType: 9
     itemDescription: "\u684C\u5B50"
     itemSprite: {fileID: 21300000, guid: 60f7a57556be87841a8cabc94054df28, type: 3}
-    itemLongDescription: "\u6728\u684C"
+    itemLongDescription: "\u7528\u6728\u5934\u5236\u4F5C\u7684\u684C\u5B50\uFF0C\u770B\u8D77\u6765\u5F88\u7ED3\u5B9E\u3002"
     itemUseGridRadius: 0
     itemUseRadius: 0
     isStartingItem: 0

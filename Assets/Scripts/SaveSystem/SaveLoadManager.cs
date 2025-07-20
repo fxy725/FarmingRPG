@@ -13,6 +13,7 @@ public class SaveLoadManager : SingletonMonobehaviour<SaveLoadManager>
 
     private string filePath;
 
+    private JsonSerializerSettings jsonSettings;
 
 
     protected override void Awake()
@@ -22,6 +23,11 @@ public class SaveLoadManager : SingletonMonobehaviour<SaveLoadManager>
         gameSave = new GameSave();
         saveableObjectList = new List<ISaveable>();
         filePath = Application.persistentDataPath + "/WildHopeCreek.json";
+
+        jsonSettings = new JsonSerializerSettings
+        {
+            Converters = new List<JsonConverter> { new Vector3Converter() }
+        };
     }
 
 
@@ -32,8 +38,7 @@ public class SaveLoadManager : SingletonMonobehaviour<SaveLoadManager>
         {
             string json = File.ReadAllText(filePath);
 
-            gameSave = JsonConvert.DeserializeObject<GameSave>(json);
-
+            gameSave = JsonConvert.DeserializeObject<GameSave>(json, jsonSettings);
             // 遍历所有可保存对象并应用保存数据
             for (int i = saveableObjectList.Count - 1; i > -1; i--)
             {
@@ -63,7 +68,7 @@ public class SaveLoadManager : SingletonMonobehaviour<SaveLoadManager>
             gameSave.gameObjectData.Add(saveableObject.ISaveableUniqueID, saveableObject.SaveData());
         }
 
-        string json = JsonConvert.SerializeObject(gameSave, Formatting.Indented);
+        string json = JsonConvert.SerializeObject(gameSave, Formatting.Indented, jsonSettings);
 
         File.WriteAllText(filePath, json);
 

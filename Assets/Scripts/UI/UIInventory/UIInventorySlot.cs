@@ -265,7 +265,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             string itemTypeDescription = InventoryManager.Instance.GetItemTypeDescription(itemDetails.itemType);
 
             // 填充文本框
-            inventoryTextBox.SetTextboxText(itemTypeDescription, itemDetails.itemDescription, "", itemDetails.itemLongDescription, "", "");
+            inventoryTextBox.SetTextboxText(itemDetails.itemDescription, itemTypeDescription, "", itemDetails.itemLongDescription, "", "");
 
             // 根据库存栏位置设置文本框位置
             if (inventoryBar.IsInventoryBarPositionBottom)

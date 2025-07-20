@@ -284,6 +284,10 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
             ItemType.Reaping_tool => Settings.ReapingTool,
             ItemType.Watering_tool => Settings.WateringTool,
             ItemType.Collecting_tool => Settings.CollectingTool,
+            ItemType.Seed => Settings.Seed,
+            ItemType.Commodity => Settings.Commodity,
+            ItemType.Reapable_scenary => Settings.ReapableScenary,
+            ItemType.Furniture => Settings.Furniture,
             _ => itemType.ToString(),
         };
         return itemTypeDescription;
