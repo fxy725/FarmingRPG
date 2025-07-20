@@ -57,7 +57,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         Time.timeScale = 0;
         pauseMenu.SetActive(true);
 
-        // 触发垃圾回收
+        // 暂停期间，强制触发垃圾回收，释放内存
         System.GC.Collect();
 
         // 高亮选中的按钮

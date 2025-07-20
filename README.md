@@ -34,53 +34,6 @@
 - **GUID 系统**：每个可保存对象都有唯一标识符
 - **自动保存**：支持手动和自动存档功能
 
-## 🛠️ 技术栈
-
-### 核心引擎
-- **Unity Version**: 6000.0.43f1 (Unity 6)
-- **Target Framework**: .NET Standard 2.1
-- **Language Version**: C# 9.0
-- **Platform**: Windows Standalone (可扩展到其他平台)
-
-### Unity 包依赖
-
-#### 2D 渲染与动画
-```json
-"com.unity.2d.animation": "10.1.4"     // 2D 骨骼动画系统
-"com.unity.2d.pixel-perfect": "5.0.3"  // 像素完美渲染
-"com.unity.2d.sprite": "1.0.0"         // 2D 精灵系统
-"com.unity.2d.spriteshape": "10.0.7"   // 2D 形状工具
-"com.unity.2d.tilemap": "1.0.0"        // 瓦片地图系统
-"com.unity.2d.psdimporter": "9.0.3"    // PSD 文件导入器
-```
-
-#### 相机与视觉效果
-```json
-"com.unity.cinemachine": "2.10.3"      // 智能相机系统
-"com.unity.timeline": "1.8.7"          // 时间线和序列器
-```
-
-#### AI 与导航
-```json
-"com.unity.ai.navigation": "2.0.6"     // AI 导航网格系统
-```
-
-#### 用户界面
-```json
-"com.unity.ugui": "2.0.0"              // Unity GUI 系统
-```
-
-#### 数据处理
-```json
-"com.unity.nuget.newtonsoft-json": "3.2.1"  // JSON 序列化库
-```
-
-#### 开发工具
-```json
-"com.unity.ide.visualstudio": "2.0.23" // Visual Studio 集成
-"com.unity.ide.rider": "3.0.31"        // JetBrains Rider 集成
-"com.unity.test-framework": "1.4.6"    // 单元测试框架
-```
 
 ## 📁 项目结构
 
@@ -280,4 +233,4 @@ public enum ItemType
 **引擎版本**: Unity 6000.0.43f1  
 **最后更新**: 2025年1月  
 
-> 这是一个展示现代Unity 2D游戏开发技术的完整项目，包含了从基础系统到高级功能的全面实现。 
+> 这是一个展示Unity 2D游戏开发技术的Demo项目，包含了从基础系统到高级功能的全面实现。 
